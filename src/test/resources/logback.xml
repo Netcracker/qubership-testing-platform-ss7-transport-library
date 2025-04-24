@@ -1,0 +1,31 @@
+<configuration scan="true">
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <!--See also https://logback.qos.ch/manual/layouts.html-->
+            <pattern>%date{HH:mm:ss.SS} %-7([%level]) "%thread" [%logger{0}#%method] - %message%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--See also http://logback.qos.ch/manual/appenders.html#RollingFileAppender-->
+        <file>console.log</file>
+        <encoder>
+            <!--See also https://logback.qos.ch/manual/layouts.html-->
+            <pattern>%date{YYYY-MM-dd HH:mm:ss.SS} %-7([%level]) "%thread" [%logger{0}#%method] - %message%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <maxIndex>10</maxIndex>
+            <FileNamePattern>console.log.%i</FileNamePattern>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10Mb</maxFileSize>
+        </triggeringPolicy>
+    </appender>
+    <logger name="org.qubership.automation" level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+</configuration>

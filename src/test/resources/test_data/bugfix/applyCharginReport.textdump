@@ -1,0 +1,103 @@
+MTP 3 User Adaptation Layer
+    Version: Release 1 (1)
+    Reserved: 0x00
+    Message class: Transfer messages (1)
+    Message Type: Payload data (DATA) (1)
+    Message length: 99
+    Network appearance (0)
+        Parameter Tag: Network appearance (512)
+        Parameter length: 8
+        Network appearance: 0
+    Routing context (1 context)
+        Parameter Tag: Routing context (6)
+        Parameter length: 8
+        Routing context: 800
+    Protocol data (SS7 message of 67 bytes)
+        Parameter Tag: Protocol data (528)
+        Parameter length: 83
+        OPC: 800
+        DPC: 383
+        SI: SCCP (3)
+        NI: National network (2)
+        MP: 0
+        SLS: 21
+        [MTP3 equivalents]
+            [OPC: 800]
+            [DPC: 383]
+            [PC: 800]
+            [PC: 383]
+            [NI: 2]
+            [SLS: 21]
+[ITU_STANDARD]
+Signalling Connection Control Part
+    Message Type: Unitdata (0x09)
+    .... 0001 = Class: 0x1
+    1000 .... = Message handling: Return message on error (0x8)
+    Pointer to first Mandatory Variable parameter: 3
+    Pointer to second Mandatory Variable parameter: 12
+    Pointer to third Mandatory Variable parameter: 21
+    Called Party address (9 bytes)
+        Address Indicator
+            1... .... = Reserved for national use: 0x1
+            .0.. .... = Routing Indicator: Route on GT (0x0)
+            ..00 10.. = Global Title Indicator: Translation Type only (0x2)
+            .... ..1. = SubSystem Number Indicator: SSN present (0x1)
+            .... ...0 = Point Code Indicator: Point Code not present (0x0)
+        SubSystem Number: CAP (146)
+        [Linked to TCAP, TCAP SSN linked to CAMEL]
+        Global Title 0x2 (7 bytes)
+            Translation Type: 0x0a
+            0000 .... = Numbering Plan: Unknown (0x0)
+            .... 0010 = Encoding Scheme: BCD, even number of digits (0x2)
+            .000 0000 = Nature of Address Indicator: NAI unknown (0x00)
+            Called Party Digits: 151442405340
+                Called or Calling GT Digits: 151442405340
+                Number of Called Party Digits: 12
+	Calling Party address (9 bytes)
+		Address Indicator
+			1... .... = Reserved for national use: 0x1
+			.0.. .... = Routing Indicator: Route on GT (0x0)
+			..00 10.. = Global Title Indicator: Translation Type only (0x2)
+			.... ..1. = SubSystem Number Indicator: SSN present (0x1)
+			.... ...0 = Point Code Indicator: Point Code not present (0x0)
+		SubSystem Number: CAP (146)
+		[Linked to TCAP, TCAP SSN linked to CAMEL]
+		Global Title 0x2 (7 bytes)
+			Translation Type: 0x0a
+			0000 .... = Numbering Plan: Unknown (0x0)
+			.... 0010 = Encoding Scheme: BCD, even number of digits (0x2)
+			.000 0000 = Nature of Address Indicator: NAI unknown (0x00)
+			Calling Party Digits: 151442405140
+				Called or Calling GT Digits: 151442405140
+				Number of Calling Party Digits: 12
+Transaction Capabilities Application Part
+    continue
+        [Transaction Id: 00000007]
+        Source Transaction ID
+            otid: 00000007
+        [Transaction Id: 61011001]
+        Destination Transaction ID
+            dtid: 61011001
+        components: 1 item
+            Component: invoke (1)
+                invoke
+                    invokeID: 2
+                    opCode: localValue (0)
+                        localValue: 36
+                    Parameter (0x04)
+                        Tag: 0x04
+                        Length: 13
+                    Data: a0
+Camel
+    invoke
+        invokeId: present (0)
+            present: 2
+        opcode: local (0)
+            local: applyChargingReport (36)
+        ApplyChargingReportArg: a00ba003810101a104800200b4
+            CAMEL-CAMEL_CallResult: timeDurationChargingResult (0)
+                timeDurationChargingResult
+                    partyToCharge: receivingSideID (1)
+                        receivingSideID: 01
+                    timeInformation: timeIfNoTariffSwitch (0)
+                        timeIfNoTariffSwitch: 180

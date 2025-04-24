@@ -1,0 +1,286 @@
+Frame 2: 302 bytes on wire (2416 bits), 302 bytes captured (2416 bits)
+Ethernet II, Src: Oracle_85:05:9e (00:10:e0:85:05:9e), Dst: Cisco_c7:06:c0 (00:23:33:c7:06:c0)
+802.1Q Virtual LAN, PRI: 0, DEI: 0, ID: 1088
+Internet Protocol Version 4, Src: 127.0.0.3, Dst: 127.0.0.4
+Stream Control Transmission Protocol, Src Port: 11048 (11048), Dst Port: 2905 (2905)
+MTP 3 User Adaptation Layer
+    Version: Release 1 (1)
+    Reserved: 0x00
+    Message class: Transfer messages (1)
+    Message Type: Payload data (DATA) (1)
+    Message length: 236
+    Network appearance (8)
+        Parameter Tag: Network appearance (512)
+        Parameter length: 8
+        Network appearance: 8
+    Protocol data (SS7 message of 202 bytes)
+        Parameter Tag: Protocol data (528)
+        Parameter length: 218
+        OPC: 96274 (1-120-18)
+        DPC: 96368 (1-120-112)
+        SI: SCCP (3)
+        NI: National network (2)
+        MP: 0
+        SLS: 26
+        [MTP3 equivalents]
+            [OPC: 96274]
+            [DPC: 96368]
+            [PC: 96274]
+            [PC: 96368]
+            [NI: 2]
+            [SLS: 26]
+        Padding: 0000
+[ANSI_STANDARD]
+Signalling Connection Control Part
+    Message Type: Unitdata (0x09)
+    .... 0001 = Class: 0x1
+    0000 .... = Message handling: No special options (0x0)
+    Pointer to first Mandatory Variable parameter: 3
+    Pointer to second Mandatory Variable parameter: 12
+    Pointer to third Mandatory Variable parameter: 21
+    Called Party address (9 bytes)
+        Address Indicator
+            1... .... = National Indicator: Address coded to National standard (0x1)
+            .0.. .... = Routing Indicator: Route on GT (0x0)
+            ..00 10.. = Global Title Indicator: Translation Type only (0x2)
+            .... ..0. = Point Code Indicator: Point Code not present (0x0)
+            .... ...1 = SubSystem Number Indicator: SSN present (0x1)
+        SubSystem Number: CAP (146)
+        Global Title 0x2 (7 bytes)
+            Translation Type: 0x0a
+            Called Party Digits: 151442405140
+                Called or Calling GT Digits: 151442405140
+                Number of Called Party Digits: 12
+    Calling Party address (9 bytes)
+        Address Indicator
+            1... .... = National Indicator: Address coded to National standard (0x1)
+            .0.. .... = Routing Indicator: Route on GT (0x0)
+            ..00 10.. = Global Title Indicator: Translation Type only (0x2)
+            .... ..0. = Point Code Indicator: Point Code not present (0x0)
+            .... ...1 = SubSystem Number Indicator: SSN present (0x1)
+        SubSystem Number: CAP (146)
+        Global Title 0x2 (7 bytes)
+            Translation Type: 0x0a
+            Calling Party Digits: 151442405310
+                Called or Calling GT Digits: 151442405310
+                Number of Calling Party Digits: 12
+Transaction Capabilities Application Part
+    continue
+        Source Transaction ID
+            otid: 581f001c
+        Destination Transaction ID
+            dtid: f90f0108
+        oid: 0.0.17.773.1.1.1 (id-as-dialogue)
+        dialogueResponse
+            Padding: 7
+            protocol-version: 80 (version1)
+            application-context-name: 0.4.0.0.1.0.50.1 (CAP-v2-gsmSSF-to-gsmSCF-AC)
+            result: accepted (0)
+            result-source-diagnostic: dialogue-service-user (1)
+                dialogue-service-user: null (0)
+        components: 3 items
+            Component: invoke (1)
+                invoke
+                    invokeID: 1
+                    opCode: localValue (0)
+                        localValue: 23
+                    CONSTRUCTOR
+                        CONSTRUCTOR Tag
+                        Tag: 0x00
+                        Length: 60
+                        CONSTRUCTOR
+                            CONSTRUCTOR Tag
+                            Tag: 0x02
+                            Length: 58
+                            CONSTRUCTOR
+                                CONSTRUCTOR Tag
+                                Tag: 0x00
+                                Length: 6
+                                Parameter (0x00)
+                                    Tag: 0x00
+                                    Length: 1
+                                Data: 07
+                                Parameter (0x01)
+                                    Tag: 0x01
+                                    Length: 1
+                                Data: 01
+                            CONSTRUCTOR
+                                CONSTRUCTOR Tag
+                                Tag: 0x00
+                                Length: 11
+                                Parameter (0x00)
+                                    Tag: 0x00
+                                    Length: 1
+                                Data: 09
+                                Parameter (0x01)
+                                    Tag: 0x01
+                                    Length: 1
+                                Data: 00
+                                CONSTRUCTOR
+                                    CONSTRUCTOR Tag
+                                    Tag: 0x02
+                                    Length: 3
+                                    Parameter (0x00)
+                                        Tag: 0x00
+                                        Length: 1
+                                    Data: 01
+                            CONSTRUCTOR
+                                CONSTRUCTOR Tag
+                                Tag: 0x00
+                                Length: 11
+                                Parameter (0x00)
+                                    Tag: 0x00
+                                    Length: 1
+                                Data: 09
+                                Parameter (0x01)
+                                    Tag: 0x01
+                                    Length: 1
+                                Data: 00
+                                CONSTRUCTOR
+                                    CONSTRUCTOR Tag
+                                    Tag: 0x02
+                                    Length: 3
+                                    Parameter (0x00)
+                                        Tag: 0x00
+                                        Length: 1
+                                    Data: 02
+                            CONSTRUCTOR
+                                CONSTRUCTOR Tag
+                                Tag: 0x00
+                                Length: 6
+                                Parameter (0x00)
+                                    Tag: 0x00
+                                    Length: 1
+                                Data: 04
+                                Parameter (0x01)
+                                    Tag: 0x01
+                                    Length: 1
+                                Data: 01
+                            CONSTRUCTOR
+                                CONSTRUCTOR Tag
+                                Tag: 0x00
+                                Length: 6
+                                Parameter (0x00)
+                                    Tag: 0x00
+                                    Length: 1
+                                Data: 05
+                                Parameter (0x01)
+                                    Tag: 0x01
+                                    Length: 1
+                                Data: 01
+                            CONSTRUCTOR
+                                CONSTRUCTOR Tag
+                                Tag: 0x00
+                                Length: 6
+                                Parameter (0x00)
+                                    Tag: 0x00
+                                    Length: 1
+                                Data: 0a
+                                Parameter (0x01)
+                                    Tag: 0x01
+                                    Length: 1
+                                Data: 01
+            Component: invoke (1)
+                invoke
+                    invokeID: 2
+                    opCode: localValue (0)
+                        localValue: 35
+                    CONSTRUCTOR
+                        CONSTRUCTOR Tag
+                        Tag: 0x00
+                        Length: 13
+                        Parameter (0x00)
+                            Tag: 0x00
+                            Length: 6
+                        Data: a0
+                        CONSTRUCTOR
+                            CONSTRUCTOR Tag
+                            Tag: 0x02
+                            Length: 3
+                            Parameter (0x00)
+                                Tag: 0x00
+                                Length: 1
+                            Data: 01
+            Component: invoke (1)
+                invoke
+                    invokeID: 3
+                    opCode: localValue (0)
+                        localValue: 20
+                    CONSTRUCTOR
+                        CONSTRUCTOR Tag
+                        Tag: 0x00
+                        Length: 12
+                        CONSTRUCTOR
+                            CONSTRUCTOR Tag
+                            Tag: 0x02
+                            Length: 10
+                            Parameter (0x04)
+                                Tag: 0x04
+                                Length: 8
+                            Data: 84
+Camel-V2
+    invoke
+        invokeId: present (0)
+            present: 1
+        opcode: local (0)
+            local: requestReportBCSMEvent (23)
+        RequestReportBCSMEventArg
+            bcsmEvents: 6 items
+                BCSMEvent
+                    eventTypeBCSM: oAnswer (7)
+                    monitorMode: notifyAndContinue (1)
+                BCSMEvent
+                    eventTypeBCSM: oDisconnect (9)
+                    monitorMode: interrupted (0)
+                    legID: sendingSideID (0)
+                        sendingSideID: 01
+                BCSMEvent
+                    eventTypeBCSM: oDisconnect (9)
+                    monitorMode: interrupted (0)
+                    legID: sendingSideID (0)
+                        sendingSideID: 02
+                BCSMEvent
+                    eventTypeBCSM: routeSelectFailure (4)
+                    monitorMode: notifyAndContinue (1)
+                BCSMEvent
+                    eventTypeBCSM: oCalledPartyBusy (5)
+                    monitorMode: notifyAndContinue (1)
+                BCSMEvent
+                    eventTypeBCSM: oAbandon (10)
+                    monitorMode: notifyAndContinue (1)
+Camel-V2
+    invoke
+        invokeId: present (0)
+            present: 2
+        opcode: local (0)
+            local: applyCharging (35)
+        ApplyChargingArg
+            aChBillingChargingCharacteristics: a00480020708
+            partyToCharge: sendingSideID (0)
+                sendingSideID: 01
+Camel-V2
+    invoke
+        invokeId: present (0)
+            present: 3
+        opcode: local (0)
+            local: connect (20)
+        ConnectArg
+            destinationRoutingAddress: 1 item
+                CalledPartyNumber: 8490514183403309
+                    1... .... = Odd/even indicator: odd number of address signals
+                    .000 0100 = Nature of address indicator: international number (4)
+                    1... .... = INN indicator: routing to internal network number not allowed
+                    .001 .... = Numbering plan indicator: ISDN (Telephony) numbering plan (1)
+                    Called Party Number: 15143804339
+                        .... 0001 = Address signal digit: 1 (1)
+                        0101 .... = Address signal digit: 5 (5)
+                        .... 0001 = Address signal digit: 1 (1)
+                        0100 .... = Address signal digit: 4 (4)
+                        .... 0011 = Address signal digit: 3 (3)
+                        1000 .... = Address signal digit: 8 (8)
+                        .... 0000 = Address signal digit: 0 (0)
+                        0100 .... = Address signal digit: 4 (4)
+                        .... 0011 = Address signal digit: 3 (3)
+                        0011 .... = Address signal digit: 3 (3)
+                        .... 1001 = Address signal digit: 9 (9)
+                        E.164 Called party number digits: 15143804339

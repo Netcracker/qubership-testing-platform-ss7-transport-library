@@ -1,0 +1,84 @@
+MTP 3 User Adaptation Layer
+    Version: Release 1 (1)
+    Reserved: 0x00
+    Message class: Transfer messages (1)
+    Message Type: Payload data (DATA) (1)
+    Message length: 243
+    Network appearance (8)
+        Parameter Tag: Network appearance (512)
+        Parameter length: 8
+        Network appearance: 8
+    Routing context (1 context)
+        Parameter Tag: Routing context (6)
+        Parameter length: 8
+        Routing context: 162
+    Protocol data (SS7 message of 203 bytes)
+        Parameter Tag: Protocol data (528)
+        Parameter length: 219
+        OPC: 800
+        DPC: 383
+        SI: SCCP (3)
+        NI: National network (2)
+        MP: 0
+        SLS: 21
+        [MTP3 equivalents]
+            [OPC: 800]
+            [DPC: 4114]
+            [PC: 96274]
+            [PC: 96418]
+            [NI: 2]
+            [SLS: 21]
+        Padding: 00
+[ITU_STANDARD]
+Signalling Connection Control Part
+    Message Type: Unitdata (0x09)
+    .... 0001 = Class: 0x1
+    1000 .... = Message handling: Return message on error (0x8)
+    Pointer to first Mandatory Variable parameter: 3
+    Pointer to second Mandatory Variable parameter: 12
+    Pointer to third Mandatory Variable parameter: 21
+    Called Party address (9 bytes)
+        Address Indicator
+            1... .... = National Indicator: Address coded to National standard (0x1)
+            .0.. .... = Routing Indicator: Route on GT (0x0)
+            ..00 10.. = Global Title Indicator: Translation Type only (0x2)
+            .... ..0. = Point Code Indicator: Point Code not present (0x0)
+            .... ...1 = SubSystem Number Indicator: SSN present (0x1)
+        SubSystem Number: CAP (146)
+        Global Title 0x2 (7 bytes)
+            Translation Type: 0x0a
+            Called Party Digits: 151442405310
+                Called or Calling GT Digits: 151442405310
+                Number of Called Party Digits: 12
+    Calling Party address (9 bytes)
+        Address Indicator
+            1... .... = National Indicator: Address coded to National standard (0x1)
+            .0.. .... = Routing Indicator: Route on GT (0x0)
+            ..00 10.. = Global Title Indicator: Translation Type only (0x2)
+            .... ..0. = Point Code Indicator: Point Code not present (0x0)
+            .... ...1 = SubSystem Number Indicator: SSN present (0x1)
+        SubSystem Number: CAP (146)
+        Global Title 0x2 (7 bytes)
+            Translation Type: 0x0a
+            Calling Party Digits: 151442405140
+                Called or Calling GT Digits: 151442405140
+                Number of Calling Party Digits: 12
+Transaction Capabilities Application Part
+    continue
+        [Transaction Id: f90f0108]
+        Source Transaction ID
+            otid: f90f0108
+        [Transaction Id: 89001001]
+        Destination Transaction ID
+            dtid: 89001001
+        components: 1 item
+Camel
+    invoke
+        invokeId: present (0)
+            present: 1
+        opcode: local (0)
+            local: eventReportBCSM (24)
+        EventReportBCSMArg
+            eventTypeBCSM: oAnswer (7)
+            legID: receivingSideID (1)
+                receivingSideID: 02
