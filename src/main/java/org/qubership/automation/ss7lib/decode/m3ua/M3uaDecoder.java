@@ -35,9 +35,15 @@ public class M3uaDecoder implements Decoder<M3uaMessage> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(M3uaDecoder.class);
 
+    /**
+     * Decode M3UA part from buffer.
+     *
+     * @param buffer - ByteBuffer parameter to decode
+     * @return M3uaMessage decoded from ByteBuffer buffer.
+     */
     @Override
-    public M3uaMessage decode(ByteBuffer buffer) {
-        LOGGER.info("Staring parsing M3ua part", buffer);
+    public M3uaMessage decode(final ByteBuffer buffer) {
+        LOGGER.info("Starting parsing of M3ua part: {}", buffer);
         LOGGER.debug("parameters: {}", buffer.array());
         M3uaMessage message = new M3uaMessage();
         message.setVersion(buffer.get());
@@ -53,24 +59,24 @@ public class M3uaDecoder implements Decoder<M3uaMessage> {
         return message;
     }
 
-    private RoutingContext parseRoutingContext(ByteBuffer buffer) {
-        LOGGER.info("Staring parsing Routing Context");
+    private RoutingContext parseRoutingContext(final ByteBuffer buffer) {
+        LOGGER.info("Staring parsing of Routing Context");
         RoutingContext routingContext = new RoutingContext();
         short tagId = buffer.getShort();
         if (tagId != 6) {
-            LOGGER.info("Routing Context is not present in message. Tag Id: {}", tagId);
+            LOGGER.info("Routing Context is not present in the message. Tag Id: {}", tagId);
             buffer.position(buffer.position() - 2);
             return null;
         }
         routingContext.setParameterTag(ParameterTag.of(tagId));
         routingContext.setParameterLength(buffer.getShort());
         routingContext.setRoutingContext(buffer.getInt());
-        LOGGER.info("Routing Context successfully prased: {}", routingContext);
+        LOGGER.info("Routing Context successfully parsed: {}", routingContext);
         return routingContext;
     }
 
-    private ProtocolData parseProtocolData(ByteBuffer buffer) {
-        LOGGER.info("Staring parsing Protocol Data");
+    private ProtocolData parseProtocolData(final ByteBuffer buffer) {
+        LOGGER.info("Starting parsing Protocol Data");
         ProtocolData protocolData = new ProtocolData();
         protocolData.setParameterTag(ParameterTag.of(buffer.getShort()));
         protocolData.setParameterLength(buffer.getShort());
@@ -80,11 +86,11 @@ public class M3uaDecoder implements Decoder<M3uaMessage> {
         protocolData.setNi(buffer.get());
         protocolData.setMp(buffer.get());
         protocolData.setSls(buffer.get());
-        LOGGER.info("Protocol Data successfully parsedL :{}");
+        LOGGER.info("Protocol Data successfully parsed: {}", protocolData);
         return protocolData;
     }
 
-    private NetworkAppearance parseNetworkAppearance(ByteBuffer buffer) {
+    private NetworkAppearance parseNetworkAppearance(final ByteBuffer buffer) {
         NetworkAppearance networkAppearance = new NetworkAppearance();
         networkAppearance.setParameterTag(ParameterTag.of(buffer.getShort()));
         networkAppearance.setParameterLength(buffer.getShort());

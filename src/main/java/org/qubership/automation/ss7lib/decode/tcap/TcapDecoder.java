@@ -48,7 +48,7 @@ public class TcapDecoder implements Decoder<TcapMessage> {
     private static final Logger LOGGER = LoggerFactory.getLogger(TcapDecoder.class);
 
     @Override
-    public TcapMessage decode(ByteBuffer buffer) {
+    public TcapMessage decode(final ByteBuffer buffer) {
         LOGGER.info("Starting parsing of tcap part");
         TcapMessage message = new TcapMessage();
         message.setTotalLength(buffer.get());
@@ -71,9 +71,10 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         return message;
     }
 
-    private void parseCap(TcapMessage message, ByteBuffer buffer) {
-        byte flag = 0x0;
-        if (!buffer.hasRemaining() || (flag = buffer.get()) != 0x6c) {
+    private void parseCap(final TcapMessage message, final ByteBuffer buffer) {
+        boolean isBufferHasRemaining = buffer.hasRemaining();
+        byte flag = isBufferHasRemaining ? buffer.get() : 0x0;
+        if (!isBufferHasRemaining || flag != 0x6c) {
             LOGGER.warn("There is no CAP layer. Flag is: {}", Converter.bytesToHex(flag));
             return;
         }
@@ -94,7 +95,7 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         }
     }
 
-    private int getLength(ByteBuffer buffer) {
+    private int getLength(final ByteBuffer buffer) {
         int length = Byte.toUnsignedInt(buffer.get());
         if (length == 129) { //avoid flag 0x81
             length = Byte.toUnsignedInt(buffer.get());
@@ -102,7 +103,7 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         return length;
     }
 
-    private CapInvoke parseInvoke(ByteBuffer entry) {
+    private CapInvoke parseInvoke(final ByteBuffer entry) {
         CapInvoke invoke = new CapInvoke();
         LOGGER.debug("Present length: {}", entry.get());
         byte presentValue = entry.get();
@@ -124,17 +125,17 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         return invoke;
     }
 
-    private Dialogue parseDialog(ByteBuffer buffer) {
-        Dialogue dialogue = new Dialogue();
+    private Dialogue parseDialog(final ByteBuffer buffer) {
         byte[] header = new byte[2];
         buffer.get(header);
-        byte type = header[0];//[-96, 29, 97, 27] -
+        byte type = header[0]; // [-96, 29, 97, 27] -
         logDebugArray("Dialog header {}", header);
         if (type != Dialogue.DIALOGUE_FLAG) {
             LOGGER.info("No dialog is present in message. Record type: {}", type);
             buffer.position(buffer.position() - 2);
             return null;
         }
+        Dialogue dialogue = new Dialogue();
         dialogue.setDialogueType(EnumProvider.of(buffer.get(), DialogueType.class));
         dialogue.setTotalLength(buffer.get());
         dialogue.setMessageLength(buffer.get());
@@ -147,7 +148,7 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         return dialogue;
     }
 
-    private void paresSourceDiagnostic(ByteBuffer buffer, Dialogue dialogue) {
+    private void paresSourceDiagnostic(final ByteBuffer buffer, final Dialogue dialogue) {
         byte[] dst = new byte[4];
         buffer.get(dst);
         if (dst[0] != (byte) 0xa3) {
@@ -165,12 +166,11 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         while (servicesBuffer.hasRemaining()) {
             DialogServiceUser serviceUser = EnumProvider.of(servicesBuffer.get(), DialogServiceUser.class);
             LOGGER.info("User service parsed: {}", serviceUser.asPrintable());
-            sourceDiagnostic.getDialogServiceUser()
-                    .add(serviceUser);
+            sourceDiagnostic.getDialogServiceUser().add(serviceUser);
         }
     }
 
-    private void parseResult(ByteBuffer buffer, Dialogue dialogue) {
+    private void parseResult(final ByteBuffer buffer, final Dialogue dialogue) {
         byte dialogDiagnosticFlag = buffer.get();
         if (dialogDiagnosticFlag != (byte) 0xa2) {
             buffer.position(buffer.position() - 1);
@@ -182,12 +182,12 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         dialogue.setResult(EnumProvider.of(dst[dst.length - 1], Result.class));
     }
 
-    private void parseApplicationContextName(ByteBuffer buffer, Dialogue dialogue) {
+    private void parseApplicationContextName(final ByteBuffer buffer, final Dialogue dialogue) {
         ApplicationContextName applicationContextName = new ApplicationContextName();
         dialogue.setApplicationContextName(applicationContextName);
-        buffer.get();//Main type;
-        buffer.get();//Length;
-        buffer.get();//AppContextType type;
+        buffer.get(); // Main type;
+        buffer.get(); // Length;
+        buffer.get(); // AppContextType type;
         byte messageLength = buffer.get();
         applicationContextName.setMessageLength(messageLength);
         byte[] source = new byte[messageLength];
@@ -197,7 +197,7 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         applicationContextName.setMessage(Converter.bytesToDottedString(destination));
     }
 
-    private Oid parseOid(ByteBuffer buffer) {
+    private Oid parseOid(final ByteBuffer buffer) {
         byte oidFlag = buffer.get();
         if (oidFlag != 0x6b) {
             LOGGER.info("No OID is present in message. Flag is: {}", oidFlag);
@@ -214,26 +214,25 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         return oid;
     }
 
-    private void logDebugArray(String format, byte... array) {
+    private void logDebugArray(final String format, final byte... array) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(format, Converter.bytesToHex(array));
         }
     }
 
-    private void decodeOtherParams(ByteBuffer oidBuffer, StringBuilder result) {
+    private void decodeOtherParams(final ByteBuffer oidBuffer, final StringBuilder result) {
         result.append('.').append(Byte.toUnsignedInt(oidBuffer.get())).append('.')
                 .append(getMultipleData(oidBuffer));
         parseLastData(oidBuffer, result);
     }
 
-    private void parseLastData(ByteBuffer oidBuffer, StringBuilder result) {
+    private void parseLastData(final ByteBuffer oidBuffer, final StringBuilder result) {
         do {
-            result.append('.')
-                    .append(Byte.toUnsignedInt(oidBuffer.get()));
+            result.append('.').append(Byte.toUnsignedInt(oidBuffer.get()));
         } while (oidBuffer.hasRemaining());
     }
 
-    private String getMultipleData(ByteBuffer buffer) {
+    private String getMultipleData(final ByteBuffer buffer) {
         byte firstPart = buffer.get();
         byte secondPart = buffer.get();
         StringBuilder builder = new StringBuilder();
@@ -244,7 +243,7 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         return String.valueOf(Integer.parseInt(builder.toString(), 16));
     }
 
-    private void parsePart(StringBuilder builder, int input) {
+    private void parsePart(final StringBuilder builder, final int input) {
         byte result = (byte) (input & 0xf);
         builder.append(Converter.byteToHex(result));
     }
@@ -253,7 +252,7 @@ public class TcapDecoder implements Decoder<TcapMessage> {
             Read more about encoding
             https://msdn.microsoft.com/en-us/library/bb540809(v=vs.85).aspx
      */
-    private StringBuilder decodeTwoFirstNodes(ByteBuffer oidValue) {
+    private StringBuilder decodeTwoFirstNodes(final ByteBuffer oidValue) {
         StringBuilder result = new StringBuilder();
         Converter.DividedByte dividedByte = Converter.divideByteOnTwo(oidValue.get());
         byte firstTwoNodes = (byte) ((dividedByte.getLeft() / 40) - dividedByte.getRight());
@@ -262,21 +261,21 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         return result;
     }
 
-    private void resolvePrefix(ByteBuffer buffer) {
+    private void resolvePrefix(final ByteBuffer buffer) {
         buffer.position(buffer.position() - 1);
         byte[] dst = new byte[6];
         buffer.get(dst);
         LOGGER.info("Oid prefix: {}", Converter.bytesToHex(dst));
     }
 
-    private void parseTransactions(ByteBuffer buffer, TcapMessage message) {
+    private void parseTransactions(final ByteBuffer buffer, final TcapMessage message) {
         Transaction transaction = parseTransactionId(buffer);
         setTx(message, transaction);
         transaction = parseTransactionId(buffer);
         setTx(message, transaction);
     }
 
-    private void setTx(TcapMessage message, Transaction transaction) {
+    private void setTx(final TcapMessage message, final Transaction transaction) {
         if (transaction == null) {
             return;
         }
@@ -287,8 +286,7 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         }
     }
 
-    private Transaction parseTransactionId(ByteBuffer buffer) {
-        Transaction transaction = new Transaction();
+    private Transaction parseTransactionId(final ByteBuffer buffer) {
         byte type = buffer.get();
         if (!TransactionID.isTx(type)) {
             buffer.position(buffer.position() - 1);
@@ -297,6 +295,7 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         byte length = buffer.get();
         byte[] txId = new byte[length];
         buffer.get(txId);
+        Transaction transaction = new Transaction();
         transaction.setTransactionID(TransactionID.of(type));
         transaction.setLength(length);
         transaction.setId(Converter.bytesToHex(txId));

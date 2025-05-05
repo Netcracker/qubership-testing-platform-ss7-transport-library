@@ -29,10 +29,16 @@ import org.slf4j.LoggerFactory;
 public class DecoderFactory {
 
     private static final M3uaDecoder M3UA_DECODER = new M3uaDecoder();
-    private static final  SccpDecoder SCCP_DECODER = new SccpDecoder();
+    private static final SccpDecoder SCCP_DECODER = new SccpDecoder();
     private static final TcapDecoder TCAP_DECODER = new TcapDecoder();
 
-    public static FullMessage decode(ByteBuffer buffer) {
+    /**
+     * Decode ByteBuffer into FullMessage object.
+     *
+     * @param buffer - ByteBuffer to decode FullMessage from
+     * @return FullMessage object created and filled.
+     */
+    public static FullMessage decode(final ByteBuffer buffer) {
         FullMessage message = new FullMessage();
         try {
             message.setM3ua(M3UA_DECODER.decode(buffer));

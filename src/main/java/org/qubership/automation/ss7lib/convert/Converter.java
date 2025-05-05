@@ -26,7 +26,13 @@ public class Converter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Converter.class);
 
-    public static String bytesToCallPartyDigits(byte[] bcd) {
+    /**
+     * Convert byte[] into String, reversing high and low parts of each byte.
+     *
+     * @param bcd - byte[] value to be converted
+     * @return String result.
+     */
+    public static String bytesToCallPartyDigits(final byte[] bcd) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Convert value: {}", Arrays.toString(bcd));
         }
@@ -40,18 +46,24 @@ public class Converter {
         return sb.toString();
     }
 
-    private static String bytesToCallPartyDigits(byte bcd) {
+    private static String bytesToCallPartyDigits(final byte bcd) {
         StringBuilder sb = new StringBuilder();
         byte high = (byte) (bcd & 0xf0);
         high >>>= (byte) 4;
         high = (byte) (high & 0x0f);
         byte low = (byte) (bcd & 0x0f);
-        sb.append(low); //It's not mistake, to keep ZERO, we need revers value. [0x70] -> [07]
+        sb.append(low); //It's not mistake, to keep ZERO, we need to reverse value. [0x70] -> [07]
         sb.append(high);
         return sb.toString();
     }
 
-    public static String bytesToHex(byte... input) {
+    /**
+     * Convert vararg byte parameter into Hex String representation.
+     *
+     * @param input vararg byte parameter
+     * @return Hex String representation.
+     */
+    public static String bytesToHex(final byte... input) {
         StringBuilder builder = new StringBuilder();
         for (byte b : input) {
             String hex = Integer.toHexString(b & 0xff);
@@ -60,12 +72,24 @@ public class Converter {
         return builder.toString();
     }
 
-    public static String byteToHex(byte b) {
-        int i = b & 0xFF;
-        return Integer.toHexString(i);
+    /**
+     * Convert byte parameter value into its Hex String representation.
+     *
+     * @param byteValue byte parameter to be converted
+     * @return Hex String representation.
+     */
+    public static String byteToHex(final byte byteValue) {
+        int intValue = byteValue & 0xFF;
+        return Integer.toHexString(intValue);
     }
 
-    public static DividedByte divideByteOnTwo(byte byteToDivide) {
+    /**
+     * Divide byte parameter value to 2.
+     *
+     * @param byteToDivide byte value to divide
+     * @return DividedByte object containing result.
+     */
+    public static DividedByte divideByteOnTwo(final byte byteToDivide) {
         DividedByte dividedByte = new DividedByte();
         byte left = (byte) (byteToDivide >> 4 & 0xf);
         byte right = (byte) (byteToDivide & 0xf);
@@ -74,7 +98,13 @@ public class Converter {
         return dividedByte;
     }
 
-    public static String bytesToDottedString(byte[] dottedValue) {
+    /**
+     * Convert byte[] parameter value into String of corresponding characters with '.' after each.
+     *
+     * @param dottedValue - byte[] to be converted
+     * @return - String result.
+     */
+    public static String bytesToDottedString(final byte[] dottedValue) {
         StringBuilder builder = new StringBuilder(dottedValue.length);
         for (int index = 0; index < dottedValue.length; index++) {
             builder.append(dottedValue[index]);
@@ -106,14 +136,18 @@ public class Converter {
         }
     }
 
+    /**
+     * Convert String message of hex digits into byte[].
+     *
+     * @param message - String message of hex digits
+     * @return - byte array.
+     */
     public static byte[] hexToBytes(final String message) {
         int len = message.length();
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
-
             data[i / 2] = (byte) ((Character.digit(message.charAt(i), 16) << 4)
                     + Character.digit(message.charAt(i + 1), 16));
-
         }
         return data;
     }

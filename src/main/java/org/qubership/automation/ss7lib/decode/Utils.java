@@ -25,19 +25,19 @@ import org.qubership.automation.ss7lib.convert.Converter;
 import org.slf4j.LoggerFactory;
 
 public class Utils {
-    public static ByteBuffer subBuffer(int length, ByteBuffer buffer) {
+    public static ByteBuffer subBuffer(final int length, final ByteBuffer buffer) {
         byte[] dst = new byte[length];
         buffer.get(dst);
         return ByteBuffer.wrap(dst);
     }
 
-    public static ByteBuffer subBuffer(ByteBuffer buffer) {
+    public static ByteBuffer subBuffer(final ByteBuffer buffer) {
         byte[] dst = new byte[buffer.limit()];
         buffer.get(dst);
         return ByteBuffer.wrap(dst);
     }
 
-    public static void logTrace(String message, List<Byte> list, Class clazz) {
+    public static void logTrace(final String message, final List<Byte> list, final Class clazz) {
         StringBuilder builder = new StringBuilder();
         Iterator<Byte> iterator = list.iterator();
         int counter = 0;
@@ -49,12 +49,12 @@ public class Utils {
         logResult(message, clazz, builder);
     }
 
-    public static void logTrace(String message, Class clazz, byte... result) {
+    public static void logTrace(final String message, final Class clazz, final byte... result) {
         StringBuilder builder = getMessageAsHex(result);
         logResult(message, clazz, builder);
     }
 
-    private static StringBuilder getMessageAsHex(byte[] result) {
+    private static StringBuilder getMessageAsHex(final byte[] result) {
         StringBuilder builder = new StringBuilder();
         int counter = 0;
         for (int index = 0; index < result.length; index++) {
@@ -65,30 +65,33 @@ public class Utils {
         return builder;
     }
 
-    public static String getAsHex(byte[] result) {
+    public static String getAsHex(final byte[] result) {
         return getMessageAsHex(result).toString();
     }
 
-    private static int buildMessage(StringBuilder builder, int counter, Byte next, boolean endCondition) {
+    private static int buildMessage(final StringBuilder builder,
+                                    final int counter,
+                                    final Byte next,
+                                    final boolean endCondition) {
+        int localCounter = counter;
         if (counter == 8) {
             builder.append(' ');
-        }
-        if (counter == 16) {
-            counter = 0;
+        } else if (counter == 16) {
+            localCounter = 0;
             builder.append('\n');
         }
         builder.append(Converter.bytesToHex(next));
         if (endCondition) {
             builder.append(' ');
         }
-        return counter;
+        return localCounter;
     }
 
-    private static void logResult(String message, Class clazz, StringBuilder builder) {
+    private static void logResult(final String message, final Class clazz, final StringBuilder builder) {
         LoggerFactory.getLogger(clazz).info(message, builder.toString());
     }
 
-    public static ByteBuffer calculateSize(ByteBuffer buffer) {
+    public static ByteBuffer calculateSize(final ByteBuffer buffer) {
         byte[] array = buffer.array();
         ByteBuffer result = ByteBuffer.allocate(array.length); /*chunks*/
         boolean isSizeSet = false;

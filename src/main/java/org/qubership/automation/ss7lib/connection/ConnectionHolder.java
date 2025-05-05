@@ -44,6 +44,8 @@ public class ConnectionHolder {
     private static final ConnectionHolder SS_7_CONNECTION = new ConnectionHolder();
     private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionHolder.class);
     private static final String HOSTS = Config.getString("ss7.listen.hosts");
+    private static final int BUFFER_ALLOCATION_SIZE = 640;
+    private static final long THREAD_INTERRUPT_WAIT_TIME_MILLIS = 500L;
     private SctpChannel socketChannel;
     private final MessageProcessor messageProcessor = new MessageProcessor();
     private final ConnectionProcessor connectionProcessor = new ConnectionProcessor();
@@ -52,23 +54,32 @@ public class ConnectionHolder {
     private SctpServerChannel serverChannel;
     private boolean isReady = false;
 
+    /**
+     * Get the instance of ConnectionHolder.
+     *
+     * @return instance of ConnectionHolder.
+     */
     public static ConnectionHolder getInstance() {
         return SS_7_CONNECTION;
     }
 
+    /**
+     * Establish connection on port given.
+     *
+     * @param port port number to listen
+     * @throws IOException if exception is faced while connection establishing.
+     */
     public void acceptConnection(int port) throws IOException {
         List<String> hosts = Splitter.on(',').splitToList(HOSTS);
         LOGGER.info("Start listening addresses: {}", hosts);
-        /*SCTP Server
-        Create a socket address in the current machine at port */
+        /* SCTP Server: Create a socket address in the current machine at port */
         Iterator<String> iterator = hosts.iterator();
         if (!iterator.hasNext()) {
             throw new IllegalStateException("No ip addresses to bind is specified");
         }
         SocketAddress serverSocketAddress = new InetSocketAddress(iterator.next(), port);
         LOGGER.info("Create and bind for sctp address");
-        /*Open a server channel
-        Bind the channel's socket to the server in the current machine at port */
+        /* Open a server channel; Bind the channel's socket to the server in the current machine at port */
         bindAddresses(iterator, serverSocketAddress);
         Set<SocketAddress> addresses = serverChannel.getAllLocalAddresses();
         for (SocketAddress address : addresses) {
@@ -85,7 +96,8 @@ public class ConnectionHolder {
                 socketChannel.association());
     }
 
-    private void bindAddresses(Iterator<String> hosts, SocketAddress serverSocketAddress) throws IOException {
+    private void bindAddresses(final Iterator<String> hosts,
+                               final SocketAddress serverSocketAddress) throws IOException {
         if (serverChannel == null) {
             serverChannel = SctpServerChannel.open().bind(serverSocketAddress);
             while (hosts.hasNext()) {
@@ -97,6 +109,11 @@ public class ConnectionHolder {
         LOGGER.info("address bind process finished successfully");
     }
 
+    /**
+     * Create and start thread of requests listener.
+     *
+     * @return thread of requests listener.
+     */
     public Thread runMainLoop() {
         thread = new Thread(() -> {
             LOGGER.info("Start listening requests from tango");
@@ -113,12 +130,15 @@ public class ConnectionHolder {
         return thread;
     }
 
+    /**
+     * Interrupt thread which executes main listener loop.
+     */
     public void stopMainLoop() {
         thread.interrupt();
         if (thread != null) {
-            LOGGER.info("Wait answer before stop MainLoop, 60sec");
+            LOGGER.info("Wait answer before stop MainLoop, {} millis", THREAD_INTERRUPT_WAIT_TIME_MILLIS);
             try {
-                thread.join(500);//wait thread answer x seconds
+                thread.join(THREAD_INTERRUPT_WAIT_TIME_MILLIS); // wait thread answer
             } catch (Exception e) {
                 LOGGER.error("Failed interrupt thread", e);
             }
@@ -129,10 +149,10 @@ public class ConnectionHolder {
         while (!Thread.interrupted()) {
             try {
                 LOGGER.info("start receiveAndProcessMessages");
-                ByteBuffer buffer = ByteBuffer.allocate(640);
-                MessageInfo messageInfo = socketChannel.receive(buffer, null, null);
+                ByteBuffer buffer = ByteBuffer.allocate(BUFFER_ALLOCATION_SIZE);
+                MessageInfo messageReceived = socketChannel.receive(buffer, null, null);
                 if (this.messageInfo == null) {
-                    this.messageInfo = messageInfo;
+                    this.messageInfo = messageReceived;
                 }
                 buffer.flip();
                 ByteBuffer data = Utils.subBuffer(buffer.limit(), buffer);
@@ -151,26 +171,43 @@ public class ConnectionHolder {
         }
     }
 
-
-    public void send(ByteBuffer buffer) {
+    /**
+     * Send byte buffer via the socketChannel.
+     *
+     * @param buffer - byte buffer to send.
+     */
+    public void send(final ByteBuffer buffer) {
         try {
             if (socketChannel == null) {
                 throw new IllegalStateException("Connection is not established yet");
             }
             socketChannel.send(buffer, messageInfo);
         } catch (IOException e) {
-            LOGGER.error("Unable to send byte data: \n" + Utils.getAsHex(buffer.array()), e);
+            LOGGER.error("Unable to send byte data: \n{}", Utils.getAsHex(buffer.array()), e);
         }
     }
 
+    /**
+     * @return isReady field value.
+     */
     public boolean isReady() {
         return isReady;
     }
 
-    public void setReady(boolean ready) {
+    /**
+     * Set isReady field according to parameter value.
+     *
+     * @param ready true or false state to set.
+     */
+    public void setReady(final boolean ready) {
         isReady = ready;
     }
 
+    /**
+     * Check if this socketChannel is connected.
+     *
+     * @return true if this socketChannel is not null, otherwise false.
+     */
     public boolean isConnected() {
         return !Objects.isNull(socketChannel);
     }

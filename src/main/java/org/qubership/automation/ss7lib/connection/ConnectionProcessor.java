@@ -34,32 +34,34 @@ import org.slf4j.LoggerFactory;
 public class ConnectionProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionProcessor.class);
+    private static final ByteBuffer M3UA_ACK_MESSAGE = ByteBuffer.wrap(new byte[]{
+            0x01, 0x00, 0x02, 0x02, /*version, reserved, msgClass, msgType*/
+            0x00, 0x00, 0x00, 0x18, /*length*/
+            0x02, 0x00, /*Parameter Tag: Network appearance (512)*/
+            0x00, 0x08, /*length*/ 0x00, 0x00, 0x00, 0x08, /*Network appearance: 0*/
+            0x00, 0x12, /*Parameter Tag: Affected point code (18)*/
+            0x00, 0x08, /*Parameter length: 8*/ 0x00, /*Mask: 0*/
+            0x00, 0x03, 0x20 /*Affected point code: (800)*/});
 
-    public void prepareConnection(ByteBuffer data) {
-        LOGGER.info("Buf limit " + data.limit() + " left=" + data.remaining() + "pos=" + data.position());
-        byte version = data.get();// position 0
-        data.get(); // pass reserved value; position 1
-        byte msgClass = data.get();//data[M3UA_MSG_CLASS_IDX]; position 2
-        byte msgType = data.get();//data[M3UA_MSG_TYPE_IDX]; position 3
-        int msgLen = data.getInt();//data[M3UA_LENGTH_IDX]; position 4
-
+    public void prepareConnection(final ByteBuffer data) {
+        LOGGER.info("Buf limit {} left={} pos={}", data.limit(), data.remaining(), data.position());
+        byte version = data.get();  // position 0
+        data.get();                 // pass reserved value; position 1
+        byte msgClass = data.get(); // data[M3UA_MSG_CLASS_IDX]; position 2
+        byte msgType = data.get();  // data[M3UA_MSG_TYPE_IDX]; position 3
+        int msgLen = data.getInt(); // data[M3UA_LENGTH_IDX]; position 4
 
         switch (msgClass) {
             case M3UA_SSNM_MSG:
-                LOGGER.info("M3UA MGMT is received, type=" + msgType);
+                LOGGER.info("M3UA SSNM is received, type={}", msgType);
                 if (msgType == M3UA_SSNM_DAUD) {
                     // we shall send DAVA
-                    ByteBuffer message = ByteBuffer.wrap(new byte[]{0x01, 0x00, 0x02, 0x02, /*version, reserved, msgClass, msgType*/
-                            0x00, 0x00, 0x00, 0x18, /*length*/
-                            0x02, 0x00, /*Parameter Tag: Network appearance (512)*/ 0x00, 0x08, /*length*/ 0x00, 0x00, 0x00, 0x08, /*Network appearance: 0*/
-                            0x00, 0x12, /*Parameter Tag: Affected point code (18)*/ 0x00, 0x08, /*Parameter length: 8*/ 0x00, /*Mask: 0*/
-                            0x00, 0x03, 0x20 /*Affected point code: 800)*/});
-                    ConnectionHolder.getInstance().send(message);
+                    ConnectionHolder.getInstance().send(M3UA_ACK_MESSAGE);
                     ConnectionHolder.getInstance().setReady(true);
                 }
                 break;
             case M3UA_MGMT_MSG:
-                LOGGER.info("M3UA MGMT is received, type=" + msgType);
+                LOGGER.info("M3UA MGMT is received, type={}", msgType);
                 if (msgType == M3UA_ASPSM_ASPUP) {
                     short tag = data.getShort();
                     short length = data.getShort();
@@ -67,17 +69,12 @@ public class ConnectionProcessor {
                     short info = data.getShort();
                     if (info == 3) {
                         // we shall send UP Ack back
-                        ByteBuffer message = ByteBuffer.wrap(new byte[]{0x01, 0x00, 0x02, 0x02, /*version, reserved, msgClass, msgType*/
-                                0x00, 0x00, 0x00, 0x18, /*length*/
-                                0x02, 0x00, /*Parameter Tag: Network appearance (512)*/ 0x00, 0x08, /*length*/ 0x00, 0x00, 0x00, 0x08, /*Network appearance: 0*/
-                                0x00, 0x12, /*Parameter Tag: Affected point code (18)*/ 0x00, 0x08, /*Parameter length: 8*/ 0x00, /*Mask: 0*/
-                                0x00, 0x03, 0x20 /*Affected point code: 800)*/});
-                        ConnectionHolder.getInstance().send(message);
+                        ConnectionHolder.getInstance().send(M3UA_ACK_MESSAGE);
                     }
                 }
                 break;
             case M3UA_ASPSM_MSG:
-                LOGGER.info("M3UA ASPSM is received, type=" + msgType);
+                LOGGER.info("M3UA ASPSM is received, type={}", msgType);
                 if (msgType == M3UA_ASPSM_ASPUP) {
                     // we shall send UP Ack back
                     ByteBuffer message = ByteBuffer.wrap(new byte[]{0x01, 0x00, 0x03, 0x04, 0x00, 0x00, 0x00, 0x08});
@@ -89,16 +86,15 @@ public class ConnectionProcessor {
                 }
                 break;
             case M3UA_ASPTM_MSG:
-                LOGGER.info("M3UA ASPTM is received, type=" + msgType);
+                LOGGER.info("M3UA ASPTM is received, type={}", msgType);
                 if (msgType == M3UA_ASPTM_ASPAC) {
                     ByteBuffer message = ByteBuffer.wrap(new byte[]{0x01, 0x00, 0x04, 0x03, 0x00, 0x00, 0x00, 0x08});
                     ConnectionHolder.getInstance().send(message);
                 }
                 break;
             default:
-                LOGGER.info("Unknown msg is received (class=" + msgClass + ", type=" + msgType + ")");
+                LOGGER.info("Unknown msg is received (class={}, type={})", msgClass, msgType);
         }
     }
-
 
 }

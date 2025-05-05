@@ -32,11 +32,15 @@ public class MessageProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageProcessor.class);
 
-    public void process(ByteBuffer buffer) {
+    /**
+     * Decode buffer, then apply gson.toJson to decoded message, then set response of ResponseHandler to the result.
+     *
+     * @param buffer - byte buffer to decode and process via Gson.
+     */
+    public void process(final ByteBuffer buffer) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        FullMessage message;
         LOGGER.info("Start decoding message");
-        message = DecoderFactory.decode(buffer);
+        FullMessage message = DecoderFactory.decode(buffer);
         String tx = "error";
         if (message.getTcap() != null) {
             tx = message.getTcap().getDestinationTransaction().getId();
