@@ -28,12 +28,14 @@ import static org.qubership.automation.ss7lib.model.SS7PropertiesPojo.M3UA_SSNM_
 
 import java.nio.ByteBuffer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ConnectionProcessor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionProcessor.class);
+    /**
+     * Response to send in case msgType is M3UA_SSNM_DAUD or M3UA_ASPSM_ASPUP (with info == 3).
+     */
     private static final ByteBuffer M3UA_ACK_MESSAGE = ByteBuffer.wrap(new byte[]{
             0x01, 0x00, 0x02, 0x02, /*version, reserved, msgClass, msgType*/
             0x00, 0x00, 0x00, 0x18, /*length*/
@@ -43,17 +45,23 @@ public class ConnectionProcessor {
             0x00, 0x08, /*Parameter length: 8*/ 0x00, /*Mask: 0*/
             0x00, 0x03, 0x20 /*Affected point code: (800)*/});
 
+    /**
+     * Send responses according to management message received.
+     *
+     * @param data - ByteBuffer containing received message.
+     */
     public void prepareConnection(final ByteBuffer data) {
-        LOGGER.info("Buf limit {} left={} pos={}", data.limit(), data.remaining(), data.position());
+        log.info("Buf limit {} left={} pos={}", data.limit(), data.remaining(), data.position());
         byte version = data.get();  // position 0
         data.get();                 // pass reserved value; position 1
         byte msgClass = data.get(); // data[M3UA_MSG_CLASS_IDX]; position 2
         byte msgType = data.get();  // data[M3UA_MSG_TYPE_IDX]; position 3
         int msgLen = data.getInt(); // data[M3UA_LENGTH_IDX]; position 4
+        log.debug("Version: {}, msgClass: {}, msgType: {}, msgLen: {}", version, msgClass, msgType, msgLen);
 
         switch (msgClass) {
             case M3UA_SSNM_MSG:
-                LOGGER.info("M3UA SSNM is received, type={}", msgType);
+                log.info("M3UA SSNM is received, type={}", msgType);
                 if (msgType == M3UA_SSNM_DAUD) {
                     // we shall send DAVA
                     ConnectionHolder.getInstance().send(M3UA_ACK_MESSAGE);
@@ -61,12 +69,13 @@ public class ConnectionProcessor {
                 }
                 break;
             case M3UA_MGMT_MSG:
-                LOGGER.info("M3UA MGMT is received, type={}", msgType);
+                log.info("M3UA MGMT is received, type={}", msgType);
                 if (msgType == M3UA_ASPSM_ASPUP) {
                     short tag = data.getShort();
                     short length = data.getShort();
                     short type = data.getShort();
                     short info = data.getShort();
+                    log.debug("Tag: {}, length: {}, type: {}, info: {}", tag, length, type, info);
                     if (info == 3) {
                         // we shall send UP Ack back
                         ConnectionHolder.getInstance().send(M3UA_ACK_MESSAGE);
@@ -74,26 +83,26 @@ public class ConnectionProcessor {
                 }
                 break;
             case M3UA_ASPSM_MSG:
-                LOGGER.info("M3UA ASPSM is received, type={}", msgType);
+                log.info("M3UA ASPSM is received, type={}", msgType);
                 if (msgType == M3UA_ASPSM_ASPUP) {
                     // we shall send UP Ack back
                     ByteBuffer message = ByteBuffer.wrap(new byte[]{0x01, 0x00, 0x03, 0x04, 0x00, 0x00, 0x00, 0x08});
                     ConnectionHolder.getInstance().send(message);
                 }
                 if (msgType == M3UA_ASPSM_BEAT) {
-                    LOGGER.info("BEAT is received");
+                    log.info("BEAT is received");
                     // we shall send UP Ack back
                 }
                 break;
             case M3UA_ASPTM_MSG:
-                LOGGER.info("M3UA ASPTM is received, type={}", msgType);
+                log.info("M3UA ASPTM is received, type={}", msgType);
                 if (msgType == M3UA_ASPTM_ASPAC) {
                     ByteBuffer message = ByteBuffer.wrap(new byte[]{0x01, 0x00, 0x04, 0x03, 0x00, 0x00, 0x00, 0x08});
                     ConnectionHolder.getInstance().send(message);
                 }
                 break;
             default:
-                LOGGER.info("Unknown msg is received (class={}, type={})", msgClass, msgType);
+                log.info("Unknown msg is received (class={}, type={})", msgClass, msgType);
         }
     }
 

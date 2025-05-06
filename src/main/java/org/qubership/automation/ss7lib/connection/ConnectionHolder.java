@@ -31,27 +31,71 @@ import java.util.Set;
 
 import org.qubership.automation.ss7lib.decode.Utils;
 import org.qubership.automation.ss7lib.proxy.config.Config;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Splitter;
 import com.sun.nio.sctp.MessageInfo;
 import com.sun.nio.sctp.SctpChannel;
 import com.sun.nio.sctp.SctpServerChannel;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ConnectionHolder {
 
+    /**
+     * Self-link to use outside via getInstance() method.
+     */
     private static final ConnectionHolder SS_7_CONNECTION = new ConnectionHolder();
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionHolder.class);
+
+    /**
+     * Hosts list to listen (names/addresses are split by ',').
+     */
     private static final String HOSTS = Config.getString("ss7.listen.hosts");
+
+    /**
+     * Size of buffer allocated to read received message.
+     */
     private static final int BUFFER_ALLOCATION_SIZE = 640;
+
+    /**
+     * Timeout how long to wait interrupted thread completion.
+     */
     private static final long THREAD_INTERRUPT_WAIT_TIME_MILLIS = 500L;
+
+    /**
+     * SCTP channel.
+     */
     private SctpChannel socketChannel;
+
+    /**
+     * Processor which performs decoding of received message and serializing it to json.
+     */
     private final MessageProcessor messageProcessor = new MessageProcessor();
+
+    /**
+     * Processor sending proper response according to the type of received message.
+     */
     private final ConnectionProcessor connectionProcessor = new ConnectionProcessor();
+
+    /**
+     * Object containing ancillary information about the received message.
+     */
     private MessageInfo messageInfo;
+
+    /**
+     * Thread which is created and started to execute main loop listening messages.
+     */
     private Thread thread;
+
+    /**
+     * Channel to SCTP server.
+     */
     private SctpServerChannel serverChannel;
+
+    /**
+     * Flag if Connection Holder instance is ready (true) or not.
+     */
+    @lombok.Setter
+    @lombok.Getter
     private boolean isReady = false;
 
     /**
@@ -69,29 +113,29 @@ public class ConnectionHolder {
      * @param port port number to listen
      * @throws IOException if exception is faced while connection establishing.
      */
-    public void acceptConnection(int port) throws IOException {
+    public void acceptConnection(final int port) throws IOException {
         List<String> hosts = Splitter.on(',').splitToList(HOSTS);
-        LOGGER.info("Start listening addresses: {}", hosts);
+        log.info("Start listening addresses: {}", hosts);
         /* SCTP Server: Create a socket address in the current machine at port */
         Iterator<String> iterator = hosts.iterator();
         if (!iterator.hasNext()) {
             throw new IllegalStateException("No ip addresses to bind is specified");
         }
         SocketAddress serverSocketAddress = new InetSocketAddress(iterator.next(), port);
-        LOGGER.info("Create and bind for sctp address");
+        log.info("Create and bind for sctp address");
         /* Open a server channel; Bind the channel's socket to the server in the current machine at port */
         bindAddresses(iterator, serverSocketAddress);
         Set<SocketAddress> addresses = serverChannel.getAllLocalAddresses();
         for (SocketAddress address : addresses) {
-            LOGGER.info("Started listening: {}", address.toString());
+            log.info("Started listening: {}", address.toString());
         }
 
         socketChannel = serverChannel.accept();
         if (socketChannel == null) {
-            LOGGER.info("Timeout: nobody connected =(");
+            log.info("Timeout: nobody connected =(");
             return;
         }
-        LOGGER.info("Remote address: {}. Association '{}'",
+        log.info("Remote address: {}. Association '{}'",
                 socketChannel.getRemoteAddresses(),
                 socketChannel.association());
     }
@@ -102,11 +146,11 @@ public class ConnectionHolder {
             serverChannel = SctpServerChannel.open().bind(serverSocketAddress);
             while (hosts.hasNext()) {
                 InetAddress inetAddress = Inet4Address.getByName(hosts.next());
-                LOGGER.info("Trying to bind address: {}", inetAddress);
+                log.info("Trying to bind address: {}", inetAddress);
                 serverChannel.bindAddress(inetAddress);
             }
         }
-        LOGGER.info("address bind process finished successfully");
+        log.info("address bind process finished successfully");
     }
 
     /**
@@ -116,17 +160,17 @@ public class ConnectionHolder {
      */
     public Thread runMainLoop() {
         thread = new Thread(() -> {
-            LOGGER.info("Start listening requests from tango");
+            log.info("Start listening requests from tango");
             try {
                 receiveAndProcessMessages();
             } catch (Throwable e) {
-                LOGGER.error("Unable to receive message", e);
+                log.error("Unable to receive message", e);
             }
         });
         thread.setName("SCTP-Thread");
-        thread.setUncaughtExceptionHandler((t, e) -> LOGGER.error("SCTP Thread is dead, please restart it.", e));
+        thread.setUncaughtExceptionHandler((t, e) -> log.error("SCTP Thread is dead, please restart it.", e));
         thread.start();
-        LOGGER.info("Request listener is successfully started");
+        log.info("Request listener is successfully started");
         return thread;
     }
 
@@ -136,11 +180,11 @@ public class ConnectionHolder {
     public void stopMainLoop() {
         thread.interrupt();
         if (thread != null) {
-            LOGGER.info("Wait answer before stop MainLoop, {} millis", THREAD_INTERRUPT_WAIT_TIME_MILLIS);
+            log.info("Wait answer before stop MainLoop, {} millis", THREAD_INTERRUPT_WAIT_TIME_MILLIS);
             try {
                 thread.join(THREAD_INTERRUPT_WAIT_TIME_MILLIS); // wait thread answer
             } catch (Exception e) {
-                LOGGER.error("Failed interrupt thread", e);
+                log.error("Failed to interrupt thread", e);
             }
         }
     }
@@ -148,7 +192,7 @@ public class ConnectionHolder {
     private void receiveAndProcessMessages() {
         while (!Thread.interrupted()) {
             try {
-                LOGGER.info("start receiveAndProcessMessages");
+                log.info("start receiveAndProcessMessages");
                 ByteBuffer buffer = ByteBuffer.allocate(BUFFER_ALLOCATION_SIZE);
                 MessageInfo messageReceived = socketChannel.receive(buffer, null, null);
                 if (this.messageInfo == null) {
@@ -163,10 +207,10 @@ public class ConnectionHolder {
                     connectionProcessor.prepareConnection(data);
                 }
             } catch (BufferUnderflowException ex) {
-                LOGGER.info("Failed processing SS7 call", ex);
+                log.info("Failed processing SS7 call", ex);
                 break;
             } catch (Exception e) {
-                LOGGER.info("Failed processing SS7 call", e);
+                log.info("Failed processing SS7 call", e);
             }
         }
     }
@@ -183,24 +227,8 @@ public class ConnectionHolder {
             }
             socketChannel.send(buffer, messageInfo);
         } catch (IOException e) {
-            LOGGER.error("Unable to send byte data: \n{}", Utils.getAsHex(buffer.array()), e);
+            log.error("Unable to send byte data: \n{}", Utils.getAsHex(buffer.array()), e);
         }
-    }
-
-    /**
-     * @return isReady field value.
-     */
-    public boolean isReady() {
-        return isReady;
-    }
-
-    /**
-     * Set isReady field according to parameter value.
-     *
-     * @param ready true or false state to set.
-     */
-    public void setReady(final boolean ready) {
-        isReady = ready;
     }
 
     /**

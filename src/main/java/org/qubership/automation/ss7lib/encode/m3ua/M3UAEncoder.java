@@ -17,11 +17,11 @@
 
 package org.qubership.automation.ss7lib.encode.m3ua;
 
-
 import java.util.ArrayList;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.qubership.automation.ss7lib.decode.Utils;
 import org.qubership.automation.ss7lib.encode.AbstractEncoder;
@@ -30,32 +30,35 @@ import org.qubership.automation.ss7lib.model.M3uaMessage;
 import org.qubership.automation.ss7lib.model.sub.m3ua.NetworkAppearance;
 import org.qubership.automation.ss7lib.model.sub.m3ua.ProtocolData;
 import org.qubership.automation.ss7lib.model.sub.m3ua.RoutingContext;
+import org.qubership.automation.ss7lib.model.type.ParameterTag;
 import org.qubership.automation.ss7lib.model.type.Standard;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class M3UAEncoder extends AbstractEncoder<M3uaMessage> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(M3UAEncoder.class);
-
-
+    /**
+     * Encode message as M3uaMessage into byte[].
+     *
+     * @param abstractMessage message to encode
+     * @return byte[] result of encoding of source message as M3uaMessage.
+     */
     @Override
     public byte[] encode(@Nonnull AbstractMessage abstractMessage) {
         M3uaMessage pojo = (M3uaMessage) abstractMessage;
-        LOGGER.info("Start M3UA message encode: {}", pojo);
-        LOGGER.info("Encode message: {}", pojo);
+        log.info("Start M3UA message encode: {}", pojo);
         ArrayList<Byte> bytes = Lists.newArrayList();
-        LOGGER.debug("Version: {}", pojo.getVersion());
+        log.debug("Version: {}", pojo.getVersion());
         bytes.add(pojo.getVersion());
-        LOGGER.debug("Reserved: {}", pojo.getReserved());
+        log.debug("Reserved: {}", pojo.getReserved());
         bytes.add(pojo.getReserved());
-        LOGGER.debug("MessageClass: {}", pojo.getMessageClass());
+        log.debug("MessageClass: {}", pojo.getMessageClass());
         bytes.add(pojo.getMessageClass().getId());
-        LOGGER.debug("MessageType: {}", pojo.getMessageType());
+        log.debug("MessageType: {}", pojo.getMessageType());
         bytes.add(pojo.getMessageType().getId());
-        LOGGER.debug("MessageLength: {}", pojo.getMessageLength());
+        log.debug("MessageLength: {}", pojo.getMessageLength());
         bytes.addAll(asList(intToBytes(pojo.getMessageLength().intValue())));
         encodeSUB(bytes, pojo);
         byte[] result = convertListToArray(bytes);
@@ -65,53 +68,53 @@ public class M3UAEncoder extends AbstractEncoder<M3uaMessage> {
 
     private void encodeSUB(@Nonnull ArrayList<Byte> bytes, @Nonnull M3uaMessage pojo) {
         if (Objects.nonNull(pojo.getNetworkAppearance())) {
-            LOGGER.debug("Start NetworkAppearance for M3UA: ");
-            encodeNA(bytes, pojo.getNetworkAppearance());
+            log.debug("Start NetworkAppearance for M3UA: ");
+            encodeNetworkAppearance(bytes, pojo.getNetworkAppearance());
         }
         if (Objects.nonNull(pojo.getRoutingContext())) {
-            LOGGER.debug("Start RoutingContext for M3UA: ");
-            encodeRC(bytes, pojo.getRoutingContext());
+            log.debug("Start RoutingContext for M3UA: ");
+            encodeRoutingContext(bytes, pojo.getRoutingContext());
         }
         if (Objects.nonNull(pojo.getProtocolData())) {
-            LOGGER.debug("Start ProtocolData for M3UA: ");
-            encodePD(bytes, pojo.getProtocolData(), pojo.getStandard());
+            log.debug("Start ProtocolData for M3UA: ");
+            encodeProtocolData(bytes, pojo.getProtocolData(), pojo.getStandard());
         }
     }
 
-    private void encodeNA(@Nonnull ArrayList<Byte> bytes, @Nonnull NetworkAppearance pojo) {
-        LOGGER.debug("ParameterTag: {}", pojo.getParameterTag());
-        bytes.addAll(asList(pojo.getParameterTag().getCode()));
-        LOGGER.debug("ParameterLength: {}", pojo.getParameterLength());
-        bytes.addAll(asList(shortToBytes(pojo.getParameterLength())));
-        LOGGER.debug("NetworkAppearance: {}", pojo.getNetworkAppearance());
-        bytes.addAll(asList(intToBytes(pojo.getNetworkAppearance())));
+    private void encodeCommonPartOfM3UA(@Nonnull ArrayList<Byte> bytes,
+                                        ParameterTag parameterTag,
+                                        short parameterLength,
+                                        int extraProperty,
+                                        @Nullable String subClassName) {
+        log.debug("ParameterTag: {}, ParameterLength: {}", parameterTag, parameterLength);
+        bytes.addAll(asList(parameterTag.getCode()));
+        bytes.addAll(asList(shortToBytes(parameterLength)));
+        if (subClassName != null) {
+            log.debug("{}: {}", subClassName, extraProperty);
+            bytes.addAll(asList(intToBytes(extraProperty)));
+        }
     }
 
-    private void encodeRC(@Nonnull ArrayList<Byte> bytes, @Nonnull RoutingContext pojo) {
-        LOGGER.debug("ParameterTag: {}", pojo.getParameterTag());
-        bytes.addAll(asList(pojo.getParameterTag().getCode()));
-        LOGGER.debug("ParameterLength: {}", pojo.getParameterLength());
-        bytes.addAll(asList(shortToBytes(pojo.getParameterLength())));
-        LOGGER.debug("RoutingContext: {}", pojo.getRoutingContext());
-        bytes.addAll(asList(intToBytes(pojo.getRoutingContext())));
+    private void encodeNetworkAppearance(@Nonnull ArrayList<Byte> bytes, @Nonnull NetworkAppearance pojo) {
+        encodeCommonPartOfM3UA(bytes, pojo.getParameterTag(), pojo.getParameterLength(),
+                pojo.getNetworkAppearance(), "NetworkAppearance");
     }
 
-    private void encodePD(@Nonnull ArrayList<Byte> bytes, @Nonnull ProtocolData pojo, Standard standard) {
-        LOGGER.debug("ParameterTag: {}", pojo.getParameterTag());
-        bytes.addAll(asList((pojo.getParameterTag().getCode())));
-        LOGGER.debug("ParameterLength: {}", pojo.getParameterLength());
-        bytes.addAll(asList(shortToBytes(pojo.getParameterLength())));
-        LOGGER.debug("Opc: {}", pojo.getOpc());
-        bytes.addAll(asList(standard.encode(pojo.getOpc())));//new byte[]{0, 0, 3, 32}
-        LOGGER.debug("Dpc: {}", pojo.getDpc());
-        bytes.addAll(asList(standard.encode(pojo.getDpc())));//new byte[]{0, 0, 1, 127}
-        LOGGER.debug("Si: {}", pojo.getSi());
+    private void encodeRoutingContext(@Nonnull ArrayList<Byte> bytes, @Nonnull RoutingContext pojo) {
+        encodeCommonPartOfM3UA(bytes, pojo.getParameterTag(), pojo.getParameterLength(),
+                pojo.getRoutingContext(), "RoutingContext");
+    }
+
+    private void encodeProtocolData(@Nonnull ArrayList<Byte> bytes, @Nonnull ProtocolData pojo, Standard standard) {
+        encodeCommonPartOfM3UA(bytes, pojo.getParameterTag(), pojo.getParameterLength(),
+                0, null);
+        bytes.addAll(asList(standard.encode(pojo.getOpc()))); //new byte[]{0, 0, 3, 32}
+        bytes.addAll(asList(standard.encode(pojo.getDpc()))); //new byte[]{0, 0, 1, 127}
         bytes.add(pojo.getSi());
-        LOGGER.debug("Ni: {}", pojo.getNi());
         bytes.add(pojo.getNi());
-        LOGGER.debug("Mp: {}", pojo.getMp());
         bytes.add(pojo.getMp());
-        LOGGER.debug("Sls: {}", pojo.getSls());
         bytes.add(pojo.getSls());
+        log.debug("Opc: {}, Dpc: {}, Si: {}, Ni: {}, Mp: {}, Sls: {}", pojo.getOpc(), pojo.getDpc(), pojo.getSi(),
+                pojo.getNi(), pojo.getMp(), pojo.getSls());
     }
 }

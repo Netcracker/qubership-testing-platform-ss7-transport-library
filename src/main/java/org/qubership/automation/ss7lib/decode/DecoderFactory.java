@@ -24,12 +24,26 @@ import org.qubership.automation.ss7lib.decode.sccp.SccpDecoder;
 import org.qubership.automation.ss7lib.decode.tcap.TcapDecoder;
 import org.qubership.automation.ss7lib.model.ErrorMessage;
 import org.qubership.automation.ss7lib.model.FullMessage;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor")
 public class DecoderFactory {
 
+    /**
+     * Decoder of M3UA part of a message.
+     */
     private static final M3uaDecoder M3UA_DECODER = new M3uaDecoder();
+
+    /**
+     * Decoder of SCCP part of a message.
+     */
     private static final SccpDecoder SCCP_DECODER = new SccpDecoder();
+
+    /**
+     * Decoder of TCAP part of a message.
+     */
     private static final TcapDecoder TCAP_DECODER = new TcapDecoder();
 
     /**
@@ -45,7 +59,7 @@ public class DecoderFactory {
             message.setSccp(SCCP_DECODER.decode(buffer));
             message.setTcap(TCAP_DECODER.decode(buffer));
         } catch (Exception e) {
-            LoggerFactory.getLogger(DecoderFactory.class).error("Failed parsing data", e);
+            log.error("Failed parsing data", e);
             message.setErrorMessage(new ErrorMessage(e));
         }
         return message;

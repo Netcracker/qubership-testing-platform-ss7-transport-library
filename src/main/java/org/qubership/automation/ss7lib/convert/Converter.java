@@ -19,12 +19,12 @@ package org.qubership.automation.ss7lib.convert;
 
 import java.util.Arrays;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Converter {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Converter.class);
 
     /**
      * Convert byte[] into String, reversing high and low parts of each byte.
@@ -33,15 +33,15 @@ public class Converter {
      * @return String result.
      */
     public static String bytesToCallPartyDigits(final byte[] bcd) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Convert value: {}", Arrays.toString(bcd));
+        if (log.isDebugEnabled()) {
+            log.debug("Convert value: {}", Arrays.toString(bcd));
         }
         StringBuilder sb = new StringBuilder();
         for (byte aBcd : bcd) {
             sb.append(bytesToCallPartyDigits(aBcd));
         }
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Result: {}", sb);
+        if (log.isDebugEnabled()) {
+            log.debug("Result: {}", sb);
         }
         return sb.toString();
     }
@@ -115,25 +115,11 @@ public class Converter {
         return builder.toString();
     }
 
+    @Setter
+    @Getter
     public static class DividedByte {
         private byte left;
         private byte right;
-
-        public byte getLeft() {
-            return left;
-        }
-
-        public void setLeft(byte left) {
-            this.left = left;
-        }
-
-        public byte getRight() {
-            return right;
-        }
-
-        public void setRight(byte right) {
-            this.right = right;
-        }
     }
 
     /**

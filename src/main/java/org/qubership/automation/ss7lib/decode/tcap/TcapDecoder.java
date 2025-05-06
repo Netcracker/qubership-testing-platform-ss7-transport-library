@@ -40,34 +40,38 @@ import org.qubership.automation.ss7lib.model.type.TransactionID;
 import org.qubership.automation.ss7lib.model.type.dialog.DialogServiceUser;
 import org.qubership.automation.ss7lib.model.type.dialog.DialogueType;
 import org.qubership.automation.ss7lib.model.type.dialog.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class TcapDecoder implements Decoder<TcapMessage> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TcapDecoder.class);
-
+    /**
+     * Parse TCAP part from the source ByteBuffer buffer.
+     *
+     * @param buffer - ByteBuffer to process
+     * @return TcapMessage decoded from the source buffer.
+     */
     @Override
     public TcapMessage decode(final ByteBuffer buffer) {
-        LOGGER.info("Starting parsing of tcap part");
+        log.info("Starting parsing of tcap part");
         TcapMessage message = new TcapMessage();
         message.setTotalLength(buffer.get());
         message.setType(TCAPType.of(buffer.get()));
         byte messageLongerThan = buffer.get(); //flag which says is message longer that 0x80
-        LOGGER.info("Flag: message longer than 0x80: {}", messageLongerThan);
+        log.info("Flag: message longer than 0x80: {}", messageLongerThan);
         if (messageLongerThan != (byte) 0x81) {
             buffer.position(buffer.position() - 1);
         }
         message.setMessageLength(buffer.get());
-        LOGGER.debug("Tcap headers: {}", message);
+        log.debug("Tcap headers: {}", message);
         parseTransactions(buffer, message);
-        LOGGER.info("Tcap part parsing finished: {}", message);
+        log.info("Tcap part parsing finished: {}", message);
         message.setOid(parseOid(buffer));
         message.setDialogue(parseDialog(buffer));
-        LOGGER.info("Tcap message: {}", message);
-        LOGGER.info("Start parsing CAP layer");
+        log.info("Tcap message: {}\nStart parsing CAP layer", message);
         parseCap(message, buffer);
-        LOGGER.info("Cap parsing finished. Full message: {}", message);
+        log.info("Cap parsing finished. Full message: {}", message);
         return message;
     }
 
@@ -75,19 +79,19 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         boolean isBufferHasRemaining = buffer.hasRemaining();
         byte flag = isBufferHasRemaining ? buffer.get() : 0x0;
         if (!isBufferHasRemaining || flag != 0x6c) {
-            LOGGER.warn("There is no CAP layer. Flag is: {}", Converter.bytesToHex(flag));
+            log.warn("There is no CAP layer. Flag is: {}", Converter.bytesToHex(flag));
             return;
         }
         int capLayerLength = getLength(buffer);
-        LOGGER.debug("Cap layer length: {}", capLayerLength);
+        log.debug("Cap layer length: {}", capLayerLength);
         ByteBuffer capLayer = Utils.subBuffer(capLayerLength, buffer);
         while (capLayer.hasRemaining()) {
-            LOGGER.debug("Cap flag: {}", capLayer.get());
+            log.debug("Cap flag: {}", capLayer.get());
             int capLength = Byte.toUnsignedInt(capLayer.get());
-            LOGGER.debug("Cap length: {}", capLength);
+            log.debug("Cap length: {}", capLength);
             ByteBuffer entry = Utils.subBuffer(capLength, capLayer);
             byte invokeLength = entry.get();
-            LOGGER.debug("Invoke length: {}", invokeLength);
+            log.debug("Invoke length: {}", invokeLength);
             CapMessage capMessage = new CapMessage();
             capMessage.setCapMessageLength((byte) capLength);
             capMessage.setInvoke(parseInvoke(entry));
@@ -105,17 +109,17 @@ public class TcapDecoder implements Decoder<TcapMessage> {
 
     private CapInvoke parseInvoke(final ByteBuffer entry) {
         CapInvoke invoke = new CapInvoke();
-        LOGGER.debug("Present length: {}", entry.get());
+        log.debug("Present length: {}", entry.get());
         byte presentValue = entry.get();
-        LOGGER.debug("Present value: {}", presentValue);
+        log.debug("Present value: {}", presentValue);
         CAPInvokeIDPojo invokeID = new CAPInvokeIDPojo();
         invokeID.setStringBytes(String.valueOf(presentValue));
         invoke.setInvokeID(invokeID);
 
-        LOGGER.debug("OpCode total length: {}", entry.get());
-        LOGGER.debug("OpCode length: {}", entry.get());
+        log.debug("OpCode total length: {}", entry.get());
+        log.debug("OpCode length: {}", entry.get());
         byte opCode = entry.get();
-        LOGGER.debug("OpCode value: {}", opCode);
+        log.debug("OpCode value: {}", opCode);
         CAPOpCodePojo opCodePojo = new CAPOpCodePojo();
         OpCodeType opCodeType = EnumProvider.of(opCode, OpCodeType.class);
         opCodePojo.setOpCodeType(opCodeType);
@@ -131,7 +135,7 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         byte type = header[0]; // [-96, 29, 97, 27] -
         logDebugArray("Dialog header {}", header);
         if (type != Dialogue.DIALOGUE_FLAG) {
-            LOGGER.info("No dialog is present in message. Record type: {}", type);
+            log.info("No dialog is present in message. Record type: {}", type);
             buffer.position(buffer.position() - 2);
             return null;
         }
@@ -165,7 +169,7 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         logDebugArray("Count of services: {}", countOfServices);
         while (servicesBuffer.hasRemaining()) {
             DialogServiceUser serviceUser = EnumProvider.of(servicesBuffer.get(), DialogServiceUser.class);
-            LOGGER.info("User service parsed: {}", serviceUser.asPrintable());
+            log.info("User service parsed: {}", serviceUser.asPrintable());
             sourceDiagnostic.getDialogServiceUser().add(serviceUser);
         }
     }
@@ -200,7 +204,7 @@ public class TcapDecoder implements Decoder<TcapMessage> {
     private Oid parseOid(final ByteBuffer buffer) {
         byte oidFlag = buffer.get();
         if (oidFlag != 0x6b) {
-            LOGGER.info("No OID is present in message. Flag is: {}", oidFlag);
+            log.info("No OID is present in message. Flag is: {}", oidFlag);
             buffer.position(buffer.position() - 1);
             return null;
         }
@@ -215,8 +219,8 @@ public class TcapDecoder implements Decoder<TcapMessage> {
     }
 
     private void logDebugArray(final String format, final byte... array) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(format, Converter.bytesToHex(array));
+        if (log.isDebugEnabled()) {
+            log.debug(format, Converter.bytesToHex(array));
         }
     }
 
@@ -265,7 +269,7 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         buffer.position(buffer.position() - 1);
         byte[] dst = new byte[6];
         buffer.get(dst);
-        LOGGER.info("Oid prefix: {}", Converter.bytesToHex(dst));
+        log.info("Oid prefix: {}", Converter.bytesToHex(dst));
     }
 
     private void parseTransactions(final ByteBuffer buffer, final TcapMessage message) {
@@ -299,7 +303,7 @@ public class TcapDecoder implements Decoder<TcapMessage> {
         transaction.setTransactionID(TransactionID.of(type));
         transaction.setLength(length);
         transaction.setId(Converter.bytesToHex(txId));
-        LOGGER.info("Decoded transaction: {}", transaction);
+        log.info("Decoded transaction: {}", transaction);
         return transaction;
     }
 }

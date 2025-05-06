@@ -22,15 +22,13 @@ import java.nio.ByteBuffer;
 import org.qubership.automation.ss7lib.decode.DecoderFactory;
 import org.qubership.automation.ss7lib.model.FullMessage;
 import org.qubership.automation.ss7lib.proxy.response.ResponseHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class MessageProcessor {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessageProcessor.class);
 
     /**
      * Decode buffer, then apply gson.toJson to decoded message, then set response of ResponseHandler to the result.
@@ -39,7 +37,7 @@ public class MessageProcessor {
      */
     public void process(final ByteBuffer buffer) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        LOGGER.info("Start decoding message");
+        log.info("Start decoding message");
         FullMessage message = DecoderFactory.decode(buffer);
         String tx = "error";
         if (message.getTcap() != null) {
