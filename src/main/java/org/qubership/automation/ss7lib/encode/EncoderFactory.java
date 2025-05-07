@@ -32,32 +32,46 @@ import org.qubership.automation.ss7lib.model.TcapMessage;
 
 import com.google.common.collect.Maps;
 
-public class EncoderFactory {
+public final class EncoderFactory {
 
-
-    private static final Map<Class<? extends AbstractMessage>, Encoder> map = Maps.newHashMap();
-
+    /**
+     * Map of encoders.
+     */
+    private static final Map<Class<? extends AbstractMessage>, Encoder> ENCODER_MAP = Maps.newHashMap();
 
     static {
-        map.put(M3uaMessage.class, new M3UAEncoder());
-        map.put(SccpMessage.class, new SCCPEncoder());
-        map.put(TcapMessage.class, new TCAPEncoder());
-        map.put(CapMessage.class, new CAPEncoder());
+        ENCODER_MAP.put(M3uaMessage.class, new M3UAEncoder());
+        ENCODER_MAP.put(SccpMessage.class, new SCCPEncoder());
+        ENCODER_MAP.put(TcapMessage.class, new TCAPEncoder());
+        ENCODER_MAP.put(CapMessage.class, new CAPEncoder());
     }
 
     private EncoderFactory() {
     }
 
-
-    public static <T extends Encoder> T getEncoder(Class<? extends AbstractMessage> clazz) {
-        Encoder encoder = map.get(clazz);
+    /**
+     * Get encoder for Class (extending AbstractMessage).
+     *
+     * @param clazz - Class of encoder to search
+     * @param <T> - subclass of Encoder to be returned
+     * @return Object of Encoder's subclass.
+     */
+    public static <T extends Encoder> T getEncoder(final Class<? extends AbstractMessage> clazz) {
+        Encoder encoder = ENCODER_MAP.get(clazz);
         if (Objects.isNull(encoder)) {
             throw new IllegalArgumentException("Encoder for " + clazz.getName() + " is not found");
         }
         return (T) encoder;
     }
 
-    public static <T extends AbstractMessage> byte[] encode(T message) {
+    /**
+     * Encode message into byte[] via the corresponding Encoder.
+     *
+     * @param message - object of T (subclass of AbstractMessage) to be encoded
+     * @param <T> - subclass of AbstractMessage
+     * @return byte[] result of encoding.
+     */
+    public static <T extends AbstractMessage> byte[] encode(final T message) {
         return getEncoder(message.getClass()).encode(message);
     }
 

@@ -42,24 +42,32 @@ import org.qubership.automation.ss7lib.model.sub.cap.message.InitialDetectionPoi
 import org.qubership.automation.ss7lib.model.sub.cap.message.idp.extention.Extension;
 import org.qubership.automation.ss7lib.model.sub.sccp.AddressIndicator;
 import org.qubership.automation.ss7lib.model.sub.sccp.CallPartyAddress;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.primitives.Bytes;
 
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor,MagicNumber")
 public class MessageParserTest {
 
+    private String message1 = "";
     private String message2 = "";
-    private String message3 = "";
 
+    /**
+     * Prepare message for full message parsing test #1.
+     */
     @Before
-    public void prepareMessage2() throws Exception {
-        message2 = DumpReader.getMessage("/test_data/FullMessage2.stringdump");
+    public void prepareMessage1() throws Exception {
+        message1 = DumpReader.getMessage("/test_data/FullMessage2.stringdump");
     }
 
+    /**
+     * Full message parsing test #1.
+     */
     @Test
     @Deprecated
-    public void parseTest2() {
+    public void parseTest1() {
         MessageParser messageParser = new MessageParser();
-        FullMessage pojoList = messageParser.parse(message2).iterator().next();
+        FullMessage pojoList = messageParser.parse(message1).iterator().next();
         ByteBuffer buffer = FullMessageEncoder.encode(pojoList);
         byte[] correctMessage = new byte[]{
                 0x01, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, (byte) 0xec,
@@ -96,16 +104,22 @@ public class MessageParserTest {
         assertArrayEquals(correctMessage, buffer.array());
     }
 
+    /**
+     * Prepare message for full message parsing test #2.
+     */
     @Before
-    public void prepareMessage3() throws Exception {
-        message3 = DumpReader.getMessage("/test_data/FullMessage3.stringdump");
+    public void prepareMessage2() throws Exception {
+        message2 = DumpReader.getMessage("/test_data/FullMessage3.stringdump");
     }
 
+    /**
+     * Full message parsing test #2.
+     */
     @Test
     @Deprecated
-    public void parseTest3() {
+    public void parseTest2() {
         MessageParser messageParser = new MessageParser();
-        FullMessage pojoList = messageParser.parse(message3).iterator().next();
+        FullMessage pojoList = messageParser.parse(message2).iterator().next();
         ByteBuffer buffer = FullMessageEncoder.encode(pojoList);
         byte[] correctMessage = new byte[]{
                 0x01, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, (byte) 0xd7,
@@ -136,11 +150,11 @@ public class MessageParserTest {
                 0x29, (byte) 0x97, (byte) 0x84, 0x65, (byte) 0x9f, 0x39, 0x08, 0x02,
                 0x71, 0x40, 0x30, 0x61, 0x15, 0x34, 0x69
         };
-
         assertArrayEquals(correctMessage, buffer.array());
     }
 
-    private <T extends AbstractMessage> void encode(List<AbstractMessage> pojoList, List<Byte> byteList) {
+    private <T extends AbstractMessage> void encode(final List<AbstractMessage> pojoList,
+                                                    final List<Byte> byteList) {
         for (AbstractMessage pojo : pojoList) {
             Encoder encoder = EncoderFactory.getEncoder(pojo.getClass());
             byte[] data = encoder.encode((T) pojo);
@@ -148,82 +162,131 @@ public class MessageParserTest {
         }
     }
 
+    private void parseEncodeAndLogMessage(final String message, final String messageType) {
+        FullMessage pojo = new MessageParser().parse(message).iterator().next();
+        ByteBuffer buffer = FullMessageEncoder.encode(pojo);
+        Utils.logTrace(messageType + " message: \n{}", getClass(), buffer.array());
+    }
+
+    /**
+     * Test of EventReport message parsing.
+     *
+     * @throws IOException in case file is absent or unavailable at the path
+     * @throws URISyntaxException in case path-to-file syntax is wrong.
+     */
     @Test
     public void testParseEventReportBCSM() throws IOException, URISyntaxException {
         String message = DumpReader.getMessage("/test_data/eventReportBCSM.stringdump");
-        FullMessage pojoList = new MessageParser().parse(message).iterator().next();
-        ByteBuffer buffer = FullMessageEncoder.encode(pojoList);
-        Utils.logTrace("Erb message: \n{}", getClass(), buffer.array());
+        parseEncodeAndLogMessage(message, "EventReport BCSM");
     }
-    @Test
-    public void givenEventReportBCSM_with7digitDestinationId_whenWeSendIt_thenSs7AddsAdditionalK0BeforeDestinationId() throws IOException, URISyntaxException {
-        String message = DumpReader.getMessage("/test_data/givenEventReportBCSM_with7digitDestinationId.stringdump");
-        FullMessage pojoList = new MessageParser().parse(message).iterator().next();
-        ByteBuffer buffer = FullMessageEncoder.encode(pojoList);
-        Utils.logTrace("Erb message: \n{}", getClass(), buffer.array());
-    }    
 
-        @Test
+    /**
+     * Test of EventReport with 7 digits DestinationId message parsing.
+     *
+     * @throws IOException in case file is absent or unavailable at the path
+     * @throws URISyntaxException in case path-to-file syntax is wrong.
+     */
+    @Test
+    public void givenEventReportWith7digitDestinationIdWhenWeSendItThenSs7AddsAdditionalK0BeforeDestinationId()
+            throws IOException, URISyntaxException {
+        String message = DumpReader.getMessage("/test_data/givenEventReportBCSM_with7digitDestinationId.stringdump");
+        parseEncodeAndLogMessage(message, "EventReport BCSM");
+    }
+
+    /**
+     * Test of EventReport message parsing.
+     *
+     * @throws IOException in case file is absent or unavailable at the path
+     * @throws URISyntaxException in case path-to-file syntax is wrong.
+     */
+    @Test
     public void testParseEventReportBCSM2() throws IOException, URISyntaxException {
         String message = DumpReader.getMessage("/test_data/eventReportBCSM_1.stringdump");
-        FullMessage pojoList = new MessageParser().parse(message).iterator().next();
-        ByteBuffer buffer = FullMessageEncoder.encode(pojoList);
-        Utils.logTrace("Erb message: \n{}", getClass(), buffer.array());
+        parseEncodeAndLogMessage(message, "EventReport BCSM");
     }
-    
+
+    /**
+     * Test of Apply Charging Report message parsing.
+     *
+     * @throws IOException in case file is absent or unavailable at the path
+     * @throws URISyntaxException in case path-to-file syntax is wrong.
+     */
     @Test
     public void testParsingApplyCharging() throws IOException, URISyntaxException {
         String message = DumpReader.getMessage("/test_data/bugfix/applyCharginReport.textdump");
-        FullMessage pojoList = new MessageParser().parse(message).iterator().next();
-        ByteBuffer buffer = FullMessageEncoder.encode(pojoList);
-        SccpMessage sccp = pojoList.getSccp();
+        FullMessage pojo = new MessageParser().parse(message).iterator().next();
+        ByteBuffer buffer = FullMessageEncoder.encode(pojo);
+        SccpMessage sccp = pojo.getSccp();
         CallPartyAddress partyAddress = sccp.getCalledPartyAddress();
         AddressIndicator indicator = partyAddress.getAddressIndicator();
         assertEquals(1, indicator.getSubSystemNumberIndicator());
-
-        Utils.logTrace("Acr message: \n{}", getClass(), buffer.array());
+        Utils.logTrace("Apply Charging Report message: \n{}", getClass(), buffer.array());
     }
 
+    /**
+     * Test of EventReport Disconnect message parsing.
+     *
+     * @throws IOException in case file is absent or unavailable at the path
+     * @throws URISyntaxException in case path-to-file syntax is wrong.
+     */
     @Test
     public void testParseDisconnect() throws IOException, URISyntaxException {
         String message = DumpReader.getMessage("/test_data/bugfix/bscmEventDisconnect.textdump");
-        FullMessage pojoList = new MessageParser().parse(message).iterator().next();
-        ByteBuffer buffer = FullMessageEncoder.encode(pojoList);
-        Utils.logTrace("ErbDisconnect message: \n{}", getClass(), buffer.array());
+        parseEncodeAndLogMessage(message, "EventReport Disconnect BCSM");
     }
 
+    /**
+     * Test of EventReport oAnswer message parsing.
+     *
+     * @throws IOException in case file is absent or unavailable at the path
+     * @throws URISyntaxException in case path-to-file syntax is wrong.
+     */
     @Test
     public void testParseAnswer() throws IOException, URISyntaxException {
         String message = DumpReader.getMessage("/test_data/bugfix/bscmEventOAnwser.textdump");
-        FullMessage pojoList = new MessageParser().parse(message).iterator().next();
-        ByteBuffer buffer = FullMessageEncoder.encode(pojoList);
-        Utils.logTrace("ErbDisconnect message: \n{}", getClass(), buffer.array());
+        parseEncodeAndLogMessage(message, "EventReport oAnswer BCSM");
     }
-    
+
+    /**
+     * Test of InitialIDp message parsing.
+     *
+     * @throws IOException in case file is absent or unavailable at the path
+     * @throws URISyntaxException in case path-to-file syntax is wrong.
+     */
     @Test
     public void testParseInitialIdp() throws IOException, URISyntaxException {
         String message = DumpReader.getMessage("/test_data/bugfix/initialIDP.textdump");
-        FullMessage pojoList = new MessageParser().parse(message).iterator().next();
-        ByteBuffer buffer = FullMessageEncoder.encode(pojoList);
-        Utils.logTrace("InitialIdp message: \n{}", getClass(), buffer.array());
+        parseEncodeAndLogMessage(message, "InitialIDP");
     }
 
+    /**
+     * Test of InitialDp with CallingParty having 10 digits message parsing.
+     *
+     * @throws IOException in case file is absent or unavailable at the path
+     * @throws URISyntaxException in case path-to-file syntax is wrong.
+     */
     @Test
-    public void givenInitDP_andCallingPartyHas10Digit_whenWeSendIt_thenCallingPartybInCapContains10Digit() throws IOException, URISyntaxException {
+    public void givenInitialDpAndCallingPartyHas10DigitsWhenWeSendItThenCallingPartyInCapContains10Digits()
+            throws IOException, URISyntaxException {
         String message = DumpReader.getMessage("/test_data/bugfix/givenInitDP_andCallingPartyHas10Digit.textdump");
-        FullMessage pojoList = new MessageParser().parse(message).iterator().next();
-        ByteBuffer buffer = FullMessageEncoder.encode(pojoList);
-        Utils.logTrace("InitialIdp message: \n{}", getClass(), buffer.array());
+        parseEncodeAndLogMessage(message, "InitialIDP");
     }
-    
+
+    /**
+     * Test of InitialDp Call Waiting message parsing.
+     *
+     * @throws IOException in case file is absent or unavailable at the path
+     * @throws URISyntaxException in case path-to-file syntax is wrong.
+     */
     @Test
     public void testParseCallWaitingIDP() throws IOException, URISyntaxException {
         String message = DumpReader.getMessage("/test_data/bugfix/callwaitingIDP.textdump");
-        FullMessage pojoList = new MessageParser().parse(message).iterator().next();
-        ByteBuffer buffer = FullMessageEncoder.encode(pojoList);
-        Utils.logTrace("InitialIdp message: \n{}", getClass(), buffer.array());
+        parseEncodeAndLogMessage(message, "CallWaitingIDP");
     }
 
+    /**
+     * Test of message encoding.
+     */
     @Test
     public void testEncodeMessage() {
         byte[] b = new byte[]{1, 5, 1, 4, 4, 2, 4, 0, 5, 4, 0};
@@ -244,10 +307,16 @@ public class MessageParserTest {
         Utils.logTrace("Source {}", getClass(), b);
         Utils.logTrace("Target {}", getClass(), arr);
         for (byte item : arr) {
-            System.out.println(Integer.toBinaryString(item));
+            LoggerFactory.getLogger(MessageParserTest.class).info(Integer.toBinaryString(item));
         }
     }
 
+    /**
+     * Test of InitialDp Call Forwarding message parsing.
+     *
+     * @throws IOException in case file is absent or unavailable at the path
+     * @throws URISyntaxException in case path-to-file syntax is wrong.
+     */
     @Test
     public void testParseInitialDpCallForwarding() throws IOException, URISyntaxException {
         MessageParser parser = new MessageParser();
@@ -264,9 +333,14 @@ public class MessageParserTest {
         assertEquals("12", invoke.getEventTypeBCSM().getStringBytes());
         Extension extension = invoke.getInitialDpArgExtension().getExtensions().iterator().next();
         assertEquals(0x1, extension.getCicSelectionType().getId());
-
     }
 
+    /**
+     * Test that parsing doesn't hang on these messages.
+     *
+     * @throws IOException in case file is absent or unavailable at the path
+     * @throws URISyntaxException in case path-to-file syntax is wrong.
+     */
     @Test(timeout = 3000)
     public void testParseHangs() throws IOException, URISyntaxException {
         MessageParser parser = new MessageParser();

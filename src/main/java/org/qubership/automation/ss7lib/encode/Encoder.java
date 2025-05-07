@@ -22,5 +22,12 @@ import javax.annotation.Nonnull;
 import org.qubership.automation.ss7lib.model.AbstractMessage;
 
 public interface Encoder {
-    byte[] encode(@Nonnull AbstractMessage  pojo);
+
+    /**
+     * Create byte[] and fill it with the result of encoding of AbstractMessage parameter.
+     *
+     * @param pojo - AbstractMessage to encode
+     * @return byte[] encoded from AbstractMessage pojo.
+     */
+    byte[] encode(@Nonnull AbstractMessage pojo);
 }

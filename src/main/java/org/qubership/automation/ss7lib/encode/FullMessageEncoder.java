@@ -22,9 +22,16 @@ import java.nio.ByteBuffer;
 import org.qubership.automation.ss7lib.model.FullMessage;
 import org.qubership.automation.ss7lib.model.M3uaMessage;
 
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor")
 public class FullMessageEncoder {
 
-    public static ByteBuffer encode(FullMessage message) {
+    /**
+     * Encode FullMessage; place result into a new ByteBuffer.
+     *
+     * @param message FullMessage to encode
+     * @return a new ByteBuffer filled with encoding result.
+     */
+    public static ByteBuffer encode(final FullMessage message) {
         byte[] tcapData = EncoderFactory.encode(message.getTcap());
         byte[] sccpData = EncoderFactory.encode(message.getSccp());
         M3uaMessage m3ua = prepareM3ua(message, tcapData, sccpData);
@@ -34,7 +41,9 @@ public class FullMessageEncoder {
         return result;
     }
 
-    private static M3uaMessage prepareM3ua(FullMessage message, byte[] tcapData, byte[] sccpData) {
+    private static M3uaMessage prepareM3ua(final FullMessage message,
+                                           final byte[] tcapData,
+                                           final byte[] sccpData) {
         M3uaMessage m3ua = message.getM3ua();
         m3ua.getProtocolData().setParameterLength((short) (16 + sccpData.length + tcapData.length));
         return m3ua;

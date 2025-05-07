@@ -25,9 +25,22 @@ import org.qubership.automation.ss7lib.model.sub.cap.message.CAPMessagePojo;
 import com.google.common.collect.Maps;
 
 public class CapDecoderFactory {
+
+    /**
+     * Map of decoders.
+     */
     private static final Map<Class<? extends CapDecoder>, CapDecoder> CAP_DECODER_MAP = Maps.newHashMap();
 
-    public static <T extends CAPMessagePojo> T decode(Class<? extends CapDecoder> clazz, ByteBuffer buffer) {
+    /**
+     * Decode ByteBuffer buffer into object of CapDecoder's subclass.
+     *
+     * @param clazz CapDecoder's subclass to determine decoder
+     * @param buffer ByteBuffer to decode
+     * @param <T> CapDecoder's subclass
+     * @return Object of CapDecoder's subclass, decoded from buffer.
+     */
+    public static <T extends CAPMessagePojo> T decode(final Class<? extends CapDecoder> clazz,
+                                                      final ByteBuffer buffer) {
         CapDecoder capDecoder = CAP_DECODER_MAP.computeIfAbsent(clazz, klass -> {
             try {
                 return klass.asSubclass(CapDecoder.class).getConstructor().newInstance();

@@ -22,30 +22,36 @@ import java.nio.ByteBuffer;
 import org.qubership.automation.ss7lib.convert.Converter;
 import org.qubership.automation.ss7lib.decode.Utils;
 import org.qubership.automation.ss7lib.model.sub.cap.message.CapMessageReleaseCallArg;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ReleaseCallDecoder implements CapDecoder<CapMessageReleaseCallArg> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReleaseCallDecoder.class);
-
+    /**
+     * Parse CapMessageReleaseCallArg message from ByteBuffer.
+     *
+     * @param buffer ByteBuffer to parse
+     * @return CapMessageReleaseCallArg parsed from the buffer.
+     */
     @Override
-    public CapMessageReleaseCallArg decode(ByteBuffer buffer) {
-        byte flag = 0x0;
-        if (!buffer.hasRemaining() || (flag = buffer.get()) != 0x4) {
-            LOGGER.warn("No release call data. Flag is: " + Converter.bytesToHex(flag));
+    public CapMessageReleaseCallArg decode(final ByteBuffer buffer) {
+        boolean isBufferHasRemaining = buffer.hasRemaining();
+        byte flag = isBufferHasRemaining ? buffer.get() : 0x0;
+        if (!isBufferHasRemaining || flag != 0x4) {
+            log.warn("No release call data. Flag is: {}", Converter.bytesToHex(flag));
             return null;
         }
         byte releaseCallLength = buffer.get();
-        LOGGER.info("Starting parsing Release Call");
-        LOGGER.debug("Release call data length: {}", releaseCallLength);
+        log.info("Starting parsing Release Call");
+        log.debug("Release call data length: {}", releaseCallLength);
         ByteBuffer byteBuffer = Utils.subBuffer(releaseCallLength, buffer);
         CapMessageReleaseCallArg callArg = new CapMessageReleaseCallArg();
         CapMessageReleaseCallArg.AllCallSegments callSegments = new CapMessageReleaseCallArg.AllCallSegments();
         callArg.setCallSegments(callSegments);
         callSegments.setMessageLength(releaseCallLength);
         callSegments.setStringBytes(Converter.bytesToHex(byteBuffer.array()));
-        LOGGER.info("Release call parsing finished: {}", callArg);
+        log.info("Release call parsing finished: {}", callArg);
         return callArg;
     }
 }

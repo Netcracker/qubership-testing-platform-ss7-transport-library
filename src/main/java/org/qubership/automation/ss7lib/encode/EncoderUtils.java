@@ -33,8 +33,15 @@ import org.qubership.automation.ss7lib.model.sub.cap.param.AbstractParamPojo;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor")
 public class EncoderUtils {
 
+    /**
+     * Reverse characters in each pair of characters of source String.
+     *
+     * @param stringBytes - String to process
+     * @return String filled with source String characters in reverse order in each pair.
+     */
     public static String reverse(String stringBytes) {
         if (stringBytes.length() % 2 != 0) {
             stringBytes = stringBytes + "f";
@@ -48,7 +55,14 @@ public class EncoderUtils {
         return buffer.toString();
     }
 
-    public static List<Byte> splitStringBytes(@Nonnull String bytes, boolean isHex) {
+    /**
+     * Convert String representation of Hex or Decimal integers into List<Byte>.
+     *
+     * @param bytes - String to process
+     * @param isHex - flag if String bytes is Hex integers representation (true) or Decimals.
+     * @return List<Byte> result of conversion.
+     */
+    public static List<Byte> splitStringBytes(final @Nonnull String bytes, final boolean isHex) {
         List<Byte> result = Lists.newArrayList();
         int radix = isHex ? 16 : 10;
         String[] split = bytes.split("(?<=\\G.{2})");
@@ -58,12 +72,26 @@ public class EncoderUtils {
         return result;
     }
 
-    public static void encodePojoFlagParam(@Nonnull List<Byte> bytes, @Nonnull AbstractParamPojo pojo) {
+    /**
+     * Fill List<Byte> parameter with Flag/Flags of AbstractParamPojo parameter,
+     * then add encoding results.
+     *
+     * @param bytes List<Byte> to fill
+     * @param pojo AbstractParamPojo object to process.
+     */
+    public static void encodePojoFlagParam(final @Nonnull List<Byte> bytes, final @Nonnull AbstractParamPojo pojo) {
         addFlag(bytes, pojo);
         encodeParam(bytes, pojo);
     }
 
-    public static void addFlag(@Nonnull List<Byte> bytes, @Nonnull AbstractParamPojo pojo) {
+    /**
+     * In case AbstractParamPojo parameter is Flag or Flags, fill List<Byte> bytes parameter
+     * with their values; otherwise do nothing.
+     *
+     * @param bytes List<Byte> to fill
+     * @param pojo AbstractParamPojo object to process.
+     */
+    public static void addFlag(final @Nonnull List<Byte> bytes, final @Nonnull AbstractParamPojo pojo) {
         if (pojo instanceof Flag) {
             bytes.add(((Flag) pojo).getFlag());
         } else if (pojo instanceof Flags) {
@@ -71,21 +99,36 @@ public class EncoderUtils {
         }
     }
 
-    public static void encodeParam(@Nonnull List<Byte> bytes, @Nonnull AbstractParamPojo pojo) {
-        ArrayList<Byte> sub_bytes = Lists.newArrayList();
+    /**
+     * Encode AbstractParamPojo parameter and fill List<Byte> parameter with encoded bytes.
+     *
+     * @param bytes List<Byte> to fill with encoding result
+     * @param pojo AbstractParamPojo object to encode.
+     */
+    public static void encodeParam(final @Nonnull List<Byte> bytes, final @Nonnull AbstractParamPojo pojo) {
+        ArrayList<Byte> subBytes = Lists.newArrayList();
         if (!Strings.isNullOrEmpty(pojo.getStringBytes())) {
-            sub_bytes.addAll(EncoderUtils.splitStringBytes(pojo.getStringBytes(), pojo.isHEX()));
+            subBytes.addAll(EncoderUtils.splitStringBytes(pojo.getStringBytes(), pojo.isHEX()));
         }
         if (pojo.getMessageLength() != 0) {
             bytes.add(pojo.getMessageLength());
         } else {
-            bytes.add((byte) sub_bytes.size());
-            pojo.setMessageLength((byte) sub_bytes.size());
+            bytes.add((byte) subBytes.size());
+            pojo.setMessageLength((byte) subBytes.size());
         }
-        bytes.addAll(sub_bytes);
+        bytes.addAll(subBytes);
     }
 
-    public static void encodeParameter(List<Byte> bytes, InitialDetectionPoint pojo, AbstractParamPojo param) {
+    /**
+     * Encode AbstractParamPojo parameter and fill List<Byte> parameter with encoded bytes.
+     *
+     * @param bytes List<Byte> to fill with encoding result
+     * @param pojo InitialDetectionPoint parameter (currently unused)
+     * @param param AbstractParamPojo object to encode.
+     */
+    public static void encodeParameter(final List<Byte> bytes,
+                                       final InitialDetectionPoint pojo,
+                                       final AbstractParamPojo param) {
         if (Objects.nonNull(param)) {
             encodePojoFlagParam(bytes, param);
         }

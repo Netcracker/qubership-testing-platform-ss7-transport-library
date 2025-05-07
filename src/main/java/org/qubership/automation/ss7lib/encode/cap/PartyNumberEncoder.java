@@ -26,8 +26,14 @@ import org.qubership.automation.ss7lib.model.sub.cap.message.idp.PartyNumber;
 
 public class PartyNumberEncoder implements PartEncoder<PartyNumber> {
 
+    /**
+     * Encode PartyNumber into ByteBuffer.
+     *
+     * @param partyNumber PartyNumber object to be encoded
+     * @return ByteBuffer containing the result of encoding.
+     */
     @Override
-    public ByteBuffer encode(PartyNumber partyNumber) {
+    public ByteBuffer encode(final PartyNumber partyNumber) {
         ByteBuffer buffer = ByteBuffer.allocate(20); /*8 - is calling party number value and 1 - is reserved for length*/
         fillOddAndNatureIndicator(partyNumber, buffer);
         fillOtherIndicators(partyNumber, buffer);
@@ -39,12 +45,19 @@ public class PartyNumberEncoder implements PartEncoder<PartyNumber> {
         return result;
     }
 
+    /**
+     * Encode PartyNumber into List<Byte>.
+     *
+     * @param messagePart PartyNumber object to be encoded
+     * @return List<Byte> array containing the result of encoding;
+     * currently UnsupportedOperationException is thrown instead.
+     */
     @Override
-    public List<Byte> encodeToArray(PartyNumber messagePart) {
+    public List<Byte> encodeToArray(final PartyNumber messagePart) {
         throw new UnsupportedOperationException();
     }
 
-    private void encodeNumber(PartyNumber partyNumber, ByteBuffer buffer) {
+    private void encodeNumber(final PartyNumber partyNumber, final ByteBuffer buffer) {
         String number = partyNumber.getNumber();
         char[] chars = number.toCharArray();
         for (int index = 0; index < chars.length; index = index + 2) {
@@ -58,27 +71,26 @@ public class PartyNumberEncoder implements PartEncoder<PartyNumber> {
                 buffer.put((byte) (second & 0xf));
             }
         }
-
     }
 
-    private byte parseByte(char aChar) {
+    private byte parseByte(final char aChar) {
         return Byte.parseByte(Character.toString(aChar), 16);
     }
 
-    private void fillOtherIndicators(PartyNumber partyNumber, ByteBuffer buffer) {
+    private void fillOtherIndicators(final PartyNumber partyNumber, final ByteBuffer buffer) {
         byte networkInformationIndicator = partyNumber.getNetworkInformationIndicator();
         byte planIndicator = partyNumber.getNumberingPlanIndicator();
         byte presentationIndicator = partyNumber.getAddressPresentationIndicator();
         byte screeningIndicator = partyNumber.getScreeningIndicator();
         byte result = 0x0;
-        result |= networkInformationIndicator << 7;
-        result |= (planIndicator & 7) << 4;
-        result |= (presentationIndicator & 3) << 2;
-        result |= (screeningIndicator & 3);
+        result |= (byte) (networkInformationIndicator << 7);
+        result |= (byte) ((planIndicator & 7) << 4);
+        result |= (byte) ((presentationIndicator & 3) << 2);
+        result |= (byte) (screeningIndicator & 3);
         buffer.put((byte) (result & 0xff));
     }
 
-    private void fillOddAndNatureIndicator(PartyNumber partyNumber, ByteBuffer result) {
+    private void fillOddAndNatureIndicator(final PartyNumber partyNumber, final ByteBuffer result) {
         byte oddIndicator = partyNumber.getOddIndicator();
         byte natureAddressIndicator = partyNumber.getNatureAddressIndicator();
         byte oddAndNature = (byte) (((oddIndicator << 7) | natureAddressIndicator) & 0xff);

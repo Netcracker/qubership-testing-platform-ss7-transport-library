@@ -25,71 +25,74 @@ import org.qubership.automation.ss7lib.model.sub.cap.message.LegID;
 import org.qubership.automation.ss7lib.model.type.EnumProvider;
 import org.qubership.automation.ss7lib.model.type.EventType;
 import org.qubership.automation.ss7lib.model.type.MonitorMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class EventRequestBcsmDecoder implements CapDecoder<CAPMessageRequestReportBCSMEventArg> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EventRequestBcsmDecoder.class);
-
+    /**
+     * Parse CAPMessageRequestReportBCSMEventArg message from ByteBuffer.
+     *
+     * @param buffer ByteBuffer to parse
+     * @return CAPMessageRequestReportBCSMEventArg parsed from the buffer.
+     */
     @Override
-    public CAPMessageRequestReportBCSMEventArg decode(ByteBuffer buffer) {
+    public CAPMessageRequestReportBCSMEventArg decode(final ByteBuffer buffer) {
         if (!buffer.hasRemaining()) {
             return null;
         }
-        CAPMessageRequestReportBCSMEventArg eventArg = new CAPMessageRequestReportBCSMEventArg();
         byte flag = buffer.get();
-        LOGGER.debug("Event bcsm flag: {}", flag);
+        log.debug("Event flag: {}", flag);
         byte messageLength = buffer.get();
+        log.debug("Total message length: {}", messageLength);
+        CAPMessageRequestReportBCSMEventArg eventArg = new CAPMessageRequestReportBCSMEventArg();
         eventArg.setMessageLength(messageLength);
-        LOGGER.debug("Total length bcsm : {}", messageLength);
         byte secondFlag = buffer.get();
         byte length = buffer.get();
-        LOGGER.debug("Message length bcsm : {}", length);
+        log.debug("Message length: {}", length);
         eventArg.setLength(length);
         parseEvents(eventArg, buffer);
         return eventArg;
     }
 
-    private void parseEvents(CAPMessageRequestReportBCSMEventArg eventArg, ByteBuffer buffer) {
+    private void parseEvents(final CAPMessageRequestReportBCSMEventArg eventArg, final ByteBuffer buffer) {
         byte[] dst = new byte[eventArg.getLength()];
         buffer.get(dst);
         ByteBuffer eventsBuffer = ByteBuffer.wrap(dst);
         while (eventsBuffer.hasRemaining()) {
-            CAPMessageRequestReportBCSMEventArg.BSCMEvent event = new CAPMessageRequestReportBCSMEventArg.BSCMEvent();
             byte eventFlag = eventsBuffer.get();
             byte eventLength = eventsBuffer.get();
             byte[] eventData = new byte[eventLength];
-            LOGGER.debug("Event flag/length : {}/{}", eventFlag, eventLength);
+            log.debug("Event flag/length : {}/{}", eventFlag, eventLength);
             eventsBuffer.get(eventData);
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Event data: {}", Arrays.toString(eventData));
-            }
+            log.debug("Event data: {}", Arrays.toString(eventData));
             ByteBuffer wrap = ByteBuffer.wrap(eventData);
             byte id = getEventId(wrap);
+            CAPMessageRequestReportBCSMEventArg.BSCMEvent event = new CAPMessageRequestReportBCSMEventArg.BSCMEvent();
             event.setEventType(EnumProvider.of(id, EventType.class));
             id = getEventId(wrap);
             event.setMonitorMode(EnumProvider.of(id, MonitorMode.class));
             event.setLength(eventLength);
             event.setLegID(parseLegId(wrap));
             eventArg.getBscmEventList().add(event);
-            LOGGER.info("Found event: {}", event);
+            log.info("Found event: {}", event);
         }
     }
 
-    private LegID parseLegId(ByteBuffer buffer) {
-        LegID legID = new LegID();
+    private LegID parseLegId(final ByteBuffer buffer) {
         byte flag = buffer.get();
         byte totalLength = buffer.get();
         byte magicFlag = buffer.get();
         byte legLength = buffer.get();
+        LegID legID = new LegID();
         legID.setId(buffer.get());
         return legID;
     }
 
-    private byte getEventId(ByteBuffer wrap) {
+    private byte getEventId(final ByteBuffer wrap) {
         byte flag = wrap.get();
         byte length = wrap.get();
-        return wrap.get() /*EventType*/;
+        return wrap.get();
     }
 }

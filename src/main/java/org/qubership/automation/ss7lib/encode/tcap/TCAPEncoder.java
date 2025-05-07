@@ -41,22 +41,24 @@ import org.qubership.automation.ss7lib.model.sub.tcap.Transaction;
 import org.qubership.automation.ss7lib.model.type.TCAPType;
 import org.qubership.automation.ss7lib.model.type.dialog.DialogServiceUser;
 import org.qubership.automation.ss7lib.model.type.dialog.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class TCAPEncoder extends AbstractEncoder<TcapMessage> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TCAPEncoder.class);
-
-
+    /**
+     * Encode TcapMessage; place result into a new byte[].
+     *
+     * @param abstractMessage - TcapMessage to encode
+     * @return a new byte[] filled with encoding result.
+     */
     @Override
-    public byte[] encode(@Nonnull AbstractMessage abstractMessage) {
+    public byte[] encode(@Nonnull final AbstractMessage abstractMessage) {
         TcapMessage tcapMessage = (TcapMessage) abstractMessage;
-        LOGGER.info("Start TCAP encode");
-        LOGGER.info("Encode message: {}", tcapMessage);
+        log.info("Start encode of TCAP message: {}", tcapMessage);
         ArrayList<Byte> bytes = Lists.newArrayList();
         encodeTotalMessage(bytes, tcapMessage);
         byte[] result = convertListToArray(bytes);
@@ -64,52 +66,51 @@ public class TCAPEncoder extends AbstractEncoder<TcapMessage> {
         return result;
     }
 
-    private void encodeTotalMessage(@Nonnull ArrayList<Byte> bytes, @Nonnull TcapMessage pojo) {
-        ArrayList<Byte> sub_bytes = Lists.newArrayList();
+    private void encodeTotalMessage(@Nonnull final ArrayList<Byte> bytes, @Nonnull final TcapMessage pojo) {
+        ArrayList<Byte> subBytes = Lists.newArrayList();
 
-        sub_bytes.add(pojo.getType().getCode());
-        encodeMessage(sub_bytes, pojo);
-        pojo.setTotalLength((byte) sub_bytes.size());
+        subBytes.add(pojo.getType().getCode());
+        encodeMessage(subBytes, pojo);
+        pojo.setTotalLength((byte) subBytes.size());
         bytes.add(pojo.getTotalLength());
-        bytes.addAll(sub_bytes);
+        bytes.addAll(subBytes);
     }
 
-    private void encodeMessage(@Nonnull ArrayList<Byte> bytes, @Nonnull TcapMessage pojo) {
-        ArrayList<Byte> sub_bytes = Lists.newArrayList();
+    private void encodeMessage(@Nonnull final ArrayList<Byte> bytes, @Nonnull final TcapMessage pojo) {
+        ArrayList<Byte> subBytes = Lists.newArrayList();
 
         if (Objects.nonNull(pojo.getSourceTransaction())) {
-            encodeTransaction(sub_bytes, pojo.getSourceTransaction());
+            encodeTransaction(subBytes, pojo.getSourceTransaction());
         }
         if (Objects.nonNull(pojo.getDestinationTransaction())) {
-            encodeTransaction(sub_bytes, pojo.getDestinationTransaction());
+            encodeTransaction(subBytes, pojo.getDestinationTransaction());
         }
         if (Objects.nonNull(pojo.getOid())) {
-            encodeOid(sub_bytes, pojo.getOid(), pojo.getType());
+            encodeOid(subBytes, pojo.getOid(), pojo.getType());
         }
         if (Objects.nonNull(pojo.getDialogue())) {
-            encodeDialogue(sub_bytes, pojo.getDialogue());
+            encodeDialogue(subBytes, pojo.getDialogue());
         }
         if (!pojo.getCapMessages().isEmpty()) {
-            sub_bytes.add(pojo.getFlagStartCap());
-
-            ArrayList<Byte> cap_bytes = Lists.newArrayList();
+            subBytes.add(pojo.getFlagStartCap());
+            ArrayList<Byte> capBytes = Lists.newArrayList();
             for (CapMessage capMessage : pojo.getCapMessages()) {
                 byte[] encode = new CAPEncoder().encode(capMessage);
-                cap_bytes.addAll(asList(encode));
+                capBytes.addAll(asList(encode));
             }
-            validateLengthMessage(sub_bytes, (byte) cap_bytes.size());
-            sub_bytes.add((byte) cap_bytes.size());
-            sub_bytes.addAll(cap_bytes);
+            validateLengthMessage(subBytes, (byte) capBytes.size());
+            subBytes.add((byte) capBytes.size());
+            subBytes.addAll(capBytes);
         }
-        pojo.setMessageLength((byte) sub_bytes.size());
+        pojo.setMessageLength((byte) subBytes.size());
         validateLengthMessage(bytes, pojo.getMessageLength().byteValue());
         bytes.add(pojo.getMessageLength().byteValue());
-        bytes.addAll(sub_bytes);
+        bytes.addAll(subBytes);
     }
 
-    public void encodeTransaction(@Nonnull ArrayList<Byte> bytes, @Nonnull Transaction transaction) {
+    public void encodeTransaction(@Nonnull final ArrayList<Byte> bytes, @Nonnull final Transaction transaction) {
         bytes.add(transaction.getTransactionID().getCode());
-        ArrayList<Byte> sub_bytes = Lists.newArrayList();
+        ArrayList<Byte> subBytes = Lists.newArrayList();
         List<Byte> tx = splitStringBytes(transaction.getId(), transaction.isHEX());
         int size = tx.size();
         if (size < 4) {
@@ -117,69 +118,69 @@ public class TCAPEncoder extends AbstractEncoder<TcapMessage> {
                 tx.add(0, (byte) 0x0);
             }
         }
-        sub_bytes.addAll(tx);
-        transaction.setLength((byte) sub_bytes.size());
+        subBytes.addAll(tx);
+        transaction.setLength((byte) subBytes.size());
         bytes.add(transaction.getLength());
-        bytes.addAll(sub_bytes);
+        bytes.addAll(subBytes);
     }
 
-    private void encodeDialogue(@Nonnull ArrayList<Byte> bytes, @Nonnull Dialogue pojo) {
+    private void encodeDialogue(@Nonnull final ArrayList<Byte> bytes, @Nonnull final Dialogue pojo) {
         bytes.add(pojo.getMainType());
-        ArrayList<Byte> sub_bytes = Lists.newArrayList();
+        ArrayList<Byte> subBytes = Lists.newArrayList();
 
-        encodeDialogueMessage(sub_bytes, pojo);
-        pojo.setTotalLength((byte) sub_bytes.size());
+        encodeDialogueMessage(subBytes, pojo);
+        pojo.setTotalLength((byte) subBytes.size());
         bytes.add(pojo.getTotalLength());
-        bytes.addAll(sub_bytes);
-
+        bytes.addAll(subBytes);
     }
 
-    private void encodeDialogueMessage(@Nonnull ArrayList<Byte> bytes, @Nonnull Dialogue pojo) {
+    private void encodeDialogueMessage(@Nonnull final ArrayList<Byte> bytes, @Nonnull final Dialogue pojo) {
         bytes.add(pojo.getDialogueType().getId());
-        ArrayList<Byte> sub_bytes = Lists.newArrayList();
+        ArrayList<Byte> subBytes = Lists.newArrayList();
 
-        sub_bytes.addAll(asList(pojo.getFlag()));
-        sub_bytes.add(pojo.getPadding());
-        sub_bytes.add(pojo.getProtocolVersion());
+        subBytes.addAll(asList(pojo.getFlag()));
+        subBytes.add(pojo.getPadding());
+        subBytes.add(pojo.getProtocolVersion());
         if (pojo.getApplicationContextName() != null) {
-            encodeApplicationContext(sub_bytes, pojo.getApplicationContextName());
+            encodeApplicationContext(subBytes, pojo.getApplicationContextName());
         }
         if (Objects.nonNull(pojo.getResult())) {
-            encodeResult(sub_bytes, pojo.getResult());
+            encodeResult(subBytes, pojo.getResult());
         }
         if (Objects.nonNull(pojo.getResultSourceDiagnostic())) {
-            encodeResultSourceDiagnostic(sub_bytes, pojo.getResultSourceDiagnostic());
+            encodeResultSourceDiagnostic(subBytes, pojo.getResultSourceDiagnostic());
         }
-        pojo.setMessageLength((byte) sub_bytes.size());
+        pojo.setMessageLength((byte) subBytes.size());
         bytes.add(pojo.getMessageLength());
-        bytes.addAll(sub_bytes);
+        bytes.addAll(subBytes);
     }
 
-    private void encodeResultSourceDiagnostic(ArrayList<Byte> bytes, ResultSourceDiagnostic pojo) {
+    private void encodeResultSourceDiagnostic(final ArrayList<Byte> bytes, final ResultSourceDiagnostic pojo) {
         bytes.add(pojo.getFirstFlag());
-        ArrayList<Byte> sub_bytes = Lists.newArrayList();
-        encodeResultSourceDiagnosticMessage(sub_bytes, pojo);
-        bytes.add((byte) sub_bytes.size());
-        bytes.addAll(sub_bytes);
+        ArrayList<Byte> subBytes = Lists.newArrayList();
+        encodeResultSourceDiagnosticMessage(subBytes, pojo);
+        bytes.add((byte) subBytes.size());
+        bytes.addAll(subBytes);
     }
 
-    private void encodeResultSourceDiagnosticMessage(ArrayList<Byte> bytes, ResultSourceDiagnostic pojo) {
+    private void encodeResultSourceDiagnosticMessage(final ArrayList<Byte> bytes,
+                                                     final ResultSourceDiagnostic pojo) {
         bytes.add(pojo.getSecondFlag());
-        ArrayList<Byte> sub_bytes = Lists.newArrayList();
-        sub_bytes.add(pojo.getId());
-        encodeDialogueService(sub_bytes, pojo.getDialogServiceUser());
-        bytes.add((byte) ((byte) sub_bytes.size() + 1));
-        bytes.add((byte) sub_bytes.size());
-        bytes.addAll(sub_bytes);
+        ArrayList<Byte> subBytes = Lists.newArrayList();
+        subBytes.add(pojo.getId());
+        encodeDialogueService(subBytes, pojo.getDialogServiceUser());
+        bytes.add((byte) ((byte) subBytes.size() + 1));
+        bytes.add((byte) subBytes.size());
+        bytes.addAll(subBytes);
     }
 
-    private void encodeDialogueService(ArrayList<Byte> bytes, List<DialogServiceUser> pojos) {
+    private void encodeDialogueService(final ArrayList<Byte> bytes, final List<DialogServiceUser> pojos) {
         for (DialogServiceUser pojo : pojos) {
             bytes.add(pojo.getId());
         }
     }
 
-    private void encodeResult(ArrayList<Byte> bytes, Result pojo) {
+    private void encodeResult(final ArrayList<Byte> bytes, final Result pojo) {
         bytes.add(pojo.getFirstFlag());
         bytes.add((byte) 0x03);
         bytes.add(pojo.getSecondFlag());
@@ -187,23 +188,24 @@ public class TCAPEncoder extends AbstractEncoder<TcapMessage> {
         bytes.add(pojo.getId());
     }
 
-    private void encodeApplicationContext(@Nonnull ArrayList<Byte> bytes, @Nonnull ApplicationContextName pojo) {
+    private void encodeApplicationContext(@Nonnull final ArrayList<Byte> bytes,
+                                          @Nonnull final ApplicationContextName pojo) {
         bytes.add(pojo.getMainType());
-        ArrayList<Byte> sub_bytes = Lists.newArrayList();
+        ArrayList<Byte> subBytes = Lists.newArrayList();
 
-        sub_bytes.add(pojo.getMessageType());
+        subBytes.add(pojo.getMessageType());
 
         List<Byte> message = splitApplicationContextMessage(pojo.getMessage());
         pojo.setMessageLength((byte) message.size());
-        sub_bytes.add(pojo.getMessageLength());
-        sub_bytes.addAll(message);
+        subBytes.add(pojo.getMessageLength());
+        subBytes.addAll(message);
 
-        pojo.setTotalLength((byte) sub_bytes.size());
+        pojo.setTotalLength((byte) subBytes.size());
         bytes.add(pojo.getTotalLength());
-        bytes.addAll(sub_bytes);
+        bytes.addAll(subBytes);
     }
 
-    private List<Byte> splitApplicationContextMessage(String message) {
+    private List<Byte> splitApplicationContextMessage(final String message) {
         List<Byte> result = Lists.newArrayList();
         String string = message.replaceFirst("0", "");
         String[] split = string.split("\\.");
@@ -213,16 +215,16 @@ public class TCAPEncoder extends AbstractEncoder<TcapMessage> {
             }
         }
         return result;
-
     }
 
-    private void encodeOid(@Nonnull ArrayList<Byte> bytes, @Nonnull Oid pojo, TCAPType type) {
+    private void encodeOid(@Nonnull final ArrayList<Byte> bytes,
+                           @Nonnull final Oid pojo,
+                           final TCAPType type) {
         bytes.add(pojo.getFirstFlag());
         bytes.add(type.getFirstFlag());
         bytes.add(pojo.getSecondFlag());
         bytes.add(type.getSecondFlag());
         bytes.add(pojo.getThirdFlag());
-
 
         ArrayList<Byte> oid = Lists.newArrayList();
         String string = pojo.getOid().replaceFirst("0\\.", "");
@@ -238,10 +240,9 @@ public class TCAPEncoder extends AbstractEncoder<TcapMessage> {
         }
         bytes.add((byte) oid.size());
         bytes.addAll(oid);
-//        bytes.addAll(Lists.newArrayList((byte)0x00,(byte)0x11,(byte)0x86,(byte)0x05,(byte)0x01,(byte)0x01,(byte)0x01)); //pojo.getOid()
     }
 
-    private void encodeOidNumber(ArrayList<Byte> bytes, String s) {
+    private void encodeOidNumber(final ArrayList<Byte> bytes, final String s) {
         byte[] array = ByteBuffer.allocate(2).putShort(Short.parseShort(s)).array();
 
         String[] split = Converter.bytesToHex(array).split("");
@@ -250,20 +251,13 @@ public class TCAPEncoder extends AbstractEncoder<TcapMessage> {
             firstByte = (byte) (firstByte << 4 | 8);
             firstByte = (byte) (firstByte | Byte.parseByte(split[0]));
 
-            byte secondByte = 0;
-            secondByte = (byte) (Byte.parseByte(split[1]) << 1);
-
-            byte thirdByte = 0;
-            thirdByte = Byte.parseByte(split[2]);
-
-            byte fourthByte = 0;
-            fourthByte = Byte.parseByte(split[3]);
+            byte secondByte = (byte) (Byte.parseByte(split[1]) << 1);
+            byte thirdByte = Byte.parseByte(split[2]);
+            byte fourthByte = Byte.parseByte(split[3]);
 
             bytes.add((byte) (firstByte << 4 | secondByte));
             bytes.add((byte) (thirdByte << 4 | fourthByte));
         }
-
-
     }
 
 }

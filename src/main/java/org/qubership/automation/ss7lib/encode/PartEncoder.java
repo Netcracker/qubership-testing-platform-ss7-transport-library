@@ -21,7 +21,20 @@ import java.nio.ByteBuffer;
 import java.util.List;
 
 public interface PartEncoder<T> {
+
+    /**
+     * Encode messagePart into a new ByteBuffer object.
+     *
+     * @param messagePart object to be encoded
+     * @return a new ByteBuffer with encoding result.
+     */
     ByteBuffer encode(T messagePart);
 
+    /**
+     * Encode messagePart into a new List<Byte> object.
+     *
+     * @param messagePart object to be encoded
+     * @return a new List<Byte> with encoding result.
+     */
     List<Byte> encodeToArray(T messagePart);
 }

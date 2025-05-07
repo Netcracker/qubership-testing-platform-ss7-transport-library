@@ -22,46 +22,50 @@ import java.nio.ByteBuffer;
 import org.qubership.automation.ss7lib.convert.Converter;
 import org.qubership.automation.ss7lib.decode.Utils;
 import org.qubership.automation.ss7lib.model.sub.cap.message.CAPMessageApplyChargingArg;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ApplyChargingArgDecoder implements CapDecoder<CAPMessageApplyChargingArg> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApplyChargingArgDecoder.class);
-
+    /**
+     * Parse CAPMessageApplyChargingArg message from ByteBuffer.
+     *
+     * @param buffer ByteBuffer to parse
+     * @return CAPMessageApplyChargingArg parsed from the buffer.
+     */
     @Override
-    public CAPMessageApplyChargingArg decode(ByteBuffer buffer) {
-        LOGGER.info("Start parsing ApplyChargingArg");
-        CAPMessageApplyChargingArg arg = new CAPMessageApplyChargingArg();
+    public CAPMessageApplyChargingArg decode(final ByteBuffer buffer) {
+        log.info("Start parsing ApplyChargingArg");
         if (!buffer.hasRemaining() || buffer.get() != 0x30) {
             return null;
         }
         byte length = buffer.get();
         ByteBuffer chargingBuffer = Utils.subBuffer(length, buffer);
         byte flag = chargingBuffer.get();
-        LOGGER.debug("Apply charge flag: {}", flag);
+        log.debug("Apply charge flag: {}", flag);
+        CAPMessageApplyChargingArg arg = new CAPMessageApplyChargingArg();
         decodeAch(arg, chargingBuffer);
         decodePartyToCharge(arg, chargingBuffer);
-        LOGGER.info("Finished parsing ApplyChargingArg: {}", arg);
+        log.info("Finished parsing ApplyChargingArg: {}", arg);
         return arg;
     }
 
-    private void decodePartyToCharge(CAPMessageApplyChargingArg arg, ByteBuffer chargingBuffer) {
+    private void decodePartyToCharge(final CAPMessageApplyChargingArg arg, final ByteBuffer chargingBuffer) {
         if (!chargingBuffer.hasRemaining() || chargingBuffer.get() != (byte) 0xa2) {
             return;
         }
-        LOGGER.debug("Party to charge length: {}", chargingBuffer.get());
-        LOGGER.debug("Party to charge flag: {}", chargingBuffer.get());
-        LOGGER.debug("Party to charge  value length: {}", chargingBuffer.get());
+        log.debug("Party to charge length: {}", chargingBuffer.get());
+        log.debug("Party to charge flag: {}", chargingBuffer.get());
+        log.debug("Party to charge  value length: {}", chargingBuffer.get());
         CAPMessageApplyChargingArg.PartyToCharge partyToCharge = new CAPMessageApplyChargingArg.PartyToCharge();
         arg.setPartyToCharge(partyToCharge);
         partyToCharge.setStringBytes(Converter.bytesToHex(chargingBuffer.get()));
-
     }
 
-    private void decodeAch(CAPMessageApplyChargingArg arg, ByteBuffer chargingBuffer) {
+    private void decodeAch(final CAPMessageApplyChargingArg arg, final ByteBuffer chargingBuffer) {
         byte valueLength = chargingBuffer.get();
-        LOGGER.debug("Characteristic length: {}", valueLength);
+        log.debug("Characteristic length: {}", valueLength);
 
         ByteBuffer valueData = Utils.subBuffer(valueLength, chargingBuffer);
 

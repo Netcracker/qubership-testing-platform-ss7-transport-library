@@ -29,7 +29,6 @@ import javax.annotation.Nonnull;
 import org.qubership.automation.ss7lib.convert.Converter;
 import org.qubership.automation.ss7lib.decode.Utils;
 import org.qubership.automation.ss7lib.encode.AbstractEncoder;
-import org.qubership.automation.ss7lib.encode.tcap.TCAPEncoder;
 import org.qubership.automation.ss7lib.model.AbstractMessage;
 import org.qubership.automation.ss7lib.model.CapMessage;
 import org.qubership.automation.ss7lib.model.pojo.MiscCallInfo;
@@ -45,40 +44,45 @@ import org.qubership.automation.ss7lib.model.sub.cap.message.InitialDetectionPoi
 import org.qubership.automation.ss7lib.model.sub.cap.message.LegID;
 import org.qubership.automation.ss7lib.model.type.EventType;
 import org.qubership.automation.ss7lib.model.type.MonitorMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 public class CAPEncoder extends AbstractEncoder<CapMessage> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TCAPEncoder.class);
-    private InitialIdpEncoder initialIdpEncoder = new InitialIdpEncoder();
+    /**
+     * InitialIdpEncoder object.
+     */
+    private final InitialIdpEncoder initialIdpEncoder = new InitialIdpEncoder();
 
+    /**
+     * Encode AbstractMessage; place result into a new byte[].
+     *
+     * @param pojo - AbstractMessage to encode
+     * @return byte[] filled with encoding result.
+     */
     @Override
-    public byte[] encode(@Nonnull AbstractMessage pojo) {
+    public byte[] encode(@Nonnull final AbstractMessage pojo) {
         CapMessage capMessage = (CapMessage) pojo;
-        LOGGER.info("Start CAP encode");
-        LOGGER.info("Encode message: {}", pojo);
+        log.info("Start encode of CAP message: {}", pojo);
         ArrayList<Byte> bytes = Lists.newArrayList();
-        ArrayList<Byte> sub_bytes = Lists.newArrayList();
+        ArrayList<Byte> subBytes = Lists.newArrayList();
 
         bytes.add(capMessage.getStartFlag());
         if (Objects.nonNull(capMessage.getInvoke())) {
-            encodeInvoke(sub_bytes, capMessage.getInvoke());
+            encodeInvoke(subBytes, capMessage.getInvoke());
         }
-        validateLengthMessage(bytes, (byte) sub_bytes.size());
-        bytes.add((byte) sub_bytes.size());
-        bytes.addAll(sub_bytes);
+        validateLengthMessage(bytes, (byte) subBytes.size());
+        bytes.add((byte) subBytes.size());
+        bytes.addAll(subBytes);
         byte[] result = convertListToArray(bytes);
         Utils.logTrace("Finish CAP message encode: \n{}", getClass(), result);
         return result;
     }
 
-    private void encodeInvoke(@Nonnull ArrayList<Byte> bytes, @Nonnull CapInvoke capMessage) {
+    private void encodeInvoke(@Nonnull final ArrayList<Byte> bytes,
+                              @Nonnull final CapInvoke capMessage) {
         if (Objects.nonNull(capMessage.getInvokeID())) {
             encodePojoFlagParam(bytes, capMessage.getInvokeID());
             Utils.logTrace("Invoke id: {}", bytes, getClass());
@@ -93,7 +97,8 @@ public class CAPEncoder extends AbstractEncoder<CapMessage> {
         }
     }
 
-    private void encodeMessage(@Nonnull ArrayList<Byte> bytes, @Nonnull CAPMessagePojo capMessage) {
+    private void encodeMessage(@Nonnull final ArrayList<Byte> bytes,
+                               @Nonnull final CAPMessagePojo capMessage) {
         bytes.add(capMessage.getStartFlag());
         ArrayList<Byte> message = Lists.newArrayList();
         Utils.logTrace("Message flag: \n{}", bytes, getClass());
@@ -120,23 +125,25 @@ public class CAPEncoder extends AbstractEncoder<CapMessage> {
         bytes.addAll(message);
     }
 
-    private void encodeAcr(ArrayList<Byte> message, ApplyChargingReportArg capMessage) {
+    private void encodeAcr(final ArrayList<Byte> message, final ApplyChargingReportArg capMessage) {
         for (byte b : capMessage.getValue()) {
             message.add(b);
         }
     }
 
-    private void encodeConnect(@Nonnull ArrayList<Byte> bytes, @Nonnull CAPMessageConnectArg capMessage) {
+    private void encodeConnect(@Nonnull final ArrayList<Byte> bytes,
+                               @Nonnull final CAPMessageConnectArg capMessage) {
         bytes.add(capMessage.getFlag());
-        ArrayList<Byte> sub_bytes = Lists.newArrayList();
+        ArrayList<Byte> subBytes = Lists.newArrayList();
         for (CAPMessageConnectArg.DestinationRoutingAddress address : capMessage.getDestinationRoutingAddressList()) {
-            encodePojoFlagParam(sub_bytes, address);
+            encodePojoFlagParam(subBytes, address);
         }
-        bytes.add((byte) sub_bytes.size());
-        bytes.addAll(sub_bytes);
+        bytes.add((byte) subBytes.size());
+        bytes.addAll(subBytes);
     }
 
-    private void encodeAC(@Nonnull ArrayList<Byte> bytes, @Nonnull CAPMessageApplyChargingArg capMessage) {
+    private void encodeAC(@Nonnull final ArrayList<Byte> bytes,
+                          @Nonnull final CAPMessageApplyChargingArg capMessage) {
         if (Objects.nonNull(capMessage.getaChBillingChargingCharacteristics())) {
             encodePojoFlagParam(bytes, capMessage.getaChBillingChargingCharacteristics());
         }
@@ -145,12 +152,13 @@ public class CAPEncoder extends AbstractEncoder<CapMessage> {
         }
     }
 
-    private void encodeIDP(@Nonnull ArrayList<Byte> bytes, @Nonnull InitialDetectionPoint pojo) {
+    private void encodeIDP(@Nonnull final ArrayList<Byte> bytes,
+                           @Nonnull final InitialDetectionPoint pojo) {
         bytes.addAll(initialIdpEncoder.encodeToArray(pojo));
     }
 
 
-    private void encodeERB(List<Byte> message, CAPMessageEventReportBCSMArg erb) {
+    private void encodeERB(final List<Byte> message, final CAPMessageEventReportBCSMArg erb) {
         erb.getBscmEventList().forEach(event -> {
             message.add(event.getAfterLengthFlag());
             message.add((byte) 0x1); // length of ERB.type
@@ -171,7 +179,7 @@ public class CAPEncoder extends AbstractEncoder<CapMessage> {
         });
     }
 
-    private void encodeMiscInfo(BSCMEvent event, List<Byte> message) {
+    private void encodeMiscInfo(final BSCMEvent event, final List<Byte> message) {
         MiscCallInfo miscCallInfo = event.getMiscCallInfo();
         if (Objects.isNull(miscCallInfo)) {
             return;
@@ -185,53 +193,52 @@ public class CAPEncoder extends AbstractEncoder<CapMessage> {
         message.addAll(bytes);
     }
 
-    private void encodeSpecificInformation(List<Byte> message, BSCMEvent event, EventType eventType) {
+    private void encodeSpecificInformation(final List<Byte> message,
+                                           final BSCMEvent event,
+                                           final EventType eventType) {
         message.addAll(asList(eventType.getFlags()));
         LinkedList<Byte> list = new LinkedList<>();
         list.add((byte) 0x80); //disconnect flag
         byte[] bytes = Converter.hexToBytes(event.getSpecificInformation().getReleaseCause());
         list.add((byte) bytes.length);
-
         list.addAll(asList(bytes));
-
         if (event.isCallForwarded()) {
             list.addAll(asList(new byte[]{(byte) 0x9f, 0x32, 0})); /*CallForwarded flag*/
         }
-
         message.add((byte) (list.size()));
         message.addAll(list);
-
     }
 
-    private void encodeRRB(@Nonnull ArrayList<Byte> bytes, @Nonnull CAPMessageRequestReportBCSMEventArg pojo) {
+    private void encodeRRB(@Nonnull final ArrayList<Byte> bytes,
+                           @Nonnull final CAPMessageRequestReportBCSMEventArg pojo) {
         bytes.add(pojo.getFlag());
-        ArrayList<Byte> sub_bytes = Lists.newArrayList();
+        ArrayList<Byte> subBytes = Lists.newArrayList();
         for (CAPMessageRequestReportBCSMEventArg.BSCMEvent bscmEvent : pojo.getBscmEventList()) {
-            encodeBSCMEvent(sub_bytes, bscmEvent);
+            encodeBSCMEvent(subBytes, bscmEvent);
         }
-        bytes.add((byte) sub_bytes.size());
-        bytes.addAll(sub_bytes);
+        bytes.add((byte) subBytes.size());
+        bytes.addAll(subBytes);
     }
 
-    private void encodeBSCMEvent(@Nonnull ArrayList<Byte> bytes,
-                                 @Nonnull CAPMessageRequestReportBCSMEventArg.BSCMEvent bscmEvent) {
+    private void encodeBSCMEvent(@Nonnull final ArrayList<Byte> bytes,
+                                 @Nonnull final CAPMessageRequestReportBCSMEventArg.BSCMEvent bscmEvent) {
         bytes.add(bscmEvent.getStartFlag());
-        ArrayList<Byte> sub_bytes = Lists.newArrayList();
+        ArrayList<Byte> subBytes = Lists.newArrayList();
 
-        sub_bytes.add(bscmEvent.getAfterLengthFlag());
-        sub_bytes.add(bscmEvent.getEventType().getLength());
-        sub_bytes.add(bscmEvent.getEventType().getId());
+        subBytes.add(bscmEvent.getAfterLengthFlag());
+        subBytes.add(bscmEvent.getEventType().getLength());
+        subBytes.add(bscmEvent.getEventType().getId());
         MonitorMode monitorMode = bscmEvent.getMonitorMode();
         if (Objects.nonNull(monitorMode)) {
-            sub_bytes.addAll(asList(monitorMode.getCode()));
+            subBytes.addAll(asList(monitorMode.getCode()));
         }
         if (Objects.nonNull(bscmEvent.getLegID())) {
-            sub_bytes.addAll(asList(bscmEvent.getLegID().getStartFlag()));
-            sub_bytes.add(bscmEvent.getLegID().getLength());
-            sub_bytes.add(bscmEvent.getLegID().getId());
+            subBytes.addAll(asList(bscmEvent.getLegID().getStartFlag()));
+            subBytes.add(bscmEvent.getLegID().getLength());
+            subBytes.add(bscmEvent.getLegID().getId());
         }
-        bytes.add((byte) sub_bytes.size());
-        bytes.addAll(sub_bytes);
+        bytes.add((byte) subBytes.size());
+        bytes.addAll(subBytes);
     }
 
 }

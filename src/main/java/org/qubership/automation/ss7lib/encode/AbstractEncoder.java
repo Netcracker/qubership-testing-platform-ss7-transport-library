@@ -29,34 +29,75 @@ import com.google.common.primitives.Bytes;
 
 public abstract class AbstractEncoder<T extends AbstractMessage> implements Encoder {
 
-    protected byte[] convertListToArray(@Nonnull List<Byte> bytes) {
+    /**
+     * Create and fill byte[] from List<Byte>.
+     *
+     * @param bytes - List<Byte> to process
+     * @return byte[] created and filled from List of bytes.
+     */
+    protected byte[] convertListToArray(@Nonnull final List<Byte> bytes) {
         ByteBuffer buffer = ByteBuffer.allocate(bytes.size());
         bytes.forEach(buffer::put);
         return buffer.array();
     }
 
-
-    protected byte convertStringBinaryToByte(String binaryString) {
+    /**
+     * Parse String representation of binary integer, then get byte from it.
+     *
+     * @param binaryString - String representation of binary integer
+     * @return byte cast from integer parsed from binaryString.
+     */
+    protected byte convertStringBinaryToByte(final String binaryString) {
         return (byte) Integer.parseInt(binaryString, 2);
     }
 
-    protected byte[] intToBytes(int number) {
+    /**
+     * Create and fill byte[] from int number.
+     *
+     * @param number - int number to process
+     * @return byte[] created and filled from int number.
+     */
+    protected byte[] intToBytes(final int number) {
         return ByteBuffer.allocate(4).putInt(number).array();
     }
 
-    protected byte[] shortToBytes(short number) {
+    /**
+     * Create and fill byte[] from short number.
+     *
+     * @param number - short number to process
+     * @return byte[] created and filled from short number.
+     */
+    protected byte[] shortToBytes(final short number) {
         return ByteBuffer.allocate(2).putShort(number).array();
     }
 
-    protected byte[] byteToBytes(byte number) {
+    /**
+     * Create and fill byte[] from byte number.
+     *
+     * @param number - byte number to process
+     * @return byte[] created and filled from byte number.
+     */
+    protected byte[] byteToBytes(final byte number) {
         return ByteBuffer.allocate(1).put(number).array();
     }
 
-    protected List<Byte> asList(byte[] bytes) {
+    /**
+     * Create and fill List<Byte> from byte[].
+     *
+     * @param bytes - byte[] to process
+     * @return List<Byte> created and filled from byte[] bytes.
+     */
+    protected List<Byte> asList(final byte[] bytes) {
         return Bytes.asList(bytes);
     }
 
-    protected void validateLengthMessage(ArrayList<Byte> bytes, byte length) {
+    /**
+     * Validate length parameter; in some conditions add (byte) 0x81 to bytes array.
+     *
+     * @param bytes ArrayList<Byte> to add extra byte in case incorrect length
+     * @param length byte length value to validate.
+     */
+    protected void validateLengthMessage(final ArrayList<Byte> bytes, final byte length) {
         if (length > 0x79 || length < 0) {
             bytes.add((byte) 0x81);
         }

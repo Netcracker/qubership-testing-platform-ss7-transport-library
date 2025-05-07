@@ -32,39 +32,40 @@ import org.qubership.automation.ss7lib.model.SccpMessage;
 import org.qubership.automation.ss7lib.model.sub.sccp.AddressIndicator;
 import org.qubership.automation.ss7lib.model.sub.sccp.CallPartyAddress;
 import org.qubership.automation.ss7lib.model.sub.sccp.GlobalTitle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SCCPEncoder extends AbstractEncoder<SccpMessage> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SCCPEncoder.class);
-
-
+    /**
+     * Encode SCCP Message; place result into a new byte[].
+     *
+     * @param abstractMessage - AbstractMessage to encode
+     * @return a new byte[] filled with encoding result.
+     */
     @Override
-    public byte[] encode(@Nonnull AbstractMessage abstractMessage) {
+    public byte[] encode(@Nonnull final AbstractMessage abstractMessage) {
         SccpMessage pojo = (SccpMessage) abstractMessage;
-        LOGGER.info("Start SCCP encode");
-        LOGGER.info("Encode message: {}", pojo);
+        log.info("Start encode of SCCP message: {}", pojo);
         ArrayList<Byte> bytes = Lists.newArrayList();
-        LOGGER.debug("MessageType: {}", pojo.getMessageType());
+        log.debug("MessageType: {}", pojo.getMessageType());
         bytes.add(pojo.getMessageType().getId());
-        LOGGER.debug("MessageHandling: {}", pojo.getMessageHandling());
-        LOGGER.debug("Class: {}", pojo.getClazz());
-        bytes.add(compoundParametrsToBinaryString(pojo.getMessageHandling(), pojo.getClazz()));
-        LOGGER.debug("PointerToFirstMandatoryVariable: {}", pojo.getPointerToFirstMandatoryVariable());
+        log.debug("MessageHandling: {}, Class: {}", pojo.getMessageHandling(), pojo.getClazz());
+        bytes.add(compoundParametersToBinaryString(pojo.getMessageHandling(), pojo.getClazz()));
+        log.debug("PointerToFirstMandatoryVariable: {}", pojo.getPointerToFirstMandatoryVariable());
         bytes.add(pojo.getPointerToFirstMandatoryVariable());
-        LOGGER.debug("PointerToSecondMandatoryVariable: {}", pojo.getPointerToSecondMandatoryVariable());
+        log.debug("PointerToSecondMandatoryVariable: {}", pojo.getPointerToSecondMandatoryVariable());
         bytes.add(pojo.getPointerToSecondMandatoryVariable());
-        LOGGER.debug("PointerToThirdMandatoryVariable: {}", pojo.getPointerToThirdMandatoryVariable());
+        log.debug("PointerToThirdMandatoryVariable: {}", pojo.getPointerToThirdMandatoryVariable());
         bytes.add(pojo.getPointerToThirdMandatoryVariable());
         if (Objects.nonNull(pojo.getCalledPartyAddress())) {
-            LOGGER.debug("Start CalledPartyAddress for SCCP: ");
+            log.debug("Start CalledPartyAddress for SCCP: ");
             encodeCall(bytes, pojo.getCalledPartyAddress(), pojo.isITUProtocol());
         }
         if (Objects.nonNull(pojo.getCallingPartyAddress())) {
-            LOGGER.debug("Start CallingPartyAddress for SCCP: ");
+            log.debug("Start CallingPartyAddress for SCCP: ");
             encodeCall(bytes, pojo.getCallingPartyAddress(), pojo.isITUProtocol());
         }
         byte[] result = convertListToArray(bytes);
@@ -72,25 +73,29 @@ public class SCCPEncoder extends AbstractEncoder<SccpMessage> {
         return result;
     }
 
-    private void encodeCall(@Nonnull ArrayList<Byte> bytes, @Nonnull CallPartyAddress pojo, boolean isITUProtocol) {
-        ArrayList<Byte> sub_bytes = Lists.newArrayList();
+    private void encodeCall(@Nonnull final ArrayList<Byte> bytes,
+                            @Nonnull final CallPartyAddress pojo,
+                            final boolean isITUProtocol) {
+        ArrayList<Byte> subBytes = Lists.newArrayList();
         if (Objects.nonNull(pojo.getAddressIndicator())) {
-            LOGGER.debug("Start AddressIndicator: {}", pojo.getAddressIndicator());
-            encodeAI(sub_bytes, pojo.getAddressIndicator(), isITUProtocol);
+            log.debug("Start AddressIndicator: {}", pojo.getAddressIndicator());
+            encodeAddressIndicator(subBytes, pojo.getAddressIndicator(), isITUProtocol);
         }
-        LOGGER.debug("SubSystemNumber: {}", pojo.getSubSystemNumber());
-        sub_bytes.add(pojo.getSubSystemNumber().getCode());
+        log.debug("SubSystemNumber: {}", pojo.getSubSystemNumber());
+        subBytes.add(pojo.getSubSystemNumber().getCode());
         if (Objects.nonNull(pojo.getGlobalTitle())) {
-            LOGGER.debug("Start GlobalTitle for CalledPartyAddress foe SCCP: ");
-            encodeGT(sub_bytes, pojo.getGlobalTitle());
+            log.debug("Start GlobalTitle for CalledPartyAddress foe SCCP: ");
+            encodeGlobalTitle(subBytes, pojo.getGlobalTitle());
         }
-        pojo.setLength((byte) sub_bytes.size());
-        LOGGER.debug("Length: {}", pojo.getLength());
+        pojo.setLength((byte) subBytes.size());
+        log.debug("Length: {}", pojo.getLength());
         bytes.add(pojo.getLength());
-        bytes.addAll(sub_bytes);
+        bytes.addAll(subBytes);
     }
 
-    private void encodeAI(@Nonnull ArrayList<Byte> bytes, @Nonnull AddressIndicator pojo, boolean isITUProtocol) {
+    private void encodeAddressIndicator(@Nonnull final ArrayList<Byte> bytes,
+                                        @Nonnull final AddressIndicator pojo,
+                                        final boolean isITUProtocol) {
         byte result = (byte) 0;
         result = (byte) (result << 1 | pojo.getNationalIndicator());
         result = (byte) (result << 1 | pojo.getRoutingIndicator());
@@ -102,24 +107,23 @@ public class SCCPEncoder extends AbstractEncoder<SccpMessage> {
             result = (byte) (result << 1 | pojo.getPointCodeIndicator());
             result = (byte) (result << 1 | pojo.getSubSystemNumberIndicator());
         }
-        Utils.logTrace("Address idicator: {}", getClass(), result);
+        Utils.logTrace("Address indicator: {}", getClass(), result);
         bytes.add(result);
     }
 
-    private void encodeGT(@Nonnull ArrayList<Byte> bytes, @Nonnull GlobalTitle pojo) {
-        LOGGER.debug("TranslationType: {}", pojo.getTranslationType());
+    private void encodeGlobalTitle(@Nonnull final ArrayList<Byte> bytes,
+                                   @Nonnull final GlobalTitle pojo) {
+        log.debug("TranslationType: {}, CallPartyDigits: {}", pojo.getTranslationType(), pojo.getCallPartyDigits());
         bytes.add(pojo.getTranslationType());
-        LOGGER.debug("CallPartyDigits: {}", pojo.getCallPartyDigits());
         bytes.addAll(splitStringBytes(reverse(String.valueOf(pojo.getCallPartyDigits())), true));
     }
 
-    private byte compoundParametrsToBinaryString(Byte... pieceOfBinary) {
+    private byte compoundParametersToBinaryString(final Byte... pieceOfBinary) {
         byte result = 0;
         for (byte piece : pieceOfBinary) {
             result = (byte) (result << 4 | piece);
         }
         return result;
     }
-
 
 }

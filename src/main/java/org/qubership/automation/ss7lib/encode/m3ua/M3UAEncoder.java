@@ -46,7 +46,7 @@ public class M3UAEncoder extends AbstractEncoder<M3uaMessage> {
      * @return byte[] result of encoding of source message as M3uaMessage.
      */
     @Override
-    public byte[] encode(@Nonnull AbstractMessage abstractMessage) {
+    public byte[] encode(@Nonnull final AbstractMessage abstractMessage) {
         M3uaMessage pojo = (M3uaMessage) abstractMessage;
         log.info("Start M3UA message encode: {}", pojo);
         ArrayList<Byte> bytes = Lists.newArrayList();
@@ -66,7 +66,8 @@ public class M3UAEncoder extends AbstractEncoder<M3uaMessage> {
         return result;
     }
 
-    private void encodeSUB(@Nonnull ArrayList<Byte> bytes, @Nonnull M3uaMessage pojo) {
+    private void encodeSUB(@Nonnull final ArrayList<Byte> bytes,
+                           @Nonnull final M3uaMessage pojo) {
         if (Objects.nonNull(pojo.getNetworkAppearance())) {
             log.debug("Start NetworkAppearance for M3UA: ");
             encodeNetworkAppearance(bytes, pojo.getNetworkAppearance());
@@ -81,11 +82,11 @@ public class M3UAEncoder extends AbstractEncoder<M3uaMessage> {
         }
     }
 
-    private void encodeCommonPartOfM3UA(@Nonnull ArrayList<Byte> bytes,
-                                        ParameterTag parameterTag,
-                                        short parameterLength,
-                                        int extraProperty,
-                                        @Nullable String subClassName) {
+    private void encodeCommonPartOfM3UA(@Nonnull final ArrayList<Byte> bytes,
+                                        final ParameterTag parameterTag,
+                                        final short parameterLength,
+                                        final int extraProperty,
+                                        @Nullable final String subClassName) {
         log.debug("ParameterTag: {}, ParameterLength: {}", parameterTag, parameterLength);
         bytes.addAll(asList(parameterTag.getCode()));
         bytes.addAll(asList(shortToBytes(parameterLength)));
@@ -95,17 +96,21 @@ public class M3UAEncoder extends AbstractEncoder<M3uaMessage> {
         }
     }
 
-    private void encodeNetworkAppearance(@Nonnull ArrayList<Byte> bytes, @Nonnull NetworkAppearance pojo) {
+    private void encodeNetworkAppearance(@Nonnull final ArrayList<Byte> bytes,
+                                         @Nonnull final NetworkAppearance pojo) {
         encodeCommonPartOfM3UA(bytes, pojo.getParameterTag(), pojo.getParameterLength(),
                 pojo.getNetworkAppearance(), "NetworkAppearance");
     }
 
-    private void encodeRoutingContext(@Nonnull ArrayList<Byte> bytes, @Nonnull RoutingContext pojo) {
+    private void encodeRoutingContext(@Nonnull final ArrayList<Byte> bytes,
+                                      @Nonnull final RoutingContext pojo) {
         encodeCommonPartOfM3UA(bytes, pojo.getParameterTag(), pojo.getParameterLength(),
                 pojo.getRoutingContext(), "RoutingContext");
     }
 
-    private void encodeProtocolData(@Nonnull ArrayList<Byte> bytes, @Nonnull ProtocolData pojo, Standard standard) {
+    private void encodeProtocolData(@Nonnull final ArrayList<Byte> bytes,
+                                    @Nonnull final ProtocolData pojo,
+                                    final Standard standard) {
         encodeCommonPartOfM3UA(bytes, pojo.getParameterTag(), pojo.getParameterLength(),
                 0, null);
         bytes.addAll(asList(standard.encode(pojo.getOpc()))); //new byte[]{0, 0, 3, 32}

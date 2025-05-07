@@ -39,32 +39,35 @@ import org.qubership.automation.ss7lib.parse.parser.RedirectionNumber;
 import com.google.common.collect.Lists;
 
 public class InitialIdpEncoder implements PartEncoder<InitialDetectionPoint> {
+
+    /**
+     * PartyNumberEncoder object.
+     */
     private final PartyNumberEncoder partyNumberEncoder = new PartyNumberEncoder();
 
-
-    private void encodePartNumber(List<Byte> bytes, PartyNumber callPartyNumber, byte callPartyNumberFlag) {
-        if (Objects.nonNull(callPartyNumber)) {
-            ByteBuffer buffer = partyNumberEncoder.encode(callPartyNumber);
-            bytes.add(callPartyNumberFlag);
-            for (byte b : buffer.array()) {
-                bytes.add(b);
-            }
-        }
-    }
-
+    /**
+     * Encode InitialDetectionPoint into ByteBuffer.
+     *
+     * @param pojo InitialDetectionPoint object to be encoded
+     * @return ByteBuffer containing the result of encoding; currently UnsupportedOperationException is thrown instead.
+     */
     @Override
-    public ByteBuffer encode(InitialDetectionPoint pojo) {
+    public ByteBuffer encode(final InitialDetectionPoint pojo) {
         throw new UnsupportedOperationException("Only #encodeToArray is supported");
     }
 
+    /**
+     * Encode InitialDetectionPoint into List<Byte>.
+     *
+     * @param idp InitialDetectionPoint object to be encoded
+     * @return List<Byte> array containing the result of encoding.
+     */
     @Override
-    public List<Byte> encodeToArray(InitialDetectionPoint idp) {
+    public List<Byte> encodeToArray(final InitialDetectionPoint idp) {
         List<Byte> bytes = new LinkedList<>();
         encodeParameter(bytes, idp, idp.getServiceKey());
-
-        encodePartNumber(bytes, idp.getCalledPartyNumber(), PartyNumber.CALLED_PARTY_NUMBER_FLAG);
-        encodePartNumber(bytes, idp.getCallingPartyNumber(), PartyNumber.CALLING_PARTY_NUMBER_FLAG);
-
+        encodePartyNumber(bytes, idp.getCalledPartyNumber(), PartyNumber.CALLED_PARTY_NUMBER_FLAG);
+        encodePartyNumber(bytes, idp.getCallingPartyNumber(), PartyNumber.CALLING_PARTY_NUMBER_FLAG);
         encodeParameter(bytes, idp, idp.getCallingPartysCategory());
         encodeParameter(bytes, idp, idp.getIpsspCapabilities());
         encodeOriginalRedirection(bytes, idp);
@@ -91,7 +94,6 @@ public class InitialIdpEncoder implements PartEncoder<InitialDetectionPoint> {
             encodePojoFlagParam(bytes, locationInformation);
             bytes.addAll(sub_bytes);
         }
-
         encodeParameter(bytes, idp, idp.getExtBasicServiceCode());
         encodeParameter(bytes, idp, idp.getCallReferenceNumber());
         encodeParameter(bytes, idp, idp.getMscAddress());
@@ -107,7 +109,7 @@ public class InitialIdpEncoder implements PartEncoder<InitialDetectionPoint> {
         return bytes;
     }
 
-    private void encodeOriginalRedirection(List<Byte> bytes, InitialDetectionPoint idp) {
+    private void encodeOriginalRedirection(final List<Byte> bytes, final InitialDetectionPoint idp) {
         RedirectionPartyId calledPartyId = idp.getOriginalCalledPartyId();
         if (calledPartyId == null) {
             return;
@@ -124,7 +126,7 @@ public class InitialIdpEncoder implements PartEncoder<InitialDetectionPoint> {
         bytes.addAll(redirection);
     }
 
-    private void encodeRedirection(List<Byte> bytes, InitialDetectionPoint idp) {
+    private void encodeRedirection(final List<Byte> bytes, final InitialDetectionPoint idp) {
         RedirectionPartyId redirectingPartyId = idp.getRedirectingPartyId();
         if (redirectingPartyId == null) {
             return;
@@ -142,19 +144,31 @@ public class InitialIdpEncoder implements PartEncoder<InitialDetectionPoint> {
         encodeParameter(bytes, idp, idp.getRedirectionInformation());
     }
 
-    private void encodePartyNumber(InitialDetectionPoint.LocationInformation locationInformation,
-                                   ArrayList<Byte> sub_bytes) {
+    private void encodePartyNumber(final InitialDetectionPoint.LocationInformation locationInformation,
+                                   final ArrayList<Byte> subBytes) {
         if (locationInformation.getLocationNumber() == null) {
             return;
         }
         /*LocationNumber encoding*/
-        sub_bytes.add((byte) 0x82); /*LocationNumber flag*/
+        subBytes.add((byte) 0x82); /*LocationNumber flag*/
         ByteBuffer locationNumber = partyNumberEncoder.encode(locationInformation.getLocationNumber()
                 .getPartyNumber());
-        sub_bytes.addAll(asList(locationNumber.array()));
+        subBytes.addAll(asList(locationNumber.array()));
     }
 
-    private void encodeExtension(InitialDpArgExtension extension, List<Byte> bytes) {
+    private void encodePartyNumber(final List<Byte> bytes,
+                                   final PartyNumber callPartyNumber,
+                                   final byte callPartyNumberFlag) {
+        if (Objects.nonNull(callPartyNumber)) {
+            ByteBuffer buffer = partyNumberEncoder.encode(callPartyNumber);
+            bytes.add(callPartyNumberFlag);
+            for (byte b : buffer.array()) {
+                bytes.add(b);
+            }
+        }
+    }
+
+    private void encodeExtension(final InitialDpArgExtension extension, final List<Byte> bytes) {
         InitialDPExtensionEncoder encoder = new InitialDPExtensionEncoder();
         bytes.addAll(asList((byte) 0xbf, (byte) 0x3b)); /*Extension flag*/
         bytes.addAll(encoder.encodeToArray(extension));

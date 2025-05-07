@@ -30,17 +30,26 @@ import org.qubership.automation.ss7lib.model.sub.sccp.GlobalTitle;
 import org.qubership.automation.ss7lib.model.type.EnumProvider;
 import org.qubership.automation.ss7lib.model.type.MessageType;
 import org.qubership.automation.ss7lib.model.type.SubSystemNumber;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SccpDecoder implements Decoder<SccpMessage> {
 
-    private static final int ADDR_INDICATOR_AND_SUBSYSTEM_NUM_SIZE = 2;
-    private static final Logger LOGGER = LoggerFactory.getLogger(SccpDecoder.class);
+    /**
+     * Size of Address Indicator and SubSystem Number in a buffer.
+     */
+    private static final int ADDRESS_INDICATOR_AND_SUBSYSTEM_NUM_SIZE = 2;
 
+    /**
+     * SCCP message part parsing.
+     *
+     * @param buffer ByteBuffer to decode
+     * @return SccpMessage parsed from the buffer.
+     */
     @Override
-    public SccpMessage decode(ByteBuffer buffer) {
-        LOGGER.info("Start parsing sccp message part");
+    public SccpMessage decode(final ByteBuffer buffer) {
+        log.info("Start parsing sccp message part");
         SccpMessage sccpMessage = new SccpMessage();
         sccpMessage.setMessageType(EnumProvider.of(buffer.get(), MessageType.class));
         byte classAndHandling = buffer.get();
@@ -49,21 +58,21 @@ public class SccpDecoder implements Decoder<SccpMessage> {
         sccpMessage.setPointerToFirstMandatoryVariable(buffer.get());
         sccpMessage.setPointerToSecondMandatoryVariable(buffer.get());
         sccpMessage.setPointerToThirdMandatoryVariable(buffer.get());
-        LOGGER.debug("Sccp headers: {}", sccpMessage);
+        log.debug("Sccp headers: {}", sccpMessage);
         sccpMessage.setCalledPartyAddress(parseAddress(buffer));
         sccpMessage.setCallingPartyAddress(parseAddress(buffer));
         return sccpMessage;
     }
 
-    private byte parseHandling(byte classAndHandling) {
+    private byte parseHandling(final byte classAndHandling) {
         return (byte) ((byte) (classAndHandling >> 4) & 15);
     }
 
-    private byte parseClass(byte classAndHandling) {
+    private byte parseClass(final byte classAndHandling) {
         return (byte) (classAndHandling & 15);
     }
 
-    private CallPartyAddress parseAddress(ByteBuffer buffer) {
+    private CallPartyAddress parseAddress(final ByteBuffer buffer) {
         CallPartyAddress partyAddress = new CallPartyAddress();
         byte addressSize = buffer.get();
         AddressIndicator indicator = parseAddressIndicator(buffer);
@@ -75,8 +84,8 @@ public class SccpDecoder implements Decoder<SccpMessage> {
         return partyAddress;
     }
 
-    private void parseGlobalTitle(GlobalTitle globalTitle, ByteBuffer buffer, byte addressSize) {
-        byte[] data = new byte[addressSize - ADDR_INDICATOR_AND_SUBSYSTEM_NUM_SIZE];
+    private void parseGlobalTitle(final GlobalTitle globalTitle, final ByteBuffer buffer, final byte addressSize) {
+        byte[] data = new byte[addressSize - ADDRESS_INDICATOR_AND_SUBSYSTEM_NUM_SIZE];
         buffer.get(data);
         globalTitle.setTranslationType(data[0]);
         byte[] partyAddress = Arrays.copyOfRange(data, 1, data.length);
@@ -84,7 +93,7 @@ public class SccpDecoder implements Decoder<SccpMessage> {
         globalTitle.setCallPartyDigits(String.valueOf(chars));
     }
 
-    private AddressIndicator parseAddressIndicator(ByteBuffer buffer) {
+    private AddressIndicator parseAddressIndicator(final ByteBuffer buffer) {
         AddressIndicator indicator = new AddressIndicator();
         byte addressIndicator = buffer.get();
         indicator.setNationalIndicator((byte) ((byte) (addressIndicator & 128) >> 7 & 1));

@@ -31,25 +31,36 @@ import com.google.common.collect.Lists;
 
 public class InitialDPExtensionEncoder implements PartEncoder<InitialDpArgExtension> {
 
+    /**
+     * Encode InitialDpArgExtension into ByteBuffer.
+     *
+     * @param messagePart object to be encoded
+     * @return ByteBuffer containing the result of encoding; currently UnsupportedOperationException is thrown instead.
+     */
     @Override
-    public ByteBuffer encode(InitialDpArgExtension messagePart) {
+    public ByteBuffer encode(final InitialDpArgExtension messagePart) {
         throw new UnsupportedOperationException("use #encodeToArray");
     }
 
+    /**
+     * Encode InitialDpArgExtension into List<Byte>.
+     *
+     * @param argExtension object to be encoded
+     * @return List<Byte> array containing the result of encoding.
+     */
     @Override
-    public List<Byte> encodeToArray(InitialDpArgExtension argExtension) {
-        LinkedList<Byte> result = Lists.newLinkedList();
-
+    public List<Byte> encodeToArray(final InitialDpArgExtension argExtension) {
         List<Byte> bytes = Lists.newLinkedList();
         encodeExtensions(argExtension, bytes);
         encodeGmscAddress(argExtension, bytes);
+        LinkedList<Byte> result = Lists.newLinkedList();
         result.add((byte) (bytes.size() + 1));
         result.add(argExtension.getFlag()); /*initialArgsExtension*/
         result.addAll(bytes);
         return result;
     }
 
-    private void encodeGmscAddress(InitialDpArgExtension argExtension, List<Byte> bytes) {
+    private void encodeGmscAddress(final InitialDpArgExtension argExtension, final List<Byte> bytes) {
         String gmscAddress = argExtension.getGmscAddress();
         if (gmscAddress == null) {
             return;
@@ -60,7 +71,7 @@ public class InitialDPExtensionEncoder implements PartEncoder<InitialDpArgExtens
         bytes.addAll(encodedGmscAddress);
     }
 
-    private void encodeExtensions(InitialDpArgExtension argExtension, List<Byte> bytes) {
+    private void encodeExtensions(final InitialDpArgExtension argExtension, final List<Byte> bytes) {
         List<Byte> data = Lists.newLinkedList();
         argExtension.getExtensions().forEach(extension -> {
             data.add(extension.getFlag());
