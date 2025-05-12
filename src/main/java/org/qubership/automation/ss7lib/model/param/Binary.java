@@ -19,32 +19,65 @@ package org.qubership.automation.ss7lib.model.param;
 
 public class Binary extends Number {
 
+    /**
+     * String representation of binary number.
+     */
     private final String binary;
 
+    /**
+     * Constructor.
+     *
+     * @param binary - String representation of binary number.
+     */
     public Binary(String binary) {
         this.binary = binary;
     }
 
+    /**
+     * Get integer parsed from the String value with radix = 2.
+     *
+     * @return integer parsed from the String value with radix = 2.
+     */
     @Override
     public int intValue() {
         return Integer.parseInt(binary, 2);
     }
 
+    /**
+     * Get long parsed from the String value with radix = 2.
+     *
+     * @return long parsed from the String value with radix = 2.
+     */
     @Override
     public long longValue() {
         return Long.parseLong(binary, 2);
     }
 
+    /**
+     * Get float parsed from the String value.
+     *
+     * @return float parsed from the String value.
+     */
     @Override
     public float floatValue() {
         return Float.parseFloat(binary);
     }
 
+    /**
+     * Get double parsed from the String value.
+     *
+     * @return double parsed from the String value.
+     */
     @Override
     public double doubleValue() {
         return Double.parseDouble(binary);
     }
 
+    /**
+     * Simply getter of binary field.
+     *
+     * @return String binary field.
+     */
     public String stringBinary() {
         return binary;
     }

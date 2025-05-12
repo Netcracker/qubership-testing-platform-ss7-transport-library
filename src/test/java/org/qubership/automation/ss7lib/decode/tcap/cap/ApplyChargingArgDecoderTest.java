@@ -32,7 +32,7 @@ public class ApplyChargingArgDecoderTest {
     public void testDecodeApplyChargingArgs() throws IOException, URISyntaxException {
         ByteBuffer trace = DumpReader.getHexTrace("/test_data/ApplyChargingArg.hexdump");
         CAPMessageApplyChargingArg chargingArg = CapDecoderFactory.decode(ApplyChargingArgDecoder.class, trace);
-        assertEquals("a00480020708", chargingArg.getaChBillingChargingCharacteristics().getStringBytes());
+        assertEquals("a00480020708", chargingArg.getAChBillingChargingCharacteristics().getStringBytes());
         assertEquals("02", chargingArg.getPartyToCharge().getStringBytes());
     }
 }

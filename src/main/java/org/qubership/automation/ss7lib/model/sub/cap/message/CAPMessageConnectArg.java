@@ -25,35 +25,56 @@ import org.qubership.automation.ss7lib.model.sub.cap.param.AbstractParamPojo;
 import com.google.common.collect.Lists;
 
 public class CAPMessageConnectArg extends  CAPMessagePojo {
+
+    /**
+     * Start Flag byte; always = (byte) 0xa0.
+     */
     private final byte startFlag = (byte) 0xa0;
+
+    /**
+     * Message Length byte.
+     */
+    @lombok.Setter
+    @lombok.Getter
     private byte length;
 
+    /**
+     * List of DestinationRoutingAddress elements.
+     */
+    @lombok.Getter
     private final List<DestinationRoutingAddress> destinationRoutingAddressList = Lists.newArrayList();
 
+    /**
+     * Getter for flag field.
+     *
+     * @return byte startFlag value.
+     */
     public byte getFlag() {
         return startFlag;
     }
 
-    public byte getLength() {
-        return length;
-    }
-
-    public void setLength(byte length) {
-        this.length = length;
-    }
-
-    public List<DestinationRoutingAddress> getDestinationRoutingAddressList() {
-        return destinationRoutingAddressList;
-    }
-
     public static class DestinationRoutingAddress extends AbstractParamPojo implements Flag {
+
+        /**
+         * Start Flag byte; always = 0x04.
+         */
         private final byte flag = 0x04;
 
+        /**
+         * Getter for flag field.
+         *
+         * @return byte flag field value.
+         */
         @Override
         public byte getFlag() {
             return flag;
         }
 
+        /**
+         * Get boolean isHex flag.
+         *
+         * @return boolean isHex flag; always true currently.
+         */
         @Override
         public boolean isHEX() {
             return true;

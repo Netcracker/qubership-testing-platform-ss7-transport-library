@@ -21,23 +21,27 @@ import org.qubership.automation.ss7lib.model.sub.Flag;
 import org.qubership.automation.ss7lib.model.sub.cap.param.AbstractParamPojo;
 import org.qubership.automation.ss7lib.model.type.OpCodeType;
 
+import lombok.Getter;
+
+@Getter
 public class CAPOpCodePojo extends AbstractParamPojo implements Flag {
 
+    /**
+     * Byte flag, currently is always = (byte) 0x02.
+     */
     private final byte flag = (byte) 0x02;
+
+    /**
+     * OpCodeType value field.
+     */
+    @lombok.Setter
     private OpCodeType opCodeType;
 
-    public byte getFlag() {
-        return flag;
-    }
-
-    public OpCodeType getOpCodeType() {
-        return opCodeType;
-    }
-
-    public void setOpCodeType(OpCodeType opCodeType) {
-        this.opCodeType = opCodeType;
-    }
-
+    /**
+     * Make and return String representation of this object.
+     *
+     * @return String representation of this object.
+     */
     @Override
     public String toString() {
         return "CAPOpCodePojo{" + "flag=" + flag + ", opCodeType=" + opCodeType + '}';

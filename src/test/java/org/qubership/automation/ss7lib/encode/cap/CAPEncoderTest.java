@@ -21,7 +21,6 @@ import org.qubership.automation.ss7lib.model.CapMessage;
 import org.qubership.automation.ss7lib.model.sub.cap.CAPInvokeIDPojo;
 import org.qubership.automation.ss7lib.model.sub.cap.CAPOpCodePojo;
 import org.qubership.automation.ss7lib.model.sub.cap.CapInvoke;
-import org.qubership.automation.ss7lib.model.sub.cap.message.*;
 
 import org.qubership.automation.ss7lib.model.sub.cap.message.CAPMessageApplyChargingArg;
 import org.qubership.automation.ss7lib.model.sub.cap.message.CAPMessageConnectArg;
@@ -193,7 +192,7 @@ public class CAPEncoderTest {
         CAPMessageApplyChargingArg messageAC = new CAPMessageApplyChargingArg();
         CAPMessageApplyChargingArg.AChBillingChargingCharacteristics aChBillingChargingCharacteristics = new CAPMessageApplyChargingArg.AChBillingChargingCharacteristics();
         aChBillingChargingCharacteristics.setStringBytes("a00480020708");
-        messageAC.setaChBillingChargingCharacteristics(aChBillingChargingCharacteristics);
+        messageAC.setAChBillingChargingCharacteristics(aChBillingChargingCharacteristics);
         CAPMessageApplyChargingArg.PartyToCharge partyToCharge = new CAPMessageApplyChargingArg.PartyToCharge();
         partyToCharge.setStringBytes("1");
         messageAC.setPartyToCharge(partyToCharge);

@@ -17,27 +17,34 @@
 
 package org.qubership.automation.ss7lib.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class ErrorMessage extends AbstractMessage {
+
+    /**
+     * Error message combined with the stacktrace.
+     */
     private String error;
 
-    public ErrorMessage(Exception e) {
-        this.error = e.getMessage();
-        this.error += '\n' + getStackTrace(e);
+    /**
+     * Constructor from an Exception.
+     *
+     * @param exception Exception to be encapsulated into a new Message.
+     */
+    public ErrorMessage(final Exception exception) {
+        this.error = exception.getMessage();
+        this.error += '\n' + getStackTrace(exception);
     }
 
-    private String getStackTrace(Exception e) {
+    private String getStackTrace(final Exception exception) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+        for (StackTraceElement stackTraceElement : exception.getStackTrace()) {
             stringBuilder.append(stackTraceElement).append('\n');
         }
         return stringBuilder.toString();
     }
 
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
 }

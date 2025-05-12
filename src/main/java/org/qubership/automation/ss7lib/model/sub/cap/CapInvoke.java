@@ -19,35 +19,43 @@ package org.qubership.automation.ss7lib.model.sub.cap;
 
 import org.qubership.automation.ss7lib.model.sub.cap.message.CAPMessagePojo;
 
+import lombok.Setter;
+
+@Setter
 public class CapInvoke {
+
+    /**
+     * CAP Invoke ID object.
+     */
+    @lombok.Getter
     private CAPInvokeIDPojo invokeID;
+
+    /**
+     * CAP OpCode object.
+     */
+    @lombok.Getter
     private CAPOpCodePojo opCode;
+
+    /**
+     * CAP message object.
+     */
     private CAPMessagePojo capMessagePojo;
 
-    public CAPInvokeIDPojo getInvokeID() {
-        return invokeID;
-    }
-
-    public void setInvokeID(CAPInvokeIDPojo invokeID) {
-        this.invokeID = invokeID;
-    }
-
-    public CAPOpCodePojo getOpCode() {
-        return opCode;
-    }
-
-    public void setOpCode(CAPOpCodePojo opCode) {
-        this.opCode = opCode;
-    }
-
+    /**
+     * Get capMessagePojo field cast to T (subclass of CAPMessagePojo).
+     *
+     * @param <T> subclass of CAPMessagePojo
+     * @return capMessagePojo field cast to T (subclass of CAPMessagePojo).
+     */
     public <T extends CAPMessagePojo> T getCapMessagePojo() {
         return (T) capMessagePojo;
     }
 
-    public void setCapMessagePojo(CAPMessagePojo capMessagePojo) {
-        this.capMessagePojo = capMessagePojo;
-    }
-
+    /**
+     * Make and return String representation of this object.
+     *
+     * @return String representation of this object.
+     */
     @Override
     public String toString() {
         return "CapInvoke{"

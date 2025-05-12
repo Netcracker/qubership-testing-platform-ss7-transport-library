@@ -17,17 +17,23 @@
 
 package org.qubership.automation.ss7lib.model.pojo;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class MiscCallInfo {
+
+    /**
+     * Type of the message.
+     */
     private byte messageType;
 
-    public void setMessageType(byte messageType) {
-        this.messageType = messageType;
-    }
-
-    public byte getMessageType() {
-        return messageType;
-    }
-
+    /**
+     * Get flag byte.
+     *
+     * @return byte - currently always returns (byte) 0xa4.
+     */
     public byte getFlag() {
         return (byte) 0xa4;
     }

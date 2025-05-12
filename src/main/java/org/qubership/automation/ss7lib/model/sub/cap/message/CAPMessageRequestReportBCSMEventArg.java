@@ -23,78 +23,85 @@ import org.qubership.automation.ss7lib.model.type.EventType;
 import org.qubership.automation.ss7lib.model.type.MonitorMode;
 
 import com.google.common.collect.Lists;
+import lombok.Getter;
+import lombok.Setter;
 
 public class CAPMessageRequestReportBCSMEventArg extends CAPMessagePojo {
+
+    /**
+     * Start Flag byte; always = (byte) 0xa0.
+     */
     private final transient byte startFlag = (byte) 0xa0;
+
+    /**
+     * Message Length byte.
+     */
+    @Setter
+    @Getter
     private byte length;
 
+    /**
+     * LinkedList of BSCMEvent elements.
+     */
+    @Getter
     private final LinkedList<BSCMEvent> bscmEventList = Lists.newLinkedList();
 
-
+    /**
+     * Get byte flag value.
+     *
+     * @return byte startFlag value.
+     */
     public byte getFlag() {
         return startFlag;
     }
 
-    public byte getLength() {
-        return length;
-    }
-
-    public void setLength(byte length) {
-        this.length = length;
-    }
-
-    public LinkedList<BSCMEvent> getBscmEventList() {
-        return bscmEventList;
-    }
-
     public static class BSCMEvent {
+
+        /**
+         * Start Flag byte; always = (byte) 0x30.
+         */
+        @Getter
         private final transient byte startFlag = (byte) 0x30;
+
+        /**
+         * Message Length byte.
+         */
+        @Setter
+        @Getter
         private transient byte length;
+
+        /**
+         * After Length Flag byte.
+         */
+        @Getter
         private final transient byte afterLengthFlag = (byte) 0x80;
+
+        /**
+         * Event Type value field.
+         */
+        @Setter
+        @Getter
         private EventType eventType;
+
+        /**
+         * Monitor mode value field.
+         */
+        @Setter
+        @Getter
         private MonitorMode monitorMode;
+
+        /**
+         * LegID value field.
+         */
+        @Setter
+        @Getter
         private LegID legID;
 
-        public byte getStartFlag() {
-            return startFlag;
-        }
-
-        public byte getLength() {
-            return length;
-        }
-
-        public void setLength(byte length) {
-            this.length = length;
-        }
-
-        public byte getAfterLengthFlag() {
-            return afterLengthFlag;
-        }
-
-        public EventType getEventType() {
-            return eventType;
-        }
-
-        public void setEventType(EventType eventType) {
-            this.eventType = eventType;
-        }
-
-        public MonitorMode getMonitorMode() {
-            return monitorMode;
-        }
-
-        public void setMonitorMode(MonitorMode monitorMode) {
-            this.monitorMode = monitorMode;
-        }
-
-        public LegID getLegID() {
-            return legID;
-        }
-
-        public void setLegID(LegID legID) {
-            this.legID = legID;
-        }
-
+        /**
+         * Make and return String representation of this object.
+         *
+         * @return String representation of this object.
+         */
         @Override
         public String toString() {
             return "BSCMEvent{"

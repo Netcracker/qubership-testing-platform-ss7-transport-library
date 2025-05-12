@@ -19,32 +19,65 @@ package org.qubership.automation.ss7lib.model.param;
 
 public class Hex extends Number {
 
+    /**
+     * String representation of hex number.
+     */
     private final String hex;
 
+    /**
+     * Constructor.
+     *
+     * @param hex - String representation of hex number.
+     */
     public Hex(String hex) {
         this.hex = hex;
     }
 
+    /**
+     * Get integer parsed from the String value with radix = 16.
+     *
+     * @return integer parsed from the String value with radix = 16.
+     */
     @Override
     public int intValue() {
         return Integer.parseInt(hex, 16);
     }
 
+    /**
+     * Get long parsed from the String value with radix = 16.
+     *
+     * @return long parsed from the String value with radix = 16.
+     */
     @Override
     public long longValue() {
         return Long.parseLong(hex, 16);
     }
 
+    /**
+     * Get float parsed from the String value.
+     *
+     * @return float parsed from the String value.
+     */
     @Override
     public float floatValue() {
         return Float.parseFloat(hex);
     }
 
+    /**
+     * Get double parsed from the String value.
+     *
+     * @return double parsed from the String value.
+     */
     @Override
     public double doubleValue() {
         return Double.parseDouble(hex);
     }
 
+    /**
+     * Simply getter of hex field.
+     *
+     * @return String hex field.
+     */
     public String stringHex() {
         return hex;
     }

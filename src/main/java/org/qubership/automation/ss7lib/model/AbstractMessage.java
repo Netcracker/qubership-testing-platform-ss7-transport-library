@@ -19,15 +19,11 @@ package org.qubership.automation.ss7lib.model;
 
 public class AbstractMessage implements SS7PropertiesPojo {
 
+    /**
+     * Length of a message.
+     */
+    @lombok.Setter
+    @lombok.Getter
     private transient Number messageLength;
-
-    public Number getMessageLength() {
-        return messageLength;
-    }
-
-    public void setMessageLength(Number messageLength) {
-        this.messageLength = messageLength;
-    }
-
 
 }

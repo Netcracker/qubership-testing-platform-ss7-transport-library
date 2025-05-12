@@ -23,49 +23,71 @@ import org.qubership.automation.ss7lib.model.sub.Flag;
 import org.qubership.automation.ss7lib.model.sub.Flags;
 import org.qubership.automation.ss7lib.model.sub.cap.param.AbstractParamPojo;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class CAPMessageApplyChargingArg extends CAPMessagePojo {
 
-
+    /**
+     * ApplyCharging BillingChargingCharacteristics object field.
+     */
     private AChBillingChargingCharacteristics aChBillingChargingCharacteristics;
+
+    /**
+     * PartyToCharge object field.
+     */
     private PartyToCharge partyToCharge;
 
-    public AChBillingChargingCharacteristics getaChBillingChargingCharacteristics() {
-        return aChBillingChargingCharacteristics;
-    }
-
-    public void setaChBillingChargingCharacteristics(
-            AChBillingChargingCharacteristics aChBillingChargingCharacteristics) {
-        this.aChBillingChargingCharacteristics = aChBillingChargingCharacteristics;
-    }
-
-    public PartyToCharge getPartyToCharge() {
-        return partyToCharge;
-    }
-
-    public void setPartyToCharge(PartyToCharge partyToCharge) {
-        this.partyToCharge = partyToCharge;
-    }
-
     public static class AChBillingChargingCharacteristics extends AbstractParamPojo implements Flag {
+
+        /**
+         * Start Flag byte; always = (byte) 0x80.
+         */
         private final byte startFlag = (byte) 0x80;
+
+        /**
+         * Time field; set from String stringBytes parameter value.
+         */
         private short time = 0;
 
+        /**
+         * Set stringBytes and time fields from String stringBytes parameter.
+         *
+         * @param stringBytes String bytes representation.
+         */
         @Override
-        public void setStringBytes(String stringBytes) {
+        public void setStringBytes(final String stringBytes) {
             String s = stringBytes.substring(stringBytes.length() - 4);
             time = Short.parseShort(s, 16);
             super.setStringBytes(stringBytes);
         }
 
+        /**
+         * Getter for startFlag field.
+         *
+         * @return byte startFlag field value.
+         */
         public byte getFlag() {
             return startFlag;
         }
 
+        /**
+         * Get boolean isHex flag.
+         *
+         * @return boolean isHex flag; always true currently.
+         */
         @Override
         public boolean isHEX() {
             return true;
         }
 
+        /**
+         * Make and return String representation of this object.
+         *
+         * @return String representation of this object.
+         */
         @Override
         public String toString() {
             return "AChBillingChargingCharacteristics{"
@@ -75,13 +97,26 @@ public class CAPMessageApplyChargingArg extends CAPMessagePojo {
     }
 
     public static class PartyToCharge extends AbstractParamPojo implements Flags {
+
+        /**
+         * Start Flag byte[]; always = {(byte) 0xa2, (byte) 0x03, (byte) 0x80}.
+         */
         private final byte[] startFlag = {(byte) 0xa2, (byte) 0x03, (byte) 0x80};
 
-
+        /**
+         * Get flags byte[].
+         *
+         * @return byte[] startFlag.
+         */
         public byte[] getFlags() {
             return startFlag;
         }
 
+        /**
+         * Make and return String representation of this object.
+         *
+         * @return String representation of this object.
+         */
         @Override
         public String toString() {
             return "PartyToCharge{" + "startFlag=" + Arrays.toString(startFlag)
@@ -89,6 +124,11 @@ public class CAPMessageApplyChargingArg extends CAPMessagePojo {
         }
     }
 
+    /**
+     * Make and return String representation of this object.
+     *
+     * @return String representation of this object.
+     */
     @Override
     public String toString() {
         return "CAPMessageApplyChargingArg{"

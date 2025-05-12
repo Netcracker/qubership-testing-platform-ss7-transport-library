@@ -19,31 +19,34 @@ package org.qubership.automation.ss7lib.model;
 
 import org.qubership.automation.ss7lib.model.sub.cap.CapInvoke;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
 public class CapMessage extends AbstractMessage {
+
+    /**
+     * Start flag, currently is always = (byte) 0xa1.
+     */
     private final transient byte startFlag = (byte) 0xa1;
+
+    /**
+     * Length of the capMessage.
+     */
+    @Setter
     private byte capMessageLength;
+
+    /**
+     * CapInvoke message field.
+     */
+    @Setter
     private CapInvoke invoke;
 
-    public byte getStartFlag() {
-        return startFlag;
-    }
-
-    public byte getCapMessageLength() {
-        return capMessageLength;
-    }
-
-    public void setCapMessageLength(byte capMessageLength) {
-        this.capMessageLength = capMessageLength;
-    }
-
-    public CapInvoke getInvoke() {
-        return invoke;
-    }
-
-    public void setInvoke(CapInvoke invoke) {
-        this.invoke = invoke;
-    }
-
+    /**
+     * Make and return String representation of this object.
+     *
+     * @return String representation of this object.
+     */
     @Override
     public String toString() {
         return "CapMessage{"

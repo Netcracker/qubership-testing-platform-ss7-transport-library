@@ -22,26 +22,32 @@ import java.util.LinkedList;
 import com.google.common.collect.Lists;
 
 public class CAPMessageEventReportBCSMArg extends CAPMessagePojo {
+
+    /**
+     * Start Flag byte; always = (byte) 0xa0.
+     */
     private final transient byte startFlag = (byte) 0xa0;
+
+    /**
+     * Message Length byte.
+     */
+    @lombok.Setter
+    @lombok.Getter
     private byte length;
 
+    /**
+     * LinkedList of BSCMEvent elements.
+     */
+    @lombok.Getter
     private final LinkedList<BSCMEvent> bscmEventList = Lists.newLinkedList();
 
-
+    /**
+     * Get byte flag.
+     *
+     * @return byte startFlag value.
+     */
     public byte getFlag() {
         return startFlag;
-    }
-
-    public byte getLength() {
-        return length;
-    }
-
-    public void setLength(byte length) {
-        this.length = length;
-    }
-
-    public LinkedList<BSCMEvent> getBscmEventList() {
-        return bscmEventList;
     }
 
 }

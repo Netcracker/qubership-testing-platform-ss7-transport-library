@@ -72,7 +72,7 @@ public class ApplyChargingArgDecoder implements CapDecoder<CAPMessageApplyChargi
         CAPMessageApplyChargingArg.AChBillingChargingCharacteristics ach =
                 new CAPMessageApplyChargingArg.AChBillingChargingCharacteristics();
 
-        arg.setaChBillingChargingCharacteristics(ach);
+        arg.setAChBillingChargingCharacteristics(ach);
         ach.setStringBytes(Converter.bytesToHex(valueData.array()));
     }
 }

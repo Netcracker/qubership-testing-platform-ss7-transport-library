@@ -17,41 +17,31 @@
 
 package org.qubership.automation.ss7lib.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class FullMessage {
+
+    /**
+     * M3UA part of the FullMessage.
+     */
     private M3uaMessage m3ua;
+
+    /**
+     * SCCP part of the FullMessage.
+     */
     private SccpMessage sccp;
+
+    /**
+     * TCAP part of the FullMessage.
+     */
     private TcapMessage tcap;
+
+    /**
+     * ErrorMessage part of the FullMessage.
+     */
     private ErrorMessage errorMessage;
 
-    public void setM3ua(M3uaMessage m3ua) {
-        this.m3ua = m3ua;
-    }
-
-    public void setSccp(SccpMessage sccp) {
-        this.sccp = sccp;
-    }
-
-    public SccpMessage getSccp() {
-        return sccp;
-    }
-
-    public void setTcap(TcapMessage tcap) {
-        this.tcap = tcap;
-    }
-
-    public TcapMessage getTcap() {
-        return tcap;
-    }
-
-    public M3uaMessage getM3ua() {
-        return m3ua;
-    }
-
-    public ErrorMessage getErrorMessage() {
-        return errorMessage;
-    }
-
-    public void setErrorMessage(ErrorMessage errorMessage) {
-        this.errorMessage = errorMessage;
-    }
 }

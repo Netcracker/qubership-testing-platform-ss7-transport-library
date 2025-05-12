@@ -17,19 +17,26 @@
 
 package org.qubership.automation.ss7lib.model.sub.cap.message;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class ApplyChargingReportArg extends CAPMessagePojo {
+
+    /**
+     * Get Start Flag byte.
+     *
+     * @return byte flag; currently always returns 0x4.
+     */
     @Override
     public byte getStartFlag() {
         return 0x4;
     }
 
+    /**
+     * Byte[] value field.
+     */
     private byte[] value;
 
-    public void setValue(byte[] value) {
-        this.value = value;
-    }
-
-    public byte[] getValue() {
-        return value;
-    }
 }

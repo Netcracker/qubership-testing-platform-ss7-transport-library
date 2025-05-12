@@ -19,23 +19,21 @@ package org.qubership.automation.ss7lib.model.pojo;
 
 import org.qubership.automation.ss7lib.model.type.SpecificInfo;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class SpecificInformation {
+
+    /**
+     * SpecificInfo (enum) value field.
+     */
     private SpecificInfo type;
+
+    /**
+     * Release cause string.
+     */
     private String releaseCause;
 
-    public void setType(SpecificInfo type) {
-        this.type = type;
-    }
-
-    public SpecificInfo getType() {
-        return type;
-    }
-
-    public void setReleaseCause(String releaseCause) {
-        this.releaseCause = releaseCause;
-    }
-
-    public String getReleaseCause() {
-        return releaseCause;
-    }
 }

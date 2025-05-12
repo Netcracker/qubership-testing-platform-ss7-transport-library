@@ -18,22 +18,33 @@
 package org.qubership.automation.ss7lib.model.sub.cap.message;
 
 public abstract class CAPMessagePojo {
+
+    /**
+     * Start Flag byte; always = (byte) 0x30.
+     */
     private final byte startFlag = (byte) 0x30;
+
+    /**
+     * Message Length byte.
+     */
+    @lombok.Setter
+    @lombok.Getter
     private byte messageLength;
 
-
+    /**
+     * Get byte startFlag field value.
+     *
+     * @return byte startFlag field value.
+     */
     public byte getStartFlag() {
         return startFlag;
     }
 
-    public byte getMessageLength() {
-        return messageLength;
-    }
-
-    public void setMessageLength(byte messageLength) {
-        this.messageLength = messageLength;
-    }
-
+    /**
+     * Make and return String representation of this object.
+     *
+     * @return String representation of this object.
+     */
     @Override
     public String toString() {
         return "CAPMessagePojo{" + "startFlag=" + startFlag + ", messageLength=" + messageLength + '}';

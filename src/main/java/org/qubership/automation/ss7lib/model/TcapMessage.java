@@ -25,77 +25,64 @@ import org.qubership.automation.ss7lib.model.sub.tcap.Transaction;
 import org.qubership.automation.ss7lib.model.type.TCAPType;
 
 import com.google.common.collect.Lists;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
 public class TcapMessage extends AbstractMessage {
+
+    /**
+     * Byte containing total message length.
+     */
+    @Setter
     private byte totalLength;
+
+    /**
+     * TCAP type of the message.
+     */
+    @Setter
     private TCAPType type;
+
+    /**
+     * Transaction on the source side.
+     */
+    @Setter
     private Transaction sourceTransaction;
+
+    /**
+     * Transaction on the destination side.
+     */
+    @Setter
     private Transaction destinationTransaction;
+
+    /**
+     * Object identifier.
+     */
+    @Setter
     private Oid oid;
+
+    /**
+     * Dialogue message part.
+     */
+    @Setter
     private Dialogue dialogue;
+
+    /**
+     * Flag 'start CAP' currently is always = 0x6c.
+     */
     private final byte flagStartCap = 0x6c;
+
+    /**
+     * List of CAP messages.
+     */
+    @Setter
     private List<CapMessage> capMessages = Lists.newLinkedList();
 
-    public byte getFlagStartCap() {
-        return flagStartCap;
-    }
-
-    public byte getTotalLength() {
-        return totalLength;
-    }
-
-    public void setTotalLength(byte totalLength) {
-        this.totalLength = totalLength;
-    }
-
-    public TCAPType getType() {
-        return type;
-    }
-
-    public void setType(TCAPType type) {
-        this.type = type;
-    }
-
-    public Transaction getSourceTransaction() {
-        return sourceTransaction;
-    }
-
-    public void setSourceTransaction(Transaction source) {
-        this.sourceTransaction = source;
-    }
-
-    public Transaction getDestinationTransaction() {
-        return destinationTransaction;
-    }
-
-    public void setDestinationTransaction(Transaction destination) {
-        this.destinationTransaction = destination;
-    }
-
-    public Oid getOid() {
-        return oid;
-    }
-
-    public void setOid(Oid oid) {
-        this.oid = oid;
-    }
-
-    public Dialogue getDialogue() {
-        return dialogue;
-    }
-
-    public void setDialogue(Dialogue dialogue) {
-        this.dialogue = dialogue;
-    }
-
-    public List<CapMessage> getCapMessages() {
-        return capMessages;
-    }
-
-    public void setCapMessages(List<CapMessage> capMessages) {
-        this.capMessages = capMessages;
-    }
-
+    /**
+     * Make and return String representation of this object.
+     *
+     * @return String representation of this object.
+     */
     @Override
     public String toString() {
         return "TcapMessage{"

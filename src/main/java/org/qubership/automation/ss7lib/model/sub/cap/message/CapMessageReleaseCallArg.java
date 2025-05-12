@@ -19,25 +19,36 @@ package org.qubership.automation.ss7lib.model.sub.cap.message;
 
 import org.qubership.automation.ss7lib.model.sub.cap.param.AbstractParamPojo;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class CapMessageReleaseCallArg extends CAPMessagePojo {
+
+    /**
+     * AllCallSegments object field.
+     */
     private AllCallSegments callSegments;
-
-    public AllCallSegments getCallSegments() {
-        return callSegments;
-    }
-
-    public void setCallSegments(AllCallSegments callSegments) {
-        this.callSegments = callSegments;
-    }
 
     public static class AllCallSegments extends AbstractParamPojo {
 
+        /**
+         * Make and return String representation of this object.
+         *
+         * @return String representation of this object.
+         */
         @Override
         public String toString() {
             return "AllCallSegments{" + "value: " + super.getStringBytes() + '}';
         }
     }
 
+    /**
+     * Make and return String representation of this object.
+     *
+     * @return String representation of this object.
+     */
     @Override
     public String toString() {
         return "CapMessageReleaseCallArg{" + "callSegments=" + callSegments + '}';

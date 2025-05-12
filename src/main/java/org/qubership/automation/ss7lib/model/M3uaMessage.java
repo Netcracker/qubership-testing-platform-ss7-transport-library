@@ -17,7 +17,6 @@
 
 package org.qubership.automation.ss7lib.model;
 
-
 import org.qubership.automation.ss7lib.model.sub.m3ua.NetworkAppearance;
 import org.qubership.automation.ss7lib.model.sub.m3ua.ProtocolData;
 import org.qubership.automation.ss7lib.model.sub.m3ua.RoutingContext;
@@ -25,72 +24,58 @@ import org.qubership.automation.ss7lib.model.type.MessageClass;
 import org.qubership.automation.ss7lib.model.type.MessageType;
 import org.qubership.automation.ss7lib.model.type.Standard;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class M3uaMessage extends AbstractMessage {
+
+    /**
+     * MessageType (enum) message field.
+     */
     private MessageType messageType;
+
+    /**
+     * MessageClass technical info.
+     */
     private MessageClass messageClass;
+
+    /**
+     * NetworkAppearance message part.
+     */
     private NetworkAppearance networkAppearance;
+
+    /**
+     * RoutingContext message part.
+     */
     private RoutingContext routingContext;
+
+    /**
+     * ProtocolData message part.
+     */
     private ProtocolData protocolData;
+
+    /**
+     * Byte containing version number.
+     */
     private byte version;
+
+    /**
+     * Byte containing 'reserved' flag.
+     */
     private byte reserved;
+
+    /**
+     * Standard (enum) message field.
+     */
     private Standard standard = Standard.ITU;
 
-    public MessageType getMessageType() {
-        return messageType;
-    }
-
-    public void setMessageType(MessageType messageType) {
-        this.messageType = messageType;
-    }
-
-    public MessageClass getMessageClass() {
-        return messageClass;
-    }
-
-    public void setMessageClass(MessageClass messageClass) {
-        this.messageClass = messageClass;
-    }
-
-    public NetworkAppearance getNetworkAppearance() {
-        return networkAppearance;
-    }
-
-    public void setNetworkAppearance(NetworkAppearance networkAppearance) {
-        this.networkAppearance = networkAppearance;
-    }
-
-    public RoutingContext getRoutingContext() {
-        return routingContext;
-    }
-
-    public void setRoutingContext(RoutingContext routingContext) {
-        this.routingContext = routingContext;
-    }
-
-    public ProtocolData getProtocolData() {
-        return protocolData;
-    }
-
-    public void setProtocolData(ProtocolData protocolData) {
-        this.protocolData = protocolData;
-    }
-
-    public byte getVersion() {
-        return version;
-    }
-
-    public void setVersion(byte version) {
-        this.version = version;
-    }
-
-    public byte getReserved() {
-        return reserved;
-    }
-
-    public void setReserved(byte reserved) {
-        this.reserved = reserved;
-    }
-
+    /**
+     * Make and return String representation of this object.
+     *
+     * @return String representation of this object.
+     */
     @Override
     public String toString() {
         return "M3uaMessage{"
@@ -104,11 +89,4 @@ public class M3uaMessage extends AbstractMessage {
                 + '}';
     }
 
-    public Standard getStandard() {
-        return standard;
-    }
-
-    public void setStandard(Standard standard) {
-        this.standard = standard;
-    }
 }

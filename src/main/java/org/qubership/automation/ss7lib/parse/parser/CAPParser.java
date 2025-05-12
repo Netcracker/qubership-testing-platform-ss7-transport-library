@@ -105,10 +105,9 @@ import com.google.common.base.Strings;
 
 public class CAPParser extends AbstractParser<CapMessage> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CAPParser.class);
     private final BCDParser bcdParser = new BCDParser();
-    private PartyNumberParser partyNumberParser = new PartyNumberParser();
-    private InitialDpArgExtensionParser initialDpArgExtensionParser = new InitialDpArgExtensionParser();
+    private final PartyNumberParser partyNumberParser = new PartyNumberParser();
+    private final InitialDpArgExtensionParser initialDpArgExtensionParser = new InitialDpArgExtensionParser();
 
     @Override
     void parse(CapMessage pojo, String value, List<String> parents) {
@@ -165,7 +164,7 @@ public class CAPParser extends AbstractParser<CapMessage> {
 
             }
             BSCMEvent bcsmEvent;
-            if (bcsmEventArg.getBscmEventList().size() > 0) {
+            if (!bcsmEventArg.getBscmEventList().isEmpty()) {
                 bcsmEvent = bcsmEventArg.getBscmEventList().getLast();
             } else {
                 bcsmEvent = new BSCMEvent();
@@ -377,7 +376,7 @@ public class CAPParser extends AbstractParser<CapMessage> {
         } else if (contain(value, "Redirecting Number")) {
             RedirectionNumber redirectionNumber = new RedirectionNumber();
             redirectionNumber.setStringBytes(getValue("Redirecting Number", value, NUMERIC_VALUE));
-            idp.setRedirectingNumber(redirectionNumber);
+            idp.setRedirectionNumber(redirectionNumber);
         } else if (contain(value, "redirectionInformation")) {
             RedirectionInformation redirectionInformation = new RedirectionInformation();
             redirectionInformation.setStringBytes(getValue("redirectionInformation", value, NUMERIC_VALUE));
@@ -400,8 +399,8 @@ public class CAPParser extends AbstractParser<CapMessage> {
     private void parseMessageApplyChargingArg(CAPMessageApplyChargingArg pojo, String value, String parent) {
         Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
         if (contain(value, A_CH_BILLING_CHARGING_CHARACTERISTICS)) {
-            pojo.setaChBillingChargingCharacteristics(new CAPMessageApplyChargingArg.AChBillingChargingCharacteristics());
-            pojo.getaChBillingChargingCharacteristics().setStringBytes(getValue(A_CH_BILLING_CHARGING_CHARACTERISTICS, value, scenario.get(A_CH_BILLING_CHARGING_CHARACTERISTICS)));
+            pojo.setAChBillingChargingCharacteristics(new CAPMessageApplyChargingArg.AChBillingChargingCharacteristics());
+            pojo.getAChBillingChargingCharacteristics().setStringBytes(getValue(A_CH_BILLING_CHARGING_CHARACTERISTICS, value, scenario.get(A_CH_BILLING_CHARGING_CHARACTERISTICS)));
         }
     }
 

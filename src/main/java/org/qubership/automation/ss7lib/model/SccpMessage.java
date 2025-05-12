@@ -20,92 +20,79 @@ package org.qubership.automation.ss7lib.model;
 import org.qubership.automation.ss7lib.model.sub.sccp.CallPartyAddress;
 import org.qubership.automation.ss7lib.model.type.MessageType;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class SccpMessage extends AbstractMessage {
+
+    /**
+     * Flag if the message is of ITUProtocol (true) or not.
+     */
+    @Setter
+    @Getter
     private boolean isITUProtocol;
+
+    /**
+     * MessageType (enum) of the message.
+     */
+    @Setter
+    @Getter
     private MessageType messageType;
+
+    /**
+     * Byte pointer to the 1st mandatory variable.
+     */
+    @Setter
+    @Getter
     private byte pointerToFirstMandatoryVariable;
+
+    /**
+     * Byte pointer to the 2nd mandatory variable.
+     */
+    @Setter
+    @Getter
     private byte pointerToSecondMandatoryVariable;
+
+    /**
+     * Byte pointer to the 3rd mandatory variable.
+     */
+    @Setter
+    @Getter
     private byte pointerToThirdMandatoryVariable;
+
+    /**
+     * CallPartyAddress message part about called party.
+     */
+    @Setter
+    @Getter
     private CallPartyAddress calledPartyAddress;
+
+    /**
+     * CallPartyAddress message part about calling party.
+     */
+    @Setter
+    @Getter
     private CallPartyAddress callingPartyAddress;
+
+    /**
+     * Byte technical info about class.
+     */
+    @Setter
+    @Getter
     private byte clazz;
+
+    /**
+     * Byte technical info about handling.
+     */
+    @Setter
+    @Getter
     private byte messageHandling;
 
-
-    public MessageType getMessageType() {
-        return messageType;
-    }
-
-    public void setMessageType(MessageType messageType) {
-        this.messageType = messageType;
-    }
-
-    public byte getPointerToFirstMandatoryVariable() {
-        return pointerToFirstMandatoryVariable;
-    }
-
-    public void setPointerToFirstMandatoryVariable(byte pointerToFirstMandatoryVariable) {
-        this.pointerToFirstMandatoryVariable = pointerToFirstMandatoryVariable;
-    }
-
-    public byte getPointerToSecondMandatoryVariable() {
-        return pointerToSecondMandatoryVariable;
-    }
-
-    public void setPointerToSecondMandatoryVariable(byte pointerToSecondMandatoryVariable) {
-        this.pointerToSecondMandatoryVariable = pointerToSecondMandatoryVariable;
-    }
-
-    public byte getPointerToThirdMandatoryVariable() {
-        return pointerToThirdMandatoryVariable;
-    }
-
-    public void setPointerToThirdMandatoryVariable(byte pointerToThirdMandatoryVariable) {
-        this.pointerToThirdMandatoryVariable = pointerToThirdMandatoryVariable;
-    }
-
-    public CallPartyAddress getCalledPartyAddress() {
-        return calledPartyAddress;
-    }
-
-    public void setCalledPartyAddress(CallPartyAddress calledPartyAddress) {
-        this.calledPartyAddress = calledPartyAddress;
-    }
-
-    public CallPartyAddress getCallingPartyAddress() {
-        return callingPartyAddress;
-    }
-
-    public void setCallingPartyAddress(CallPartyAddress callingPartyAddress) {
-        this.callingPartyAddress = callingPartyAddress;
-    }
-
-    public void setClazz(byte clazz) {
-        this.clazz = clazz;
-    }
-
-    public byte getClazz() {
-        return clazz;
-    }
-
-    public void setMessageHandling(byte messageHandling) {
-        this.messageHandling = messageHandling;
-    }
-
-
-    public byte getMessageHandling() {
-        return messageHandling;
-    }
-
-
-    public boolean isITUProtocol() {
-        return isITUProtocol;
-    }
-
-    public void setITUProtocol(boolean ITUProtocol) {
-        isITUProtocol = ITUProtocol;
-    }
-
+    /**
+     * Make and return String representation of this object.
+     *
+     * @return String representation of this object.
+     */
     @Override
     public String toString() {
         return "SccpMessage{"

@@ -144,8 +144,8 @@ public class CAPEncoder extends AbstractEncoder<CapMessage> {
 
     private void encodeAC(@Nonnull final ArrayList<Byte> bytes,
                           @Nonnull final CAPMessageApplyChargingArg capMessage) {
-        if (Objects.nonNull(capMessage.getaChBillingChargingCharacteristics())) {
-            encodePojoFlagParam(bytes, capMessage.getaChBillingChargingCharacteristics());
+        if (Objects.nonNull(capMessage.getAChBillingChargingCharacteristics())) {
+            encodePojoFlagParam(bytes, capMessage.getAChBillingChargingCharacteristics());
         }
         if (Objects.nonNull(capMessage.getPartyToCharge())) {
             encodePojoFlagParam(bytes, capMessage.getPartyToCharge());
