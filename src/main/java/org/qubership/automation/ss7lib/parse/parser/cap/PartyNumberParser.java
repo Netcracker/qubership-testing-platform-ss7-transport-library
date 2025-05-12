@@ -79,8 +79,6 @@ public class PartyNumberParser extends PartParser<PartyNumber> {
         if (applicable(value, SCREEN_INDICATOR)) {
             partyNumber.setScreeningIndicator(parseBinary(value, SCREEN_INDICATOR, BINARY_PATTERN));
         }
-
     }
-
 
 }

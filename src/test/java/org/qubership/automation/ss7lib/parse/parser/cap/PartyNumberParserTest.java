@@ -17,15 +17,15 @@
 
 package org.qubership.automation.ss7lib.parse.parser.cap;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.qubership.automation.ss7lib.model.CapMessage;
 import org.qubership.automation.ss7lib.model.sub.cap.CapInvoke;
 import org.qubership.automation.ss7lib.model.sub.cap.message.InitialDetectionPoint;
 import org.qubership.automation.ss7lib.model.sub.cap.message.idp.PartyNumber;
 import org.qubership.automation.ss7lib.parse.parser.PartParser;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 public class PartyNumberParserTest {
     private static final String INPUT = "callingPartyNumber: 8415514124044500\n" +
@@ -59,6 +59,7 @@ public class PartyNumberParserTest {
         }
         assertEquals(0x1, partyNumber.getOddIndicator());
     }
+
     @Test
     public void testParseNatureAddressIndicator() {
         for (String input : INPUT.split("\n")) {
@@ -66,6 +67,7 @@ public class PartyNumberParserTest {
         }
         assertEquals(0x4, partyNumber.getNatureAddressIndicator());
     }
+
     @Test
     public void testParseNetworkInformationIndicator() {
         for (String input : INPUT.split("\n")) {
@@ -73,6 +75,7 @@ public class PartyNumberParserTest {
         }
         assertEquals(0x0, partyNumber.getNetworkInformationIndicator());
     }
+
     @Test
     public void testParseNumberingPlanIndicator() {
         for (String input : INPUT.split("\n")) {
@@ -80,6 +83,7 @@ public class PartyNumberParserTest {
         }
         assertEquals(0x1, partyNumber.getNumberingPlanIndicator());
     }
+
     @Test
     public void testParseAddressPresentationIndicator() {
         for (String input : INPUT.split("\n")) {
@@ -87,6 +91,7 @@ public class PartyNumberParserTest {
         }
         assertEquals(0x1, partyNumber.getAddressPresentationIndicator());
     }
+
     @Test
     public void testParseScreeningIndicator() {
         for (String input : INPUT.split("\n")) {
@@ -94,6 +99,7 @@ public class PartyNumberParserTest {
         }
         assertEquals(0x1, partyNumber.getScreeningIndicator());
     }
+
     @Test
     public void testParseNumber() {
         for (String input : INPUT.split("\n")) {

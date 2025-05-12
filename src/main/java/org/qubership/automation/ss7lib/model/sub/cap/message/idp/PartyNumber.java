@@ -20,16 +20,34 @@ package org.qubership.automation.ss7lib.model.sub.cap.message.idp;
 import org.qubership.automation.ss7lib.model.sub.Flag;
 import org.qubership.automation.ss7lib.model.sub.cap.param.AbstractParamPojo;
 
-public class PartyNumber extends AbstractParamPojo implements Flag {
-    public static final transient byte CALLING_PARTY_NUMBER_FLAG = (byte) 0x83;
-    public static final transient byte CALLED_PARTY_NUMBER_FLAG = (byte) 0x82;
-    private String number;
-    private byte oddIndicator;
-    private byte natureAddressIndicator;
-    private byte networkInformationIndicator;
-    private byte numberingPlanIndicator;
-    private byte addressPresentationIndicator;
+import lombok.Getter;
+import lombok.Setter;
 
+public class PartyNumber extends AbstractParamPojo implements Flag {
+
+    public static final byte CALLING_PARTY_NUMBER_FLAG = (byte) 0x83;
+    public static final byte CALLED_PARTY_NUMBER_FLAG = (byte) 0x82;
+
+    @Setter
+    @Getter
+    private String number;
+    @Setter
+    @Getter
+    private byte oddIndicator;
+    @Setter
+    @Getter
+    private byte natureAddressIndicator;
+    @Setter
+    @Getter
+    private byte networkInformationIndicator;
+    @Setter
+    @Getter
+    private byte numberingPlanIndicator;
+    @Setter
+    @Getter
+    private byte addressPresentationIndicator;
+    @Setter
+    @Getter
     private byte screeningIndicator;
 
     public byte getFlag() {
@@ -39,62 +57,6 @@ public class PartyNumber extends AbstractParamPojo implements Flag {
     @Override
     public boolean isHEX() {
         return true;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setOddIndicator(byte oddIndicator) {
-        this.oddIndicator = oddIndicator;
-    }
-
-    public byte getOddIndicator() {
-        return oddIndicator;
-    }
-
-    public void setNatureAddressIndicator(byte natureAddressIndicator) {
-        this.natureAddressIndicator = natureAddressIndicator;
-    }
-
-    public byte getNatureAddressIndicator() {
-        return natureAddressIndicator;
-    }
-
-    public void setNetworkInformationIndicator(byte networkInformationIndicator) {
-        this.networkInformationIndicator = networkInformationIndicator;
-    }
-
-    public byte getNetworkInformationIndicator() {
-        return networkInformationIndicator;
-    }
-
-    public byte getNumberingPlanIndicator() {
-        return numberingPlanIndicator;
-    }
-
-    public void setNumberingPlanIndicator(byte numberingPlanIndicator) {
-        this.numberingPlanIndicator = numberingPlanIndicator;
-    }
-
-    public byte getAddressPresentationIndicator() {
-        return addressPresentationIndicator;
-    }
-
-    public void setAddressPresentationIndicator(byte addressPresentationIndicator) {
-        this.addressPresentationIndicator = addressPresentationIndicator;
-    }
-
-    public byte getScreeningIndicator() {
-        return screeningIndicator;
-    }
-
-    public void setScreeningIndicator(byte screeningIndicator) {
-        this.screeningIndicator = screeningIndicator;
     }
 
 }

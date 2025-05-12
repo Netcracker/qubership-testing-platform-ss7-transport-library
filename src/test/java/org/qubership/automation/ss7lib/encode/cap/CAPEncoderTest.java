@@ -17,11 +17,15 @@
 
 package org.qubership.automation.ss7lib.encode.cap;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.qubership.automation.ss7lib.encode.EncoderUtils.reverse;
+
+import org.junit.Test;
 import org.qubership.automation.ss7lib.model.CapMessage;
 import org.qubership.automation.ss7lib.model.sub.cap.CAPInvokeIDPojo;
 import org.qubership.automation.ss7lib.model.sub.cap.CAPOpCodePojo;
 import org.qubership.automation.ss7lib.model.sub.cap.CapInvoke;
-
 import org.qubership.automation.ss7lib.model.sub.cap.message.CAPMessageApplyChargingArg;
 import org.qubership.automation.ss7lib.model.sub.cap.message.CAPMessageConnectArg;
 import org.qubership.automation.ss7lib.model.sub.cap.message.CAPMessageRequestReportBCSMEventArg;
@@ -31,17 +35,15 @@ import org.qubership.automation.ss7lib.model.sub.cap.message.idp.PartyNumber;
 import org.qubership.automation.ss7lib.model.sub.cap.message.idp.ServiceKey;
 import org.qubership.automation.ss7lib.model.type.EventType;
 import org.qubership.automation.ss7lib.model.type.MonitorMode;
-import org.junit.Test;
 
-import static org.qubership.automation.ss7lib.encode.EncoderUtils.reverse;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-
+@SuppressWarnings({"checkstyle:HideUtilityClassConstructor","checkstyle:MagicNumber"})
 public class CAPEncoderTest {
 
-    //    @Test/*TODO Actualise the test*/
-    @Deprecated
-    public void testEncodeIDP() {
+    /**
+     * Test of encoding of InitialDetectionPoint (IDP) message.
+     */
+    @Test
+    public void testEncodeInitialDetectionPoint() {
         CapMessage pojo = new CapMessage();
         CapInvoke capInvokePojo = new CapInvoke();
         CAPInvokeIDPojo capInvokeIDPojo = new CAPInvokeIDPojo();
@@ -55,7 +57,8 @@ public class CAPEncoderTest {
         serviceKey.setStringBytes("3");
         messageIDP.setServiceKey(serviceKey);
         PartyNumber callingPartyNumber = new PartyNumber();
-        callingPartyNumber.setStringBytes("8415514124045503");
+        callingPartyNumber.setStringBytes("8415514124044500");
+        callingPartyNumber.setNumber("15144240540");
         messageIDP.setCallingPartyNumber(callingPartyNumber);
         InitialDetectionPoint.CallingPartysCategory callingPartysCategory = new InitialDetectionPoint.CallingPartysCategory();
         callingPartysCategory.setStringBytes("10");
@@ -109,23 +112,33 @@ public class CAPEncoderTest {
 
         byte[] cap = new CAPEncoder().encode(pojo);
 
-        byte[] correctMessage = new byte[]{(byte) 0xa1, (byte) 0x81, (byte) 0x82, 0x02, 0x01, 0x00, 0x02, 0x01, 0x00, 0x30, 0x7a, (byte) 0x80, 0x01, 0x03, (byte) 0x83, 0x08,
-                (byte) 0x84, 0x15, 0x51, 0x41, 0x24, 0x04, 0x55, 0x03, (byte) 0x85, 0x01, 0x0a, (byte) 0x88, 0x01, 0x00, (byte) 0x8a, 0x07,
-                0x03, 0x13, 0x15, 0x34, 0x08, (byte) 0x93, 0x64, (byte) 0x97, 0x02, (byte) 0x91, (byte) 0x81, (byte) 0xbb, 0x05, (byte) 0x80, 0x03, (byte) 0x80,
-                (byte) 0x90, (byte) 0xa3, (byte) 0x9c, 0x01, 0x02, (byte) 0x9f, 0x32, 0x08, 0x03, 0x52, 0x01, 0x02, 0x20, (byte) 0x93, (byte) 0x85, (byte) 0xf6,
-                (byte) 0xbf, 0x34, 0x17, 0x02, 0x01, 0x00, (byte) 0x81, 0x07, (byte) 0x91, 0x51, 0x41, 0x24, 0x04, 0x15, (byte) 0xf4, (byte) 0xa3,
-                0x09, (byte) 0x80, 0x07, 0x03, 0x02, 0x15, 0x1b, 0x58, 0x36, (byte) 0x9c, (byte) 0xbf, 0x35, 0x03, (byte) 0x83, 0x01, 0x11,
-                (byte) 0x9f, 0x36, 0x07, 0x40, 0x04, 0x41, 0x31, 0x0b, 0x42, 0x00, (byte) 0x9f, 0x37, 0x07, (byte) 0x91, 0x51, 0x41,
-                0x24, 0x04, 0x15, (byte) 0xf4, (byte) 0x9f, 0x38, 0x03, (byte) 0x81, 0x14, (byte) 0xf1, (byte) 0x9f, 0x39, 0x08, 0x02, 0x71, 0x30,
+        byte[] correctMessage = new byte[]{
+                (byte) 0xa1, (byte) 0x81, (byte) 0x82, 0x02, 0x01, 0x00, 0x02, 0x01,
+                0x00, 0x30, 0x7a, (byte) 0x80, 0x01, 0x03, (byte) 0x83, 0x08,
+                0x00, 0x00, 0x51, 0x41, 0x24, 0x04, 0x45, 0x00,
+                (byte) 0x85, 0x01, 0x0a, (byte) 0x88, 0x01, 0x00, (byte) 0x8a, 0x07,
+                0x03, 0x13, 0x15, 0x34, 0x08, (byte) 0x93, 0x64, (byte) 0x97,
+                0x02, (byte) 0x91, (byte) 0x81, (byte) 0xbb, 0x05, (byte) 0x80, 0x03, (byte) 0x80,
+                (byte) 0x90, (byte) 0xa3, (byte) 0x9c, 0x01, 0x02, (byte) 0x9f, 0x32, 0x08,
+                0x03, 0x52, 0x01, 0x02, 0x20, (byte) 0x93, (byte) 0x85, (byte) 0xf6,
+                (byte) 0xbf, 0x34, 0x17, 0x02, 0x01, 0x00, (byte) 0x81, 0x07,
+                (byte) 0x91, 0x51, 0x41, 0x24, 0x04, 0x15, (byte) 0xf4, (byte) 0xa3,
+                0x09, (byte) 0x80, 0x07, 0x03, 0x02, 0x15, 0x1b, 0x58,
+                0x36, (byte) 0x9c, (byte) 0xbf, 0x35, 0x03, (byte) 0x83, 0x01, 0x11,
+                (byte) 0x9f, 0x36, 0x07, 0x40, 0x04, 0x41, 0x31, 0x0b,
+                0x42, 0x00, (byte) 0x9f, 0x37, 0x07, (byte) 0x91, 0x51, 0x41,
+                0x24, 0x04, 0x15, (byte) 0xf4, (byte) 0x9f, 0x38, 0x03, (byte) 0x81,
+                0x14, (byte) 0xf1, (byte) 0x9f, 0x39, 0x08, 0x02, 0x71, 0x30,
                 0x10, 0x70, 0x74, 0x02, 0x0a};
 
         assertArrayEquals(correctMessage, cap);
-
     }
 
-    //    @Test/*TODO Actualise the test*/
-    @Deprecated
-    public void testEncodeRRB() {
+    /**
+     * Test of encoding of RequestReportBCSMEvent message.
+     */
+    @Test
+    public void testEncodeRequestReportBCSMEvent() {
         CapMessage pojo = new CapMessage();
         CapInvoke capInvokePojo = new CapInvoke();
         CAPInvokeIDPojo capInvokeIDPojo = new CAPInvokeIDPojo();
@@ -170,17 +183,24 @@ public class CAPEncoderTest {
 
         byte[] cap = new CAPEncoder().encode(pojo);
         byte[] correctMessage =
-                new byte[]{(byte) 0xa1, 0x44, 0x02, 0x01, 0x01, 0x02, 0x01, 0x17, 0x30, 0x3c, (byte) 0xa0, 0x3a, 0x30, 0x06, (byte) 0x80, 0x01,
-                        0x07, (byte) 0x81, 0x01, 0x01, 0x30, 0x0b, (byte) 0x80, 0x01, 0x09, (byte) 0x81, 0x01, 0x00, (byte) 0xa2, 0x03, (byte) 0x80, 0x01,
-                        0x01, 0x30, 0x0b, (byte) 0x80, 0x01, 0x09, (byte) 0x81, 0x01, 0x00, (byte) 0xa2, 0x03, (byte) 0x80, 0x01, 0x02, 0x30, 0x06,
-                        (byte) 0x80, 0x01, 0x04, (byte) 0x81, 0x01, 0x01, 0x30, 0x06, (byte) 0x80, 0x01, 0x05, (byte) 0x81, 0x01, 0x01, 0x30, 0x06,
+                new byte[]{
+                        (byte) 0xa1, 0x44, 0x02, 0x01, 0x01, 0x02, 0x01, 0x17,
+                        0x30, 0x3c, (byte) 0xa0, 0x3a, 0x30, 0x06, (byte) 0x80, 0x01,
+                        0x07, (byte) 0x81, 0x01, 0x01, 0x30, 0x0b, (byte) 0x80, 0x01,
+                        0x09, (byte) 0x81, 0x01, 0x00, (byte) 0xa2, 0x03, (byte) 0x81, 0x01,
+                        0x01, 0x30, 0x0b, (byte) 0x80, 0x01, 0x09, (byte) 0x81, 0x01,
+                        0x00, (byte) 0xa2, 0x03, (byte) 0x81, 0x01, 0x02, 0x30, 0x06,
+                        (byte) 0x80, 0x01, 0x04, (byte) 0x81, 0x01, 0x01, 0x30, 0x06,
+                        (byte) 0x80, 0x01, 0x05, (byte) 0x81, 0x01, 0x01, 0x30, 0x06,
                         (byte) 0x80, 0x01, 0x0a, (byte) 0x81, 0x01, 0x01};
         assertArrayEquals(correctMessage, cap);
     }
 
-
+    /**
+     * Test of encoding of ApplyCharging message.
+     */
     @Test
-    public void testEncodeAC() {
+    public void testEncodeApplyCharging() {
         CapMessage pojo = new CapMessage();
         CapInvoke capInvokePojo = new CapInvoke();
         CAPInvokeIDPojo capInvokeIDPojo = new CAPInvokeIDPojo();
@@ -201,14 +221,17 @@ public class CAPEncoderTest {
 
         byte[] cap = new CAPEncoder().encode(pojo);
 
-        byte[] correctMessage = new byte[]{(byte) 0xa1, 0x15, 0x02, 0x01, 0x02, 0x02, 0x01, 0x23, 0x30, 0x0d, (byte) 0x80, 0x06, (byte) 0xa0, 0x04, (byte) 0x80, 0x02,
+        byte[] correctMessage = new byte[]{
+                (byte) 0xa1, 0x15, 0x02, 0x01, 0x02, 0x02, 0x01, 0x23,
+                0x30, 0x0d, (byte) 0x80, 0x06, (byte) 0xa0, 0x04, (byte) 0x80, 0x02,
                 0x07, 0x08, (byte) 0xa2, 0x03, (byte) 0x80, 0x01, 0x01};
 
         assertArrayEquals(correctMessage, cap);
-
     }
 
-
+    /**
+     * Test of encoding of CAPMessageConnect message.
+     */
     @Test
     public void testEncodeConnect() {
         CapMessage pojo = new CapMessage();
@@ -237,12 +260,14 @@ public class CAPEncoderTest {
         assertArrayEquals(correctMessage, cap);
     }
 
+    /**
+     * Test of IMSI message converting.
+     */
     @Test
     public void convertIMSI() {
         String stringBytes = "302510200239586";
         String s = reverse(stringBytes);
         assertEquals("03520102209385f6", s);
     }
-
 
 }

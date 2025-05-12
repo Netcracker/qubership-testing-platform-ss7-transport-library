@@ -27,10 +27,10 @@ public class Hex extends Number {
     /**
      * Constructor.
      *
-     * @param hex - String representation of hex number.
+     * @param hexString - String representation of hex number.
      */
-    public Hex(String hex) {
-        this.hex = hex;
+    public Hex(final String hexString) {
+        this.hex = hexString;
     }
 
     /**

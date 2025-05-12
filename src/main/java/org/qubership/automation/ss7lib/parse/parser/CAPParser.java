@@ -98,8 +98,6 @@ import org.qubership.automation.ss7lib.model.type.MonitorMode;
 import org.qubership.automation.ss7lib.parse.parser.cap.InitialDpArgExtensionParser;
 import org.qubership.automation.ss7lib.parse.parser.cap.PartyNumberParser;
 import org.qubership.automation.ss7lib.parse.scenario.ScenarioManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
@@ -124,7 +122,8 @@ public class CAPParser extends AbstractParser<CapMessage> {
             if (Objects.isNull(pojo.getInvoke().getCapMessagePojo())) {
                 pojo.getInvoke().setInvokeID(new CAPInvokeIDPojo());
             }
-            Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getInvoke().getInvokeID().getClass());
+            Map<String, String> scenario = ScenarioManager.getInstance()
+                    .getScenario(pojo.getInvoke().getInvokeID().getClass());
             if (contain(value, PRESENT)) {
                 pojo.getInvoke().getInvokeID().setStringBytes(getValue(PRESENT, value, scenario.get(PRESENT)));
             }
@@ -132,7 +131,8 @@ public class CAPParser extends AbstractParser<CapMessage> {
             if (Objects.isNull(pojo.getInvoke().getOpCode())) {
                 pojo.getInvoke().setOpCode(new CAPOpCodePojo());
             }
-            Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getInvoke().getOpCode().getClass());
+            Map<String, String> scenario = ScenarioManager.getInstance()
+                    .getScenario(pojo.getInvoke().getOpCode().getClass());
             if (contain(value, LOCAL)) {
                 pojo.getInvoke().getOpCode().setStringBytes(getValue(LOCAL, value, scenario.get(LOCAL)));
             }
@@ -161,7 +161,6 @@ public class CAPParser extends AbstractParser<CapMessage> {
             if (Objects.isNull(bcsmEventArg)) {
                 bcsmEventArg = new CAPMessageEventReportBCSMArg();
                 pojo.getInvoke().setCapMessagePojo(bcsmEventArg);
-
             }
             BSCMEvent bcsmEvent;
             if (!bcsmEventArg.getBscmEventList().isEmpty()) {
@@ -171,7 +170,6 @@ public class CAPParser extends AbstractParser<CapMessage> {
                 bcsmEventArg.getBscmEventList().add(bcsmEvent);
             }
             parseEventBCSMEvent(bcsmEvent, value);
-
         } else if (parent.trim().contains(APPLY_CHARGING_REPORT_ARG)) {
             ApplyChargingReportArg applyChargingArg = new ApplyChargingReportArg();
             if (Objects.isNull(pojo.getInvoke().getCapMessagePojo())) {
@@ -180,27 +178,36 @@ public class CAPParser extends AbstractParser<CapMessage> {
             applyChargingArg.setValue(parseAcr(parent));
         } else if (parent.contains(LOCATION_INFORMATION)) {
             if (pojo.getInvoke().getCapMessagePojo() instanceof InitialDetectionPoint) {
-                if (Objects.isNull(((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo()).getLocationInformation())) {
-                    ((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo()).setLocationInformation(new InitialDetectionPoint.LocationInformation());
+                if (Objects.isNull(((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo())
+                        .getLocationInformation())) {
+                    ((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo())
+                            .setLocationInformation(new InitialDetectionPoint.LocationInformation());
                 }
             }
-            parseLocationinformation(((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo()).getLocationInformation(), value, parent);
+            parseLocationinformation(((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo())
+                    .getLocationInformation(), value, parent);
         } else if (parent.contains(CELL_GLOBAL_ID_OR_SERVICE_AREA_ID_OR_LAI)) {
             if (pojo.getInvoke().getCapMessagePojo() instanceof InitialDetectionPoint) {
-                if (Objects.isNull(((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo()).getLocationInformation().getCellGlobalIdOrServiceAreaIdOrLAI())) {
-                    ((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo()).getLocationInformation().setCellGlobalIdOrServiceAreaIdOrLAI(
+                if (Objects.isNull(((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo())
+                        .getLocationInformation().getCellGlobalIdOrServiceAreaIdOrLAI())) {
+                    ((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo()).getLocationInformation()
+                            .setCellGlobalIdOrServiceAreaIdOrLAI(
                             new InitialDetectionPoint.LocationInformation.CellGlobalIdOrServiceAreaIdOrLAI());
                 }
             }
-            parseCellGlobalIdOrServiceAreaIdOrLAI(((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo()).getLocationInformation().getCellGlobalIdOrServiceAreaIdOrLAI(),
+            parseCellGlobalIdOrServiceAreaIdOrLAI(((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo())
+                            .getLocationInformation().getCellGlobalIdOrServiceAreaIdOrLAI(),
                     value, parent);
         } else if (parent.contains(EXT_BASIC_SERVICE_CODE)) {
             if (pojo.getInvoke().getCapMessagePojo() instanceof InitialDetectionPoint) {
-                if (Objects.isNull(((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo()).getExtBasicServiceCode())) {
-                    ((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo()).setExtBasicServiceCode(new InitialDetectionPoint.ExtBasicServiceCode());
+                if (Objects.isNull(((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo())
+                        .getExtBasicServiceCode())) {
+                    ((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo())
+                            .setExtBasicServiceCode(new InitialDetectionPoint.ExtBasicServiceCode());
                 }
             }
-            parseExtBasicServiceCode(((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo()).getExtBasicServiceCode(), value, parent);
+            parseExtBasicServiceCode(((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo())
+                    .getExtBasicServiceCode(), value, parent);
         } else if (parent.contains(BEARER_CAPABILITY)) {
             InitialDetectionPoint initialDetectionPoint = pojo.getInvoke().getCapMessagePojo();
             if (pojo.getInvoke().getCapMessagePojo() instanceof InitialDetectionPoint) {
@@ -212,7 +219,8 @@ public class CAPParser extends AbstractParser<CapMessage> {
         } else if (parent.contains(BCSMEVENT)) {
             if (pojo.getInvoke().getCapMessagePojo() instanceof CAPMessageRequestReportBCSMEventArg) {
                 CAPMessageRequestReportBCSMEventArg capMessagePojo = pojo.getInvoke().getCapMessagePojo();
-                LinkedList<CAPMessageRequestReportBCSMEventArg.BSCMEvent> bscmEventList = capMessagePojo.getBscmEventList();
+                LinkedList<CAPMessageRequestReportBCSMEventArg.BSCMEvent> bscmEventList = capMessagePojo
+                        .getBscmEventList();
                 CAPMessageRequestReportBCSMEventArg.BSCMEvent bscmEvent;
                 if (contain(value, EVENT_TYPE_BCSM)) {
                     bscmEvent = new CAPMessageRequestReportBCSMEventArg.BSCMEvent();
@@ -225,7 +233,8 @@ public class CAPParser extends AbstractParser<CapMessage> {
         } else if (parent.contains(LEG_ID)) {
             if (pojo.getInvoke().getCapMessagePojo() instanceof CAPMessageRequestReportBCSMEventArg) {
                 CAPMessageRequestReportBCSMEventArg messagePojo = pojo.getInvoke().getCapMessagePojo();
-                LinkedList<CAPMessageRequestReportBCSMEventArg.BSCMEvent> bscmEventList = messagePojo.getBscmEventList();
+                LinkedList<CAPMessageRequestReportBCSMEventArg.BSCMEvent> bscmEventList = messagePojo
+                        .getBscmEventList();
                 CAPMessageRequestReportBCSMEventArg.BSCMEvent bscmEvent = bscmEventList.getLast();
                 if (Objects.isNull(bscmEvent.getLegID())) {
                     bscmEvent.setLegID(new LegID());
@@ -243,19 +252,27 @@ public class CAPParser extends AbstractParser<CapMessage> {
             }
         } else if (parent.contains(PARTY_TO_CHARGE)) {
             if (pojo.getInvoke().getCapMessagePojo() instanceof CAPMessageApplyChargingArg) {
-                if (Objects.isNull(((CAPMessageApplyChargingArg) pojo.getInvoke().getCapMessagePojo()).getPartyToCharge())) {
-                    ((CAPMessageApplyChargingArg) pojo.getInvoke().getCapMessagePojo()).setPartyToCharge(new CAPMessageApplyChargingArg.PartyToCharge());
+                if (Objects.isNull(((CAPMessageApplyChargingArg) pojo.getInvoke().getCapMessagePojo())
+                        .getPartyToCharge())) {
+                    ((CAPMessageApplyChargingArg) pojo.getInvoke().getCapMessagePojo())
+                            .setPartyToCharge(new CAPMessageApplyChargingArg.PartyToCharge());
                 }
-                parsePartyToCharge(((CAPMessageApplyChargingArg) pojo.getInvoke().getCapMessagePojo()).getPartyToCharge(), value, parent);
+                parsePartyToCharge(((CAPMessageApplyChargingArg) pojo.getInvoke().getCapMessagePojo())
+                        .getPartyToCharge(), value, parent);
             }
         } else if (parent.contains(DESTINATION_ROUTING_ADDRESS) && !Strings.isNullOrEmpty(value)) {
             if (pojo.getInvoke().getCapMessagePojo() instanceof CAPMessageConnectArg) {
-                ((CAPMessageConnectArg) pojo.getInvoke().getCapMessagePojo()).getDestinationRoutingAddressList().add(new CAPMessageConnectArg.DestinationRoutingAddress());
-                parseDestinationRoutingAddress(((CAPMessageConnectArg) pojo.getInvoke().getCapMessagePojo()).getDestinationRoutingAddressList().get(
-                        ((CAPMessageConnectArg) pojo.getInvoke().getCapMessagePojo()).getDestinationRoutingAddressList().size() - 1
+                ((CAPMessageConnectArg) pojo.getInvoke().getCapMessagePojo()).getDestinationRoutingAddressList()
+                        .add(new CAPMessageConnectArg.DestinationRoutingAddress());
+                parseDestinationRoutingAddress(((CAPMessageConnectArg) pojo.getInvoke().getCapMessagePojo())
+                        .getDestinationRoutingAddressList().get(
+                        ((CAPMessageConnectArg) pojo.getInvoke().getCapMessagePojo())
+                                .getDestinationRoutingAddressList().size() - 1
                 ), value, parent);
             }
-        } else if ("oDisconnectSpecificInfo".equals(parent) || "tBusySpecificInfo".equals(parent) || "tDisconnectSpecificInfo".equals(parent)) {
+        } else if ("oDisconnectSpecificInfo".equals(parent)
+                || "tBusySpecificInfo".equals(parent)
+                || "tDisconnectSpecificInfo".equals(parent)) {
             if (pojo.getInvoke().getCapMessagePojo() instanceof CAPMessageEventReportBCSMArg) {
                 CAPMessageEventReportBCSMArg message = pojo.getInvoke().getCapMessagePojo();
                 BSCMEvent event = message.getBscmEventList().getLast();
@@ -276,9 +293,10 @@ public class CAPParser extends AbstractParser<CapMessage> {
             initialDpArgExtensionParser.parse(value, idp.getInitialDpArgExtension());
         } else if (parent.contains("naCarrierInformation")) {
             InitialDetectionPoint idp = pojo.getInvoke().getCapMessagePojo();
-            Extension extension = ((LinkedList<Extension>) idp.getInitialDpArgExtension().getExtensions()).getLast();
+            Extension extension = idp.getInitialDpArgExtension().getExtensions().getLast();
             SelectionType selectionType = EnumProvider.of(
-                    getVal(value, CIC_SELECTION_TYPE, ScenarioManager.get(InitialDetectionPoint.class, CIC_SELECTION_TYPE)),
+                    getVal(value, CIC_SELECTION_TYPE, ScenarioManager.get(InitialDetectionPoint.class,
+                            CIC_SELECTION_TYPE)),
                     SelectionType.class
             );
             extension.setCicSelectionType(selectionType);
@@ -289,7 +307,8 @@ public class CAPParser extends AbstractParser<CapMessage> {
                 return;
             }
 
-            locationInformation.setLocationNumber(parseLocationNumber(value, locationInformation.getLocationNumber()));
+            locationInformation.setLocationNumber(parseLocationNumber(value, locationInformation
+                    .getLocationNumber()));
         } else if (contain(parent, CALLED_PARTY_BCDNUMBER)) {
             bcdParser.parseBCD(pojo.getInvoke().getCapMessagePojo(), value);
         } else if (contain(parent, "miscCallInfo")) {
@@ -336,16 +355,19 @@ public class CAPParser extends AbstractParser<CapMessage> {
             idp.setCalledPartyNumber(new PartyNumber());
         } else if (contain(value, CALLING_PARTYS_CATEGORY)) {
             idp.setCallingPartysCategory(new InitialDetectionPoint.CallingPartysCategory());
-            idp.getCallingPartysCategory().setStringBytes(getValue(CALLING_PARTYS_CATEGORY, value, scenario.get(CALLING_PARTYS_CATEGORY)));
+            idp.getCallingPartysCategory().setStringBytes(getValue(CALLING_PARTYS_CATEGORY, value,
+                    scenario.get(CALLING_PARTYS_CATEGORY)));
         } else if (contain(value, I_PSSPCAPABILITIES)) {
             idp.setIpsspCapabilities(new InitialDetectionPoint.IPSSPCapabilities());
-            idp.getIpsspCapabilities().setStringBytes(getValue(I_PSSPCAPABILITIES, value, scenario.get(I_PSSPCAPABILITIES)));
+            idp.getIpsspCapabilities().setStringBytes(getValue(I_PSSPCAPABILITIES, value,
+                    scenario.get(I_PSSPCAPABILITIES)));
         } else if (contain(value, LOCATION_NUMBER)) {
             idp.setLocationNumber(new InitialDetectionPoint.LocationNumber());
             idp.getLocationNumber().setStringBytes(getValue(LOCATION_NUMBER, value, scenario.get(LOCATION_NUMBER)));
         } else if (contain(value, HIGH_LAYER_COMPATIBILITY)) {
             idp.setHighLayerCompatibility(new InitialDetectionPoint.HighLayerCompatibility());
-            idp.getHighLayerCompatibility().setStringBytes(getValue(HIGH_LAYER_COMPATIBILITY, value, scenario.get(HIGH_LAYER_COMPATIBILITY)));
+            idp.getHighLayerCompatibility().setStringBytes(getValue(HIGH_LAYER_COMPATIBILITY, value,
+                    scenario.get(HIGH_LAYER_COMPATIBILITY)));
         } else if (contain(value, EVENT_TYPE_BCSM)) {
             idp.setEventTypeBCSM(new InitialDetectionPoint.EventTypeBCSM());
             idp.getEventTypeBCSM().setStringBytes(getValue(EVENT_TYPE_BCSM, value, scenario.get(EVENT_TYPE_BCSM)));
@@ -354,17 +376,20 @@ public class CAPParser extends AbstractParser<CapMessage> {
             idp.getImsi().setStringBytes(getValue(IMSI, value, scenario.get(IMSI)));
         } else if (contain(value, CALL_REFERENCE_NUMBER)) {
             idp.setCallReferenceNumber(new InitialDetectionPoint.CallReferenceNumber());
-            idp.getCallReferenceNumber().setStringBytes(getValue(CALL_REFERENCE_NUMBER, value, scenario.get(CALL_REFERENCE_NUMBER)));
+            idp.getCallReferenceNumber().setStringBytes(getValue(CALL_REFERENCE_NUMBER, value,
+                    scenario.get(CALL_REFERENCE_NUMBER)));
         } else if (contain(value, MSC_ADDRESS)) {
             idp.setMscAddress(new InitialDetectionPoint.MscAddress());
             idp.getMscAddress().setStringBytes(getValue(MSC_ADDRESS, value, scenario.get(MSC_ADDRESS)));
         } else if (contain(value, CALLED_PARTY_BCDNUMBER)) {
             idp.setCalledPartyBCDNumber(new InitialDetectionPoint.CalledPartyBCDNumber());
-//            idp.getCalledPartyBCDNumber().setStringBytes(getValue(CALLED_PARTY_BCDNUMBER, value, scenario.get(CALLED_PARTY_BCDNUMBER)));
+//            idp.getCalledPartyBCDNumber().setStringBytes(getValue(CALLED_PARTY_BCDNUMBER, value,
+//            scenario.get(CALLED_PARTY_BCDNUMBER)));
 
         } else if (contain(value, TIME_AND_TIMEZONE)) {
             idp.setTimeAndTimezone(new InitialDetectionPoint.TimeAndTimezone());
-            idp.getTimeAndTimezone().setStringBytes(getValue(TIME_AND_TIMEZONE, value, scenario.get(TIME_AND_TIMEZONE)));
+            idp.getTimeAndTimezone().setStringBytes(getValue(TIME_AND_TIMEZONE, value,
+                    scenario.get(TIME_AND_TIMEZONE)));
         } else if (contain(value, INITIAL_DP_ARG_EXTENSION)) {
             idp.setInitialDpArgExtension(new InitialDpArgExtension());
         } else if (contain(value, "callForwarding")) {
@@ -392,15 +417,19 @@ public class CAPParser extends AbstractParser<CapMessage> {
         }
     }
 
-    private void parseMessageRequestReportBCSMEventArg(CAPMessageRequestReportBCSMEventArg pojo, String value, String parent) {
+    private void parseMessageRequestReportBCSMEventArg(CAPMessageRequestReportBCSMEventArg pojo,
+                                                       String value,
+                                                       String parent) {
 //        Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
     }
 
     private void parseMessageApplyChargingArg(CAPMessageApplyChargingArg pojo, String value, String parent) {
         Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
         if (contain(value, A_CH_BILLING_CHARGING_CHARACTERISTICS)) {
-            pojo.setAChBillingChargingCharacteristics(new CAPMessageApplyChargingArg.AChBillingChargingCharacteristics());
-            pojo.getAChBillingChargingCharacteristics().setStringBytes(getValue(A_CH_BILLING_CHARGING_CHARACTERISTICS, value, scenario.get(A_CH_BILLING_CHARGING_CHARACTERISTICS)));
+            pojo.setAChBillingChargingCharacteristics(new CAPMessageApplyChargingArg
+                    .AChBillingChargingCharacteristics());
+            pojo.getAChBillingChargingCharacteristics().setStringBytes(getValue(A_CH_BILLING_CHARGING_CHARACTERISTICS,
+                    value, scenario.get(A_CH_BILLING_CHARGING_CHARACTERISTICS)));
         }
     }
 
@@ -413,17 +442,22 @@ public class CAPParser extends AbstractParser<CapMessage> {
         Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
         if (contain(value, AGE_OF_LOCATION_INFORMATION)) {
             pojo.setAgeOfLocationInformation(new InitialDetectionPoint.LocationInformation.AgeOfLocationInformation());
-            pojo.getAgeOfLocationInformation().setStringBytes(getValue(AGE_OF_LOCATION_INFORMATION, value, scenario.get(AGE_OF_LOCATION_INFORMATION)));
+            pojo.getAgeOfLocationInformation().setStringBytes(getValue(AGE_OF_LOCATION_INFORMATION, value,
+                    scenario.get(AGE_OF_LOCATION_INFORMATION)));
         } else if (contain(value, VLR_NUMBER)) {
             pojo.setVlrNumber(new InitialDetectionPoint.LocationInformation.VlrNumber());
             pojo.getVlrNumber().setStringBytes(getValue(VLR_NUMBER, value, scenario.get(VLR_NUMBER)));
         }
     }
 
-    private void parseCellGlobalIdOrServiceAreaIdOrLAI(InitialDetectionPoint.LocationInformation.CellGlobalIdOrServiceAreaIdOrLAI pojo, String value, String parent) {
+    private void parseCellGlobalIdOrServiceAreaIdOrLAI(
+            InitialDetectionPoint.LocationInformation.CellGlobalIdOrServiceAreaIdOrLAI pojo,
+            String value,
+            String parent) {
         Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
         if (contain(value, CELL_GLOBAL_ID_OR_SERVICE_AREA_ID_FIXED_LENGTH)) {
-            pojo.setStringBytes(getValue(CELL_GLOBAL_ID_OR_SERVICE_AREA_ID_FIXED_LENGTH, value, scenario.get(CELL_GLOBAL_ID_OR_SERVICE_AREA_ID_FIXED_LENGTH)));
+            pojo.setStringBytes(getValue(CELL_GLOBAL_ID_OR_SERVICE_AREA_ID_FIXED_LENGTH, value,
+                    scenario.get(CELL_GLOBAL_ID_OR_SERVICE_AREA_ID_FIXED_LENGTH)));
         }
     }
 
@@ -488,7 +522,9 @@ public class CAPParser extends AbstractParser<CapMessage> {
         }
     }
 
-    private void parseDestinationRoutingAddress(CAPMessageConnectArg.DestinationRoutingAddress pojo, String value, String parent) {
+    private void parseDestinationRoutingAddress(CAPMessageConnectArg.DestinationRoutingAddress pojo,
+                                                String value,
+                                                String parent) {
         Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
         if (contain(value, CALLED_PARTY_NUMBER)) {
             pojo.setStringBytes(getValue(CALLED_PARTY_NUMBER, value, scenario.get(CALLED_PARTY_NUMBER)));

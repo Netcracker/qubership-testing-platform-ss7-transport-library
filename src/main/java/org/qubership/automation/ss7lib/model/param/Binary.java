@@ -27,10 +27,10 @@ public class Binary extends Number {
     /**
      * Constructor.
      *
-     * @param binary - String representation of binary number.
+     * @param binaryString - String representation of binary number.
      */
-    public Binary(String binary) {
-        this.binary = binary;
+    public Binary(final String binaryString) {
+        this.binary = binaryString;
     }
 
     /**

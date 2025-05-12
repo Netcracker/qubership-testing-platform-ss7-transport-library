@@ -17,17 +17,24 @@
 
 package org.qubership.automation.ss7lib.decode.tcap.cap;
 
-import org.qubership.automation.ss7lib.DumpReader;
-import org.qubership.automation.ss7lib.model.sub.cap.message.CAPMessageApplyChargingArg;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.qubership.automation.ss7lib.DumpReader;
+import org.qubership.automation.ss7lib.model.sub.cap.message.CAPMessageApplyChargingArg;
 
 public class ApplyChargingArgDecoderTest {
+
+    /**
+     * Test of decoding of ApplyChargingArgs.
+     *
+     * @throws IOException in case resource file is missed or unavailable
+     * @throws URISyntaxException in case resource URI has wrong syntax.
+     */
     @Test
     public void testDecodeApplyChargingArgs() throws IOException, URISyntaxException {
         ByteBuffer trace = DumpReader.getHexTrace("/test_data/ApplyChargingArg.hexdump");

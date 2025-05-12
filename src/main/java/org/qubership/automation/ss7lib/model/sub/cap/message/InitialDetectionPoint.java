@@ -58,8 +58,16 @@ public class InitialDetectionPoint extends CAPMessagePojo {
 
     public static class CallingPartysCategory extends AbstractParamPojo implements Flag {
 
+        /**
+         * Start Flag byte, always = (byte) 0x85.
+         */
         private final transient byte startFlag = (byte) 0x85;
 
+        /**
+         * Get flags byte.
+         *
+         * @return byte value of startFlag field.
+         */
         public byte getFlag() {
             return startFlag;
         }
@@ -68,8 +76,16 @@ public class InitialDetectionPoint extends CAPMessagePojo {
 
     public static class IPSSPCapabilities extends AbstractParamPojo implements Flag {
 
+        /**
+         * Start Flag byte, always = (byte) 0x88.
+         */
         private final transient byte startFlag = (byte) 0x88;
 
+        /**
+         * Get flags byte.
+         *
+         * @return byte value of startFlag field.
+         */
         public byte getFlag() {
             return startFlag;
         }
@@ -78,22 +94,32 @@ public class InitialDetectionPoint extends CAPMessagePojo {
 
     public static class LocationNumber extends AbstractParamPojo implements Flag {
 
+        /**
+         * Start Flag byte, always = (byte) 0x8a.
+         */
         private final transient byte startFlag = (byte) 0x8a;
 
+        /**
+         * Get flags byte.
+         *
+         * @return byte value of startFlag field.
+         */
         public byte getFlag() {
             return startFlag;
         }
 
+        /**
+         * PartyNumber object field.
+         */
+        @Setter
+        @Getter
         private PartyNumber partyNumber;
 
-        public PartyNumber getPartyNumber() {
-            return partyNumber;
-        }
-
-        public void setPartyNumber(PartyNumber partyNumber) {
-            this.partyNumber = partyNumber;
-        }
-
+        /**
+         * Check if this is hex object (true or false).
+         *
+         * @return true if it's hex, otherwise false; always true currently.
+         */
         @Override
         public boolean isHEX() {
             return true;
@@ -103,12 +129,25 @@ public class InitialDetectionPoint extends CAPMessagePojo {
 
     public static class HighLayerCompatibility extends AbstractParamPojo implements Flag {
 
+        /**
+         * Start Flag byte, always = (byte) 0x97.
+         */
         private final transient byte startFlag = (byte) 0x97;
 
+        /**
+         * Get flags byte.
+         *
+         * @return byte value of startFlag field.
+         */
         public byte getFlag() {
             return startFlag;
         }
 
+        /**
+         * Check if this is hex object (true or false).
+         *
+         * @return true if it's hex, otherwise false; always true currently.
+         */
         @Override
         public boolean isHEX() {
             return true;
@@ -118,12 +157,25 @@ public class InitialDetectionPoint extends CAPMessagePojo {
 
     public static class BearerCapability extends AbstractParamPojo implements Flags {
 
+        /**
+         * Start Flag byte[], always = {(byte) 0xbb, (byte) 0x05, (byte) 0x80}.
+         */
         private final transient byte[] startFlag = {(byte) 0xbb, (byte) 0x05, (byte) 0x80};
 
+        /**
+         * Get flags byte[].
+         *
+         * @return byte[] value of startFlag field.
+         */
         public byte[] getFlags() {
             return startFlag;
         }
 
+        /**
+         * Check if this is hex object (true or false).
+         *
+         * @return true if it's hex, otherwise false; always true currently.
+         */
         @Override
         public boolean isHEX() {
             return true;
@@ -133,8 +185,16 @@ public class InitialDetectionPoint extends CAPMessagePojo {
 
     public static class EventTypeBCSM extends AbstractParamPojo implements Flag {
 
+        /**
+         * Start Flag byte, always = (byte) 0x9c.
+         */
         private final transient byte startFlag = (byte) 0x9c;
 
+        /**
+         * Get flags byte.
+         *
+         * @return byte value of startFlag field.
+         */
         public byte getFlag() {
             return startFlag;
         }
@@ -143,12 +203,25 @@ public class InitialDetectionPoint extends CAPMessagePojo {
 
     public static class IMSI extends AbstractParamPojo implements Flags {
 
+        /**
+         * Start Flag byte[], always = {(byte) 0x9f, (byte) 0x32}.
+         */
         private final transient byte[] startFlag = {(byte) 0x9f, (byte) 0x32};
 
+        /**
+         * Get flags byte[].
+         *
+         * @return byte[] value of startFlag field.
+         */
         public byte[] getFlags() {
             return startFlag;
         }
 
+        /**
+         * Check if this is hex object (true or false).
+         *
+         * @return true if it's hex, otherwise false; always true currently.
+         */
         @Override
         public boolean isHEX() {
             return true;
@@ -157,54 +230,58 @@ public class InitialDetectionPoint extends CAPMessagePojo {
     }
 
     public static class LocationInformation extends AbstractParamPojo implements Flags {
+
+        /**
+         * Start Flag byte[], always = {(byte) 0xbf, (byte) 0x34}.
+         */
         private final transient byte[] startFlag = {(byte) 0xbf, (byte) 0x34};
+
+        /**
+         * AgeOfLocationInformation object field.
+         */
+        @Setter
+        @Getter
         private AgeOfLocationInformation ageOfLocationInformation;
+
+        /**
+         * VlrNumber object field.
+         */
+        @Setter
+        @Getter
         private VlrNumber vlrNumber;
+
+        /**
+         * LocationNumber object field.
+         */
+        @Setter
+        @Getter
         private LocationNumber locationNumber;
 
-        public LocationNumber getLocationNumber() {
-            return locationNumber;
-        }
-
-        public void setLocationNumber(LocationNumber locationNumber) {
-            this.locationNumber = locationNumber;
-        }
-
+        /**
+         * CellGlobalIdOrServiceAreaIdOrLAI object field.
+         */
+        @Setter
+        @Getter
         private CellGlobalIdOrServiceAreaIdOrLAI cellGlobalIdOrServiceAreaIdOrLAI;
 
-
+        /**
+         * Get flags byte[].
+         *
+         * @return byte[] value of startFlag field.
+         */
         public byte[] getFlags() {
             return startFlag;
-        }
-
-        public AgeOfLocationInformation getAgeOfLocationInformation() {
-            return ageOfLocationInformation;
-        }
-
-        public void setAgeOfLocationInformation(AgeOfLocationInformation ageOfLocationInformation) {
-            this.ageOfLocationInformation = ageOfLocationInformation;
-        }
-
-        public VlrNumber getVlrNumber() {
-            return vlrNumber;
-        }
-
-        public void setVlrNumber(VlrNumber vlrNumber) {
-            this.vlrNumber = vlrNumber;
-        }
-
-        public CellGlobalIdOrServiceAreaIdOrLAI getCellGlobalIdOrServiceAreaIdOrLAI() {
-            return cellGlobalIdOrServiceAreaIdOrLAI;
-        }
-
-        public void setCellGlobalIdOrServiceAreaIdOrLAI(CellGlobalIdOrServiceAreaIdOrLAI cellGlobalIdOrServiceAreaIdOrLAI) {
-            this.cellGlobalIdOrServiceAreaIdOrLAI = cellGlobalIdOrServiceAreaIdOrLAI;
         }
 
         public static class AgeOfLocationInformation extends AbstractParamPojo implements Flag {
 
             private final transient byte startFlag = (byte) 0x02;
 
+            /**
+             * Get flags byte.
+             *
+             * @return byte value of startFlag field.
+             */
             public byte getFlag() {
                 return startFlag;
             }
@@ -213,12 +290,25 @@ public class InitialDetectionPoint extends CAPMessagePojo {
 
         public static class VlrNumber extends AbstractParamPojo implements Flag {
 
+            /**
+             * Start Flag byte, always = (byte) 0x81.
+             */
             private final transient byte startFlag = (byte) 0x81;
 
+            /**
+             * Get flags byte.
+             *
+             * @return byte value of startFlag field.
+             */
             public byte getFlag() {
                 return startFlag;
             }
 
+            /**
+             * Check if this is hex object (true or false).
+             *
+             * @return true if it's hex, otherwise false; always true currently.
+             */
             @Override
             public boolean isHEX() {
                 return true;
@@ -228,12 +318,25 @@ public class InitialDetectionPoint extends CAPMessagePojo {
 
         public static class CellGlobalIdOrServiceAreaIdOrLAI extends AbstractParamPojo implements Flags {
 
+            /**
+             * Start Flag byte[], always = {(byte) 0xa3, (byte) 0x09, (byte) 0x80}.
+             */
             private final transient  byte[] startFlag = {(byte) 0xa3, (byte) 0x09, (byte) 0x80};
 
+            /**
+             * Get flags byte[].
+             *
+             * @return byte[] value of startFlag field.
+             */
             public byte[] getFlags() {
                 return startFlag;
             }
 
+            /**
+             * Check if this is hex object (true or false).
+             *
+             * @return true if it's hex, otherwise false; always true currently.
+             */
             @Override
             public boolean isHEX() {
                 return true;
@@ -245,8 +348,16 @@ public class InitialDetectionPoint extends CAPMessagePojo {
 
     public static class ExtBasicServiceCode extends AbstractParamPojo implements Flags {
 
+        /**
+         * Start Flag byte[], always = {(byte) 0xbf, (byte) 0x35, (byte) 0x03, (byte) 0x83}.
+         */
         private final transient  byte[] startFlag = {(byte) 0xbf, (byte) 0x35, (byte) 0x03, (byte) 0x83};
 
+        /**
+         * Get flags byte[].
+         *
+         * @return byte[] value of startFlag field.
+         */
         public byte[] getFlags() {
             return startFlag;
         }
@@ -255,12 +366,25 @@ public class InitialDetectionPoint extends CAPMessagePojo {
 
     public static class CallReferenceNumber extends AbstractParamPojo implements Flags {
 
+        /**
+         * Start Flag byte[], always = {(byte) 0x9f, (byte) 0x36}.
+         */
         private final transient  byte[] startFlag = {(byte) 0x9f, (byte) 0x36};
 
+        /**
+         * Get flags byte[].
+         *
+         * @return byte[] value of startFlag field.
+         */
         public byte[] getFlags() {
             return startFlag;
         }
 
+        /**
+         * Check if this is hex object (true or false).
+         *
+         * @return true if it's hex, otherwise false; always true currently.
+         */
         @Override
         public boolean isHEX() {
             return true;
@@ -270,12 +394,25 @@ public class InitialDetectionPoint extends CAPMessagePojo {
 
     public static class MscAddress extends AbstractParamPojo implements Flags {
 
+        /**
+         * Start Flag byte[], always = {(byte) 0x9f, (byte) 0x37}.
+         */
         private final transient  byte[] startFlag = {(byte) 0x9f, (byte) 0x37};
 
+        /**
+         * Get flags byte[].
+         *
+         * @return byte[] value of startFlag field.
+         */
         public byte[] getFlags() {
             return startFlag;
         }
 
+        /**
+         * Check if this is hex object (true or false).
+         *
+         * @return true if it's hex, otherwise false; always true currently.
+         */
         @Override
         public boolean isHEX() {
             return true;
@@ -285,13 +422,26 @@ public class InitialDetectionPoint extends CAPMessagePojo {
 
     public static class CalledPartyBCDNumber extends AbstractParamPojo implements Flags {
 
+        /**
+         * Start Flag byte[], always = {(byte) 0x9f, (byte) 0x38}.
+         */
         private final transient  byte[] startFlag = {(byte) 0x9f, (byte) 0x38};
 
+        /**
+         * Check if this is hex object (true or false).
+         *
+         * @return true if it's hex, otherwise false; always true currently.
+         */
         @Override
         public boolean isHEX() {
             return true;
         }
 
+        /**
+         * Get flags byte[].
+         *
+         * @return byte[] value of startFlag field.
+         */
         public byte[] getFlags() {
             return startFlag;
         }
@@ -300,12 +450,25 @@ public class InitialDetectionPoint extends CAPMessagePojo {
 
     public static class TimeAndTimezone extends AbstractParamPojo implements Flags {
 
+        /**
+         * Start Flag byte[], always = {(byte) 0x9f, (byte) 0x39}.
+         */
         private final transient  byte[] startFlag = {(byte) 0x9f, (byte) 0x39};
 
+        /**
+         * Get flags byte[].
+         *
+         * @return byte[] value of startFlag field.
+         */
         public byte[] getFlags() {
             return startFlag;
         }
 
+        /**
+         * Check if this is hex object (true or false).
+         *
+         * @return true if it's hex, otherwise false; always true currently.
+         */
         @Override
         public boolean isHEX() {
             return true;
