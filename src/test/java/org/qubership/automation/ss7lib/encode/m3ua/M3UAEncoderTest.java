@@ -17,6 +17,9 @@
 
 package org.qubership.automation.ss7lib.encode.m3ua;
 
+import static org.junit.Assert.assertArrayEquals;
+
+import org.junit.Test;
 import org.qubership.automation.ss7lib.model.M3uaMessage;
 import org.qubership.automation.ss7lib.model.sub.m3ua.NetworkAppearance;
 import org.qubership.automation.ss7lib.model.sub.m3ua.ProtocolData;
@@ -24,12 +27,13 @@ import org.qubership.automation.ss7lib.model.sub.m3ua.RoutingContext;
 import org.qubership.automation.ss7lib.model.type.MessageClass;
 import org.qubership.automation.ss7lib.model.type.MessageType;
 import org.qubership.automation.ss7lib.model.type.ParameterTag;
-import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
-
+@SuppressWarnings("checkstyle:MagicNumber")
 public class M3UAEncoderTest {
 
+    /**
+     * Test encoding of M3UA Message.
+     */
     @Test
     public void testEncode() {
         M3uaMessage pojo = new M3uaMessage();
@@ -59,11 +63,13 @@ public class M3UAEncoderTest {
         protocolDataPojo.setSls((byte) 21);
         pojo.setProtocolData(protocolDataPojo);
 
-
         byte[] m3ua = new M3UAEncoder().encode(pojo);
-        byte[] correctMessage =    {0x01, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x6c, 0x02, 0x00, 0x00, 0x08, 0x00, 0x00,
-                                    0x00, 0x08, 0x00, 0x06, 0x00, 0x08, 0x00, 0x00, 0x00, (byte) 0xa2, 0x02, 0x10, 0x00, 0x53,
-                                    0x00, 0x01, 0x78, 0x12, 0x00, 0x01, 0x78, (byte) 0xa2, 0x03, 0x02, 0x00, 0x15};
+        byte[] correctMessage = {
+                0x01, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x6c,
+                0x02, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x08,
+                0x00, 0x06, 0x00, 0x08, 0x00, 0x00, 0x00, (byte) 0xa2,
+                0x02, 0x10, 0x00, 0x53, 0x00, 0x01, 0x78, 0x12,
+                0x00, 0x01, 0x78, (byte) 0xa2, 0x03, 0x02, 0x00, 0x15};
 
         assertArrayEquals(correctMessage, m3ua);
     }

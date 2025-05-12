@@ -17,20 +17,26 @@
 
 package org.qubership.automation.ss7lib.encode.m3ua;
 
-import org.qubership.automation.ss7lib.DumpReader;
-import org.qubership.automation.ss7lib.decode.m3ua.M3uaDecoder;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
+import org.junit.Test;
+import org.qubership.automation.ss7lib.DumpReader;
+import org.qubership.automation.ss7lib.decode.m3ua.M3uaDecoder;
+
 public class UnknownDataParsingTest {
+
+    /**
+     * Test parsing of unknown data.
+     *
+     * @throws IOException in case missed or unavailable file resource
+     * @throws URISyntaxException in case wrong syntax of file resource URI.
+     */
     @Test
     public void testParseUnknownDecData() throws IOException, URISyntaxException {
-        ByteBuffer trace = DumpReader.getTrace("/test_data/unkown.data");
+        ByteBuffer trace = DumpReader.getTrace("/test_data/unknown.data");
         M3uaDecoder decoder = new M3uaDecoder();
         decoder.decode(trace);
-
     }
 }

@@ -28,20 +28,39 @@ import org.qubership.automation.ss7lib.model.sub.cap.message.idp.PartyNumber;
 import org.qubership.automation.ss7lib.parse.parser.PartParser;
 
 public class PartyNumberParserTest {
-    private static final String INPUT = "callingPartyNumber: 8415514124044500\n" +
-            "    1... .... = Odd/even indicator: odd number of address signals\n" +
-            "    .000 0100 = Nature of address indicator: international number (4)\n" +
-            "    0... .... = NI indicator: complete\n" +
-            "    .001 .... = Numbering plan indicator: ISDN (Telephony) numbering plan ITU-T E.164 (1)\n" +
-            "    .... 01.. = Address presentation restricted indicator: presentation restricted (1)\n" +
-            "    .... ..01 = Screening indicator: user provided, verified and passed (1)\n" +
-            "    Calling Party Number: 15144240540\n";
+
+    /**
+     * Message to parse.
+     */
+    private static final String INPUT = "callingPartyNumber: 8415514124044500\n"
+            + "    1... .... = Odd/even indicator: odd number of address signals\n"
+            + "    .000 0100 = Nature of address indicator: international number (4)\n"
+            + "    0... .... = NI indicator: complete\n"
+            + "    .001 .... = Numbering plan indicator: ISDN (Telephony) numbering plan ITU-T E.164 (1)\n"
+            + "    .... 01.. = Address presentation restricted indicator: presentation restricted (1)\n"
+            + "    .... ..01 = Screening indicator: user provided, verified and passed (1)\n"
+            + "    Calling Party Number: 15144240540\n";
+
+    /**
+     * PartParser object.
+     */
     private PartParser parser;
+
+    /**
+     * CapMessage object.
+     */
     private CapMessage capMessage;
+
+    /**
+     * PartyNumber object.
+     */
     private PartyNumber partyNumber;
 
+    /**
+     * Init objects before tests.
+     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         parser = new PartyNumberParser();
         capMessage = new CapMessage();
         CapInvoke invoke = new CapInvoke();
@@ -52,6 +71,9 @@ public class PartyNumberParserTest {
         invoke.setCapMessagePojo(idp);
     }
 
+    /**
+     * Test parsing of odd/even indicator.
+     */
     @Test
     public void testParseOddIndicator() {
         for (String input : INPUT.split("\n")) {
@@ -60,6 +82,9 @@ public class PartyNumberParserTest {
         assertEquals(0x1, partyNumber.getOddIndicator());
     }
 
+    /**
+     * Test parsing of Nature of Address indicator.
+     */
     @Test
     public void testParseNatureAddressIndicator() {
         for (String input : INPUT.split("\n")) {
@@ -68,6 +93,9 @@ public class PartyNumberParserTest {
         assertEquals(0x4, partyNumber.getNatureAddressIndicator());
     }
 
+    /**
+     * Test parsing of Network Information indicator.
+     */
     @Test
     public void testParseNetworkInformationIndicator() {
         for (String input : INPUT.split("\n")) {
@@ -76,6 +104,9 @@ public class PartyNumberParserTest {
         assertEquals(0x0, partyNumber.getNetworkInformationIndicator());
     }
 
+    /**
+     * Test parsing of Numbering Plan indicator.
+     */
     @Test
     public void testParseNumberingPlanIndicator() {
         for (String input : INPUT.split("\n")) {
@@ -84,6 +115,9 @@ public class PartyNumberParserTest {
         assertEquals(0x1, partyNumber.getNumberingPlanIndicator());
     }
 
+    /**
+     * Test parsing of Address Presentation indicator.
+     */
     @Test
     public void testParseAddressPresentationIndicator() {
         for (String input : INPUT.split("\n")) {
@@ -92,6 +126,9 @@ public class PartyNumberParserTest {
         assertEquals(0x1, partyNumber.getAddressPresentationIndicator());
     }
 
+    /**
+     * Test parsing of screening indicator.
+     */
     @Test
     public void testParseScreeningIndicator() {
         for (String input : INPUT.split("\n")) {
@@ -100,6 +137,9 @@ public class PartyNumberParserTest {
         assertEquals(0x1, partyNumber.getScreeningIndicator());
     }
 
+    /**
+     * Test parsing of party number.
+     */
     @Test
     public void testParseNumber() {
         for (String input : INPUT.split("\n")) {

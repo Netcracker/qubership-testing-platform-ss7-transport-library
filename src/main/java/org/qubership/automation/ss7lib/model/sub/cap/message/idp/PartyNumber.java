@@ -28,32 +28,69 @@ public class PartyNumber extends AbstractParamPojo implements Flag {
     public static final byte CALLING_PARTY_NUMBER_FLAG = (byte) 0x83;
     public static final byte CALLED_PARTY_NUMBER_FLAG = (byte) 0x82;
 
+    /**
+     * String number of the party.
+     */
     @Setter
     @Getter
     private String number;
+
+    /**
+     * Odd/even indicator field.
+     */
     @Setter
     @Getter
     private byte oddIndicator;
+
+    /**
+     * Nature of Address indicator field.
+     */
     @Setter
     @Getter
     private byte natureAddressIndicator;
+
+    /**
+     * Network Information indicator field.
+     */
     @Setter
     @Getter
     private byte networkInformationIndicator;
+
+    /**
+     * Numbering Plan indicator field.
+     */
     @Setter
     @Getter
     private byte numberingPlanIndicator;
+
+    /**
+     * Address Presentation restricted indicator field.
+     */
     @Setter
     @Getter
     private byte addressPresentationIndicator;
+
+    /**
+     * Screening Indicator field.
+     */
     @Setter
     @Getter
     private byte screeningIndicator;
 
+    /**
+     * Get flag byte.
+     *
+     * @return byte value of flag; throw UnsupportedOperationException for this exact class objects.
+     */
     public byte getFlag() {
-        throw new UnsupportedOperationException("User getCalledPartNumberFlag/getCallingPartyNumberFlag");
+        throw new UnsupportedOperationException("Please use getCalledPartNumberFlag/getCallingPartyNumberFlag instead");
     }
 
+    /**
+     * Check if this is hex object (true or false).
+     *
+     * @return true if it's hex, otherwise false; always true currently.
+     */
     @Override
     public boolean isHEX() {
         return true;

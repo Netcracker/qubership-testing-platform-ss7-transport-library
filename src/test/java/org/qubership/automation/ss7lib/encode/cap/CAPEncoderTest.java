@@ -36,7 +36,7 @@ import org.qubership.automation.ss7lib.model.sub.cap.message.idp.ServiceKey;
 import org.qubership.automation.ss7lib.model.type.EventType;
 import org.qubership.automation.ss7lib.model.type.MonitorMode;
 
-@SuppressWarnings({"checkstyle:HideUtilityClassConstructor","checkstyle:MagicNumber"})
+@SuppressWarnings({"checkstyle:HideUtilityClassConstructor", "checkstyle:MagicNumber"})
 public class CAPEncoderTest {
 
     /**

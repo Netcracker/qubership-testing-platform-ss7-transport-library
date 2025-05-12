@@ -46,10 +46,17 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.primitives.Bytes;
 
-@SuppressWarnings({"checkstyle:HideUtilityClassConstructor","checkstyle:MagicNumber"})
+@SuppressWarnings({"checkstyle:HideUtilityClassConstructor", "checkstyle:MagicNumber"})
 public class MessageParserTest {
 
+    /**
+     * Message to parse and encode for parseTest #1.
+     */
     private String message1 = "";
+
+    /**
+     * Message to parse and encode for parseTest #2.
+     */
     private String message2 = "";
 
     /**

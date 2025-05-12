@@ -103,12 +103,30 @@ import com.google.common.base.Strings;
 
 public class CAPParser extends AbstractParser<CapMessage> {
 
+    /**
+     * BCDParser object.
+     */
     private final BCDParser bcdParser = new BCDParser();
+
+    /**
+     * PartyNumberParser object.
+     */
     private final PartyNumberParser partyNumberParser = new PartyNumberParser();
+
+    /**
+     * InitialDpArgExtensionParser object.
+     */
     private final InitialDpArgExtensionParser initialDpArgExtensionParser = new InitialDpArgExtensionParser();
 
+    /**
+     * Parse String value into CapMessage object.
+     *
+     * @param pojo CapMessage object to parse into
+     * @param value String value to parse
+     * @param parents List of parent messages.
+     */
     @Override
-    void parse(CapMessage pojo, String value, List<String> parents) {
+    void parse(final CapMessage pojo, final String value, final List<String> parents) {
         if (Strings.isNullOrEmpty(value)) {
             return;
         }
@@ -184,7 +202,7 @@ public class CAPParser extends AbstractParser<CapMessage> {
                             .setLocationInformation(new InitialDetectionPoint.LocationInformation());
                 }
             }
-            parseLocationinformation(((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo())
+            parseLocationInformation(((InitialDetectionPoint) pojo.getInvoke().getCapMessagePojo())
                     .getLocationInformation(), value, parent);
         } else if (parent.contains(CELL_GLOBAL_ID_OR_SERVICE_AREA_ID_OR_LAI)) {
             if (pojo.getInvoke().getCapMessagePojo() instanceof InitialDetectionPoint) {
@@ -306,7 +324,6 @@ public class CAPParser extends AbstractParser<CapMessage> {
             if (locationInformation == null) {
                 return;
             }
-
             locationInformation.setLocationNumber(parseLocationNumber(value, locationInformation
                     .getLocationNumber()));
         } else if (contain(parent, CALLED_PARTY_BCDNUMBER)) {
@@ -318,13 +335,12 @@ public class CAPParser extends AbstractParser<CapMessage> {
                 MiscCallInfo callInfo = new MiscCallInfo();
                 event.setMiscCallInfo(callInfo);
                 callInfo.setMessageType(getVal(value, "messageType", NUMERIC_VALUE));
-
             }
         }
     }
 
     private InitialDetectionPoint.LocationNumber parseLocationNumber(
-            String value, InitialDetectionPoint.LocationNumber locationNumber) {
+            final String value, InitialDetectionPoint.LocationNumber locationNumber) {
         if (locationNumber == null) {
             locationNumber = new InitialDetectionPoint.LocationNumber();
             locationNumber.setPartyNumber(new PartyNumber());
@@ -333,18 +349,17 @@ public class CAPParser extends AbstractParser<CapMessage> {
         return locationNumber;
     }
 
-    private String parseReleaseCause(String value) {
+    private String parseReleaseCause(final String value) {
         return value.split(":")[1].trim();
     }
 
-    private byte[] parseAcr(String parent) {
+    private byte[] parseAcr(final String parent) {
         //ApplyChargingReportArg: a00ba003810101a104800200b4
         String index = parent.split("\\s")[1];
         return Converter.hexToBytes(index);
     }
 
-
-    private void parseMessageIDP(InitialDetectionPoint idp, String value, String parent) {
+    private void parseMessageIDP(final InitialDetectionPoint idp, final String value, final String parent) {
         Map<String, String> scenario = ScenarioManager.getInstance().getScenario(idp.getClass());
         if (contain(value, SERVICE_KEY)) {
             idp.setServiceKey(new ServiceKey());
@@ -383,9 +398,6 @@ public class CAPParser extends AbstractParser<CapMessage> {
             idp.getMscAddress().setStringBytes(getValue(MSC_ADDRESS, value, scenario.get(MSC_ADDRESS)));
         } else if (contain(value, CALLED_PARTY_BCDNUMBER)) {
             idp.setCalledPartyBCDNumber(new InitialDetectionPoint.CalledPartyBCDNumber());
-//            idp.getCalledPartyBCDNumber().setStringBytes(getValue(CALLED_PARTY_BCDNUMBER, value,
-//            scenario.get(CALLED_PARTY_BCDNUMBER)));
-
         } else if (contain(value, TIME_AND_TIMEZONE)) {
             idp.setTimeAndTimezone(new InitialDetectionPoint.TimeAndTimezone());
             idp.getTimeAndTimezone().setStringBytes(getValue(TIME_AND_TIMEZONE, value,
@@ -417,13 +429,14 @@ public class CAPParser extends AbstractParser<CapMessage> {
         }
     }
 
-    private void parseMessageRequestReportBCSMEventArg(CAPMessageRequestReportBCSMEventArg pojo,
-                                                       String value,
-                                                       String parent) {
-//        Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
+    private void parseMessageRequestReportBCSMEventArg(final CAPMessageRequestReportBCSMEventArg pojo,
+                                                       final String value,
+                                                       final String parent) {
     }
 
-    private void parseMessageApplyChargingArg(CAPMessageApplyChargingArg pojo, String value, String parent) {
+    private void parseMessageApplyChargingArg(final CAPMessageApplyChargingArg pojo,
+                                              final String value,
+                                              final String parent) {
         Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
         if (contain(value, A_CH_BILLING_CHARGING_CHARACTERISTICS)) {
             pojo.setAChBillingChargingCharacteristics(new CAPMessageApplyChargingArg
@@ -433,12 +446,14 @@ public class CAPParser extends AbstractParser<CapMessage> {
         }
     }
 
-    private void parseMessageConnectArg(CAPMessageConnectArg pojo, String value, String parent) {
-//        Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
-
+    private void parseMessageConnectArg(final CAPMessageConnectArg pojo,
+                                        final String value,
+                                        final String parent) {
     }
 
-    private void parseLocationinformation(InitialDetectionPoint.LocationInformation pojo, String value, String parent) {
+    private void parseLocationInformation(final InitialDetectionPoint.LocationInformation pojo,
+                                          final String value,
+                                          final String parent) {
         Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
         if (contain(value, AGE_OF_LOCATION_INFORMATION)) {
             pojo.setAgeOfLocationInformation(new InitialDetectionPoint.LocationInformation.AgeOfLocationInformation());
@@ -451,9 +466,9 @@ public class CAPParser extends AbstractParser<CapMessage> {
     }
 
     private void parseCellGlobalIdOrServiceAreaIdOrLAI(
-            InitialDetectionPoint.LocationInformation.CellGlobalIdOrServiceAreaIdOrLAI pojo,
-            String value,
-            String parent) {
+            final InitialDetectionPoint.LocationInformation.CellGlobalIdOrServiceAreaIdOrLAI pojo,
+            final String value,
+            final String parent) {
         Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
         if (contain(value, CELL_GLOBAL_ID_OR_SERVICE_AREA_ID_FIXED_LENGTH)) {
             pojo.setStringBytes(getValue(CELL_GLOBAL_ID_OR_SERVICE_AREA_ID_FIXED_LENGTH, value,
@@ -461,21 +476,27 @@ public class CAPParser extends AbstractParser<CapMessage> {
         }
     }
 
-    private void parseExtBasicServiceCode(InitialDetectionPoint.ExtBasicServiceCode pojo, String value, String parent) {
+    private void parseExtBasicServiceCode(final InitialDetectionPoint.ExtBasicServiceCode pojo,
+                                          final String value,
+                                          final String parent) {
         Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
         if (contain(value, EXT_TELESERVICE)) {
             pojo.setStringBytes(getValue(EXT_TELESERVICE, value, scenario.get(EXT_TELESERVICE)));
         }
     }
 
-    private void parseBearerCapability(InitialDetectionPoint.BearerCapability pojo, String value, String parent) {
+    private void parseBearerCapability(final InitialDetectionPoint.BearerCapability pojo,
+                                       final String value,
+                                       final String parent) {
         Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
         if (contain(value, BEARER_CAP)) {
             pojo.setStringBytes(getValue(BEARER_CAP, value, scenario.get(BEARER_CAP)));
         }
     }
 
-    private void parseBCSMEvent(CAPMessageRequestReportBCSMEventArg.BSCMEvent pojo, String value, String parent) {
+    private void parseBCSMEvent(final CAPMessageRequestReportBCSMEventArg.BSCMEvent pojo,
+                                final String value,
+                                final String parent) {
         Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
         if (contain(value, EVENT_TYPE_BCSM)) {
             pojo.setEventType(EnumProvider.of(getValue(value, scenario, EVENT_TYPE_BCSM), EventType.class));
@@ -485,7 +506,7 @@ public class CAPParser extends AbstractParser<CapMessage> {
     }
 
 
-    private void parseEventBCSMEvent(BSCMEvent event, String value) {
+    private void parseEventBCSMEvent(final BSCMEvent event, final String value) {
         Map<String, String> scenario = ScenarioManager.getInstance().getScenario(event.getClass());
         if (contain(value, EVENT_TYPE_BCSM)) {
             event.setEventType(EnumProvider.of(getValue(value, scenario, EVENT_TYPE_BCSM), EventType.class));
@@ -497,16 +518,16 @@ public class CAPParser extends AbstractParser<CapMessage> {
         }
     }
 
-    private byte getValue(String value, Map<String, String> scenario, String propertyName) {
+    private byte getValue(final String value, final Map<String, String> scenario, final String propertyName) {
         String pattern = scenario.get(propertyName);
         return getVal(value, propertyName, pattern);
     }
 
-    private byte getVal(String value, String propertyName, String pattern) {
+    private byte getVal(final String value, final String propertyName, final String pattern) {
         return Byte.parseByte(getValue(propertyName, value, pattern));
     }
 
-    private void parseLegID(LegID pojo, String value, String parent) {
+    private void parseLegID(final LegID pojo, final String value, final String parent) {
         Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
         if (contain(value, SENDING_SIDE_ID)) {
             pojo.setId(getVal(value, SENDING_SIDE_ID, scenario.get(SENDING_SIDE_ID)));
@@ -515,16 +536,18 @@ public class CAPParser extends AbstractParser<CapMessage> {
         }
     }
 
-    private void parsePartyToCharge(CAPMessageApplyChargingArg.PartyToCharge pojo, String value, String parent) {
+    private void parsePartyToCharge(final CAPMessageApplyChargingArg.PartyToCharge pojo,
+                                    final String value,
+                                    final String parent) {
         Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
         if (contain(value, SENDING_SIDE_ID)) {
             pojo.setStringBytes(getValue(SENDING_SIDE_ID, value, scenario.get(SENDING_SIDE_ID)));
         }
     }
 
-    private void parseDestinationRoutingAddress(CAPMessageConnectArg.DestinationRoutingAddress pojo,
-                                                String value,
-                                                String parent) {
+    private void parseDestinationRoutingAddress(final CAPMessageConnectArg.DestinationRoutingAddress pojo,
+                                                final String value,
+                                                final String parent) {
         Map<String, String> scenario = ScenarioManager.getInstance().getScenario(pojo.getClass());
         if (contain(value, CALLED_PARTY_NUMBER)) {
             pojo.setStringBytes(getValue(CALLED_PARTY_NUMBER, value, scenario.get(CALLED_PARTY_NUMBER)));

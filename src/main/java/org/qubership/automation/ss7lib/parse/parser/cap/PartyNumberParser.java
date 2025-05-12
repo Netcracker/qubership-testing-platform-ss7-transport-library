@@ -28,15 +28,44 @@ import org.qubership.automation.ss7lib.parse.parser.PartParser;
 
 public class PartyNumberParser extends PartParser<PartyNumber> {
 
+    /**
+     * Constant String before odd/even indicator value.
+     */
     private static final String ODD_EVEN_INDICATOR = "Odd/even indicator";
+
+    /**
+     * Constant String before odd/even indicator value.
+     */
     private static final String NATURE_OF_ADDRESS_INDICATOR = "Nature of address indicator";
+
+    /**
+     * Constant String before network information indicator value.
+     */
     private static final String NI_INDICATOR = "NI indicator";
+
+    /**
+     * Constant String before numbering plan indicator value.
+     */
     private static final String NUMBERING_PLAN_INDICATOR = "Numbering plan Indicator";
+
+    /**
+     * Constant String before Address presentation restricted indicator value.
+     */
     private static final String RESTRICTION_INDICATOR = "Address presentation restricted indicator";
+
+    /**
+     * Constant String before Screening indicator value.
+     */
     private static final String SCREEN_INDICATOR = "Screening indicator";
 
+    /**
+     * Parse String value into PartyNumber object.
+     *
+     * @param value String value to parse
+     * @param partyNumber object to parse into.
+     */
     @Override
-    public void parse(String value, PartyNumber partyNumber) {
+    public void parse(final String value, final PartyNumber partyNumber) {
         String trimmedValue = value.trim();
         if (applicable(value, IDP_CALLING_PARTY_NUMBER_VALUE)) {
             partyNumber.setNumber(getValue(IDP_CALLING_PARTY_NUMBER_VALUE, trimmedValue, HEX_PATTERN));
