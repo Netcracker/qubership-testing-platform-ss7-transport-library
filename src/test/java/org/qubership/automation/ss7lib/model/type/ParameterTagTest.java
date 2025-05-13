@@ -17,30 +17,39 @@
 
 package org.qubership.automation.ss7lib.model.type;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertArrayEquals;
+
+import org.junit.Test;
 
 public class ParameterTagTest {
 
+    /**
+     * Test of getting NETWORK ParameterTag code.
+     */
     @Test
     public void testGetCodeByNetwork() {
         byte[] bytes = ParameterTag.NETWORK.getCode();
-        byte[] correctMessage = new byte[]{(byte)2,(byte)0};
+        byte[] correctMessage = new byte[]{(byte) 2, (byte) 0};
         assertArrayEquals(correctMessage, bytes);
     }
 
+    /**
+     * Test of ROUTING ParameterTag code.
+     */
     @Test
     public void testGetCodeByRouting() {
         byte[] bytes = ParameterTag.ROUTING.getCode();
-        byte[] correctMessage = new byte[]{(byte)0,(byte)6};
+        byte[] correctMessage = new byte[]{(byte) 0, (byte) 6};
         assertArrayEquals(correctMessage, bytes);
     }
 
+    /**
+     * Test of DATA ParameterTag code.
+     */
     @Test
     public void testGetCodeByProtocol() {
         byte[] bytes = ParameterTag.DATA.getCode();
-        byte[] correctMessage = new byte[]{(byte)2,(byte)16};
+        byte[] correctMessage = new byte[]{(byte) 2, (byte) 16};
         assertArrayEquals(correctMessage, bytes);
     }
 }

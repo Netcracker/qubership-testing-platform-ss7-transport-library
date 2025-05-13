@@ -17,11 +17,15 @@
 
 package org.qubership.automation.ss7lib.parse.parser;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Test;
+
 public class StringParserTest {
+
+    /**
+     * Test of OPC parsing from DPC ANSI.
+     */
     @Test
     public void testParseOpcDpcAnsi() {
         StringParser parser = new StringParser();
@@ -29,6 +33,9 @@ public class StringParserTest {
         assertEquals("1-120-18", value);
     }
 
+    /**
+     * Test of OPC parsing from DPC ITU.
+     */
     @Test
     public void testParseOpcDpcItu() {
         StringParser parser = new StringParser();

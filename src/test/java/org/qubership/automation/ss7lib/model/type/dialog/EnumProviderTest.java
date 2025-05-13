@@ -17,13 +17,17 @@
 
 package org.qubership.automation.ss7lib.model.type.dialog;
 
-import org.qubership.automation.ss7lib.model.type.EnumProvider;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.Test;
+import org.qubership.automation.ss7lib.model.type.EnumProvider;
+
 public class EnumProviderTest {
+
+    /**
+     * Test of getting of DialogServiceUser from EnumProvider.
+     */
     @Test
     public void testGetEnumFromProvider() {
         DialogServiceUser serviceUser = EnumProvider.of((byte) 0x0, DialogServiceUser.class);

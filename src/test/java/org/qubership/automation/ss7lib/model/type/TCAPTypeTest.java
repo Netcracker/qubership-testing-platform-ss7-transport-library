@@ -17,25 +17,33 @@
 
 package org.qubership.automation.ss7lib.model.type;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 public class TCAPTypeTest {
 
+    /**
+     * Test of getting of BEGIN TCAPType code.
+     */
     @Test
     public void testGetCodeByBegin() {
         byte code = TCAPType.BEGIN.getCode();
         assertEquals(98, code);
-
     }
 
+    /**
+     * Test of getting of CONTINUE TCAPType code.
+     */
     @Test
     public void testGetCodeByContinue() {
         byte code = TCAPType.CONTINUE.getCode();
         assertEquals(101, code);
     }
 
+    /**
+     * Test of getting of END TCAPType code.
+     */
     @Test
     public void testGetCodeByEnd() {
         byte code = TCAPType.END.getCode();

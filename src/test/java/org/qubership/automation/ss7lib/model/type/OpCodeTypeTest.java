@@ -17,17 +17,24 @@
 
 package org.qubership.automation.ss7lib.model.type;
 
-import org.qubership.automation.ss7lib.DumpReader;
-import org.qubership.automation.ss7lib.model.sub.cap.message.CAPMessageRequestReportBCSMEventArg;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.qubership.automation.ss7lib.DumpReader;
+import org.qubership.automation.ss7lib.model.sub.cap.message.CAPMessageRequestReportBCSMEventArg;
 
 public class OpCodeTypeTest {
+
+    /**
+     * Test of decoding of RequestReport BCSM message.
+     *
+     * @throws IOException in case resource file is missed or unavailable
+     * @throws URISyntaxException in case resource file URI has wrong syntax.
+     */
     @Test
     public void testDecodeRequestReportBcsm() throws IOException, URISyntaxException {
         ByteBuffer trace = DumpReader.getHexTrace("/test_data/RequestReportBCSMEvenArt.hexdump");

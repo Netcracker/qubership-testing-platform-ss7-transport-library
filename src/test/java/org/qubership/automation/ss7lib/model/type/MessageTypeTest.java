@@ -17,12 +17,15 @@
 
 package org.qubership.automation.ss7lib.model.type;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 public class MessageTypeTest {
 
+    /**
+     * Test of MessageType.PAYLOAD encoding.
+     */
     @Test
     public void testGetCodeByPayload() {
         byte byt = MessageType.PAYLOAD.getId();
@@ -30,6 +33,9 @@ public class MessageTypeTest {
         assertEquals(correctMessage, byt);
     }
 
+    /**
+     * Test of MessageType.UNIT_DATA encoding.
+     */
     @Test
     public void testGetCodeByUnitData() {
         byte code = MessageType.UNIT_DATA.getId();

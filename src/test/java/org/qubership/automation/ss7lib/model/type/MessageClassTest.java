@@ -23,6 +23,9 @@ import static org.junit.Assert.assertEquals;
 
 public class MessageClassTest {
 
+    /**
+     * Test of MessageClass.MANAGEMENT encoding.
+     */
     @Test
     public void testGetCodeByManagement() {
         byte byt = MessageClass.MANAGEMENT.getId();
@@ -30,6 +33,9 @@ public class MessageClassTest {
         assertEquals(correctMessage, byt);
     }
 
+    /**
+     * Test of MessageClass.TRANSFER_MESSAGE encoding.
+     */
     @Test
     public void testGetCodeByTransfer() {
         byte byt = MessageClass.TRANSFER_MESSAGE.getId();
@@ -37,12 +43,18 @@ public class MessageClassTest {
         assertEquals(correctMessage, byt);
     }
 
+    /**
+     * Test of MessageClass decoding.
+     */
     @Test
     public void testGetMessageClassFromByte() {
         MessageClass messageClass = EnumProvider.of((byte) 0x0, MessageClass.class);
         assertEquals(MessageClass.MANAGEMENT, messageClass);
     }
 
+    /**
+     * Test of behavior in case illegal arguments provided.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void testThrowsExceptionIfIllegalArgProvided() {
         EnumProvider.of((byte) 0x2, MessageClass.class);

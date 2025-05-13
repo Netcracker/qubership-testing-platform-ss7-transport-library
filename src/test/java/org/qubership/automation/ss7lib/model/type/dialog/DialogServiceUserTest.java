@@ -21,6 +21,9 @@ import org.junit.Test;
 
 public class DialogServiceUserTest {
 
+    /**
+     * Test of getting of Enum from Interface; not implemented yet.
+     */
     @Test
     public void testGetEnumFromInterface() {
     }

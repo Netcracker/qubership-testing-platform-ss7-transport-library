@@ -17,43 +17,50 @@
 
 package org.qubership.automation.ss7lib.parse.parser;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
-import org.qubership.automation.ss7lib.model.AbstractMessage;
-import org.junit.Test;
+import static org.junit.Assert.assertArrayEquals;
 
 import java.util.List;
 
-import static org.junit.Assert.assertArrayEquals;
+import org.junit.Test;
+import org.qubership.automation.ss7lib.model.AbstractMessage;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
+
+@SuppressWarnings("checkstyle:MagicNumber")
 public class AbstractParserTest {
 
-    private  String message =   "\n" +
-            "MTP 3 User Adaptation Layer\n" +
-            "   Version: Release 1 (1)\n"+
-            "   Reserved: 0x00\n"+
-            "   Message class: Transfer messages (1)\n"+
-            "   Message Type: Payload data (DATA) (1)\n"+
-            "   Message length: 244\n"+
-            "   Network appearance (8)\n"+
-            "       Parameter length: 8\n"+
-            "       Parameter Tag: Network appearance (512)\n"+
-            "       Network appearance: 8\n"+
-            "   Routing context (1 context)\n"+
-            "       Parameter Tag: Routing context (6)\n"+
-            "       Parameter length: 8\n"+
-            "       Routing context: 162";
+    /**
+     * Message to parse levels from.
+     */
+    private final String message =   "\n"
+            + "MTP 3 User Adaptation Layer\n"
+            + "   Version: Release 1 (1)\n"
+            + "   Reserved: 0x00\n"
+            + "   Message class: Transfer messages (1)\n"
+            + "   Message Type: Payload data (DATA) (1)\n"
+            + "   Message length: 244\n"
+            + "   Network appearance (8)\n"
+            + "       Parameter length: 8\n"
+            + "       Parameter Tag: Network appearance (512)\n"
+            + "       Network appearance: 8\n"
+            + "   Routing context (1 context)\n"
+            + "       Parameter Tag: Routing context (6)\n"
+            + "       Parameter length: 8\n"
+            + "       Routing context: 162";
 
-
+    /**
+     * Test of Level Definition Parser.
+     */
     @Test
-    public void levelDefinition() {
+    public void levelDefinitionTest() {
         AbstractParser parser = new AbstractParser() {
             @Override
-            void parse(AbstractMessage pojo, String value, List parents) {
-
+            void parse(final AbstractMessage pojo, final String value, final List parents) {
             }
+
             @Override
-            public Level levelDefinition(String previousString, String currentString) {
+            public Level levelDefinition(final String previousString, final String currentString) {
                 return super.levelDefinition(previousString, currentString);
             }
         };
@@ -80,8 +87,6 @@ public class AbstractParserTest {
         for (int i = 1; i < values.size(); i++) {
             levels.add(parser.levelDefinition(values.get(i - 1), values.get(i)));
         }
-
         assertArrayEquals(currentLevel.toArray(), levels.toArray());
-
     }
 }
