@@ -6,8 +6,9 @@
 
     <groupId>org.qubership.automation</groupId>
     <artifactId>ss7-lib</artifactId>
-    <version>1.0.6</version>
+    <version>${revision}</version>
     <properties>
+        <revision>1.0.6-SNAPSHOT</revision>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -16,6 +17,151 @@
         <org.ow2.asm.version>9.5</org.ow2.asm.version>
         <lombok.version>1.18.30</lombok.version>
     </properties>
+
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>ss7 Library</description>
+    <url>https://github.com/Netcracker/qubership-testing-platform-ss7-transport-library</url>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Netcracker</name>
+            <email>opensourcegroup@netcracker.com</email>
+            <organization>Netcracker Technology</organization>
+            <organizationUrl>https://www.netcracker.com</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:https//github.com/Netcracker/qubership-testing-platform-ss7-transport-library.git</connection>
+        <developerConnection>scm:git:https://github.com:Netcracker/qubership-testing-platform-ss7-transport-library.git</developerConnection>
+        <url>scm:git:https://github.com/Netcracker/qubership-testing-platform-ss7-transport-library/tree/main</url>
+    </scm>
+
+    <repositories>
+        <!-- Maven Central repository for release versions -->
+        <repository>
+            <id>oss.sonatype.org</id>
+            <url>https://central.sonatype.com</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <!-- Maven Central repository for SNAPSHOT versions-->
+        <repository>
+            <id>oss.sonatype.org-snapshot</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+
+        <!-- GitHub packages repository for both release and SNAPSHOT versions -->
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/netcracker/*</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <profiles>
+        <profile>
+            <id>central</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.7.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                            <waitUntil>published</waitUntil>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.7</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.3.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.6.3</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <repository>
+                    <id>central</id>
+                    <name>Central Maven Repository</name>
+                </repository>
+            </distributionManagement>
+        </profile>
+
+        <profile>
+            <id>github</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <distributionManagement>
+                <repository>
+                    <id>github</id>
+                    <name>GitHub Packages</name>
+                    <url>https://maven.pkg.github.com/Netcracker/qubership-testing-platform-diameter-transport-library</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 
     <build>
         <finalName>ss7</finalName>
@@ -365,27 +511,40 @@
             <version>${lombok.version}</version>
         </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>Maven Central</name>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-    </repositories>
 
     <pluginRepositories>
         <pluginRepository>
-            <id>central</id>
-            <name>Maven Central</name>
-            <url>https://repo1.maven.org/maven2/</url>
+            <id>oss.sonatype.org</id>
+            <url>https://central.sonatype.com</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+
+        <pluginRepository>
+            <id>oss.sonatype.org-snapshot</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+
+        <pluginRepository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/netcracker/*</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </pluginRepository>
     </pluginRepositories>
 
-    <distributionManagement>
-        <repository>
-            <id>central</id>
-            <name>Maven Central</name>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-    </distributionManagement>
 </project>
