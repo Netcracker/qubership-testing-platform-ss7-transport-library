@@ -29,7 +29,7 @@ jobs:
   mvn-snapshot-deploy:
     uses: netcracker/qubership-workflow-hub/.github/workflows/re-maven-snapshot-deploy.yaml@main
     with:
-      java-version: "21"
+      java-version: "8"
       additional-mvn-args: ""
       target-store: "maven-central"
     secrets:

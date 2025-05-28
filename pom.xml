@@ -8,6 +8,7 @@
     <artifactId>ss7-lib</artifactId>
     <version>1.0.6-SNAPSHOT</version>
     <properties>
+        <revision>1.0.6-SNAPSHOT</revision>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
