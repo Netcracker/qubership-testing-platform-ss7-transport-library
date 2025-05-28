@@ -46,10 +46,10 @@ public class PartyNumberEncoder implements PartEncoder<PartyNumber> {
     }
 
     /**
-     * Encode PartyNumber into List<Byte>.
+     * Encode PartyNumber into List of Bytes.
      *
      * @param messagePart PartyNumber object to be encoded
-     * @return List<Byte> array containing the result of encoding;
+     * @return List of Bytes array containing the result of encoding;
      * currently UnsupportedOperationException is thrown instead.
      */
     @Override

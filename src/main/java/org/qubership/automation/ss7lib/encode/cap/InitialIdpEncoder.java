@@ -57,10 +57,10 @@ public class InitialIdpEncoder implements PartEncoder<InitialDetectionPoint> {
     }
 
     /**
-     * Encode InitialDetectionPoint into List<Byte>.
+     * Encode InitialDetectionPoint into List of Bytes.
      *
      * @param idp InitialDetectionPoint object to be encoded
-     * @return List<Byte> array containing the result of encoding.
+     * @return List of Bytes array containing the result of encoding.
      */
     @Override
     public List<Byte> encodeToArray(final InitialDetectionPoint idp) {

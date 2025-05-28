@@ -31,10 +31,10 @@ public interface PartEncoder<T> {
     ByteBuffer encode(T messagePart);
 
     /**
-     * Encode messagePart into a new List<Byte> object.
+     * Encode messagePart into a new List of Bytes object.
      *
      * @param messagePart object to be encoded
-     * @return a new List<Byte> with encoding result.
+     * @return a new List of Bytes with encoding result.
      */
     List<Byte> encodeToArray(T messagePart);
 }

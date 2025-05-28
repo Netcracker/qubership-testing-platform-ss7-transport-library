@@ -43,10 +43,10 @@ public class InitialDPExtensionEncoder implements PartEncoder<InitialDpArgExtens
     }
 
     /**
-     * Encode InitialDpArgExtension into List<Byte>.
+     * Encode InitialDpArgExtension into List of Bytes.
      *
      * @param argExtension object to be encoded
-     * @return List<Byte> array containing the result of encoding.
+     * @return List of Bytes array containing the result of encoding.
      */
     @Override
     public List<Byte> encodeToArray(final InitialDpArgExtension argExtension) {

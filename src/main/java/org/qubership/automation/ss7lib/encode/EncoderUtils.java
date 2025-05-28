@@ -56,11 +56,11 @@ public class EncoderUtils {
     }
 
     /**
-     * Convert String representation of Hex or Decimal integers into List<Byte>.
+     * Convert String representation of Hex or Decimal integers into List of Bytes.
      *
      * @param bytes - String to process
      * @param isHex - flag if String bytes is Hex integers representation (true) or Decimals.
-     * @return List<Byte> result of conversion.
+     * @return List of Bytes result of conversion.
      */
     public static List<Byte> splitStringBytes(final @Nonnull String bytes, final boolean isHex) {
         List<Byte> result = Lists.newArrayList();
@@ -73,10 +73,10 @@ public class EncoderUtils {
     }
 
     /**
-     * Fill List<Byte> parameter with Flag/Flags of AbstractParamPojo parameter,
+     * Fill List of Bytes parameter with Flag/Flags of AbstractParamPojo parameter,
      * then add encoding results.
      *
-     * @param bytes List<Byte> to fill
+     * @param bytes List of Bytes to fill
      * @param pojo AbstractParamPojo object to process.
      */
     public static void encodePojoFlagParam(final @Nonnull List<Byte> bytes, final @Nonnull AbstractParamPojo pojo) {
@@ -85,10 +85,10 @@ public class EncoderUtils {
     }
 
     /**
-     * In case AbstractParamPojo parameter is Flag or Flags, fill List<Byte> bytes parameter
+     * In case AbstractParamPojo parameter is Flag or Flags, fill List of Bytes parameter
      * with their values; otherwise do nothing.
      *
-     * @param bytes List<Byte> to fill
+     * @param bytes List of Bytes to fill
      * @param pojo AbstractParamPojo object to process.
      */
     public static void addFlag(final @Nonnull List<Byte> bytes, final @Nonnull AbstractParamPojo pojo) {
@@ -100,9 +100,9 @@ public class EncoderUtils {
     }
 
     /**
-     * Encode AbstractParamPojo parameter and fill List<Byte> parameter with encoded bytes.
+     * Encode AbstractParamPojo parameter and fill List of Bytes parameter with encoded bytes.
      *
-     * @param bytes List<Byte> to fill with encoding result
+     * @param bytes List of Bytes to fill with encoding result
      * @param pojo AbstractParamPojo object to encode.
      */
     public static void encodeParam(final @Nonnull List<Byte> bytes, final @Nonnull AbstractParamPojo pojo) {
@@ -120,9 +120,9 @@ public class EncoderUtils {
     }
 
     /**
-     * Encode AbstractParamPojo parameter and fill List<Byte> parameter with encoded bytes.
+     * Encode AbstractParamPojo parameter and fill List of Bytes parameter with encoded bytes.
      *
-     * @param bytes List<Byte> to fill with encoding result
+     * @param bytes List of Bytes to fill with encoding result
      * @param pojo InitialDetectionPoint parameter (currently unused)
      * @param param AbstractParamPojo object to encode.
      */

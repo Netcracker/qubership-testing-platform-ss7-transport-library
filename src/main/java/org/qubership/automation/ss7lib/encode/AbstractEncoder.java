@@ -30,9 +30,9 @@ import com.google.common.primitives.Bytes;
 public abstract class AbstractEncoder<T extends AbstractMessage> implements Encoder {
 
     /**
-     * Create and fill byte[] from List<Byte>.
+     * Create and fill byte[] from List of Bytes.
      *
-     * @param bytes - List<Byte> to process
+     * @param bytes - List of Bytes to process
      * @return byte[] created and filled from List of bytes.
      */
     protected byte[] convertListToArray(@Nonnull final List<Byte> bytes) {
@@ -82,10 +82,10 @@ public abstract class AbstractEncoder<T extends AbstractMessage> implements Enco
     }
 
     /**
-     * Create and fill List<Byte> from byte[].
+     * Create and fill List of Bytes from byte[].
      *
      * @param bytes - byte[] to process
-     * @return List<Byte> created and filled from byte[] bytes.
+     * @return List of Bytes created and filled from byte[] bytes.
      */
     protected List<Byte> asList(final byte[] bytes) {
         return Bytes.asList(bytes);
@@ -94,7 +94,7 @@ public abstract class AbstractEncoder<T extends AbstractMessage> implements Enco
     /**
      * Validate length parameter; in some conditions add (byte) 0x81 to bytes array.
      *
-     * @param bytes ArrayList<Byte> to add extra byte in case incorrect length
+     * @param bytes ArrayList of Bytes to add extra byte in case incorrect length
      * @param length byte length value to validate.
      */
     protected void validateLengthMessage(final ArrayList<Byte> bytes, final byte length) {
