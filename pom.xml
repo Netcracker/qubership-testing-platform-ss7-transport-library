@@ -8,16 +8,15 @@
     <artifactId>ss7-lib</artifactId>
     <version>1.0.6-SNAPSHOT</version>
     <properties>
+        <java.version>21</java.version>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-
-        <org.ow2.asm.version>9.5</org.ow2.asm.version>
         <lombok.version>1.18.30</lombok.version>
     </properties>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>ss7 Library</description>
+    <description>SS7 Library</description>
     <url>https://github.com/Netcracker/qubership-testing-platform-ss7-transport-library</url>
     <licenses>
         <license>
@@ -35,7 +34,7 @@
     </developers>
     <scm>
         <connection>scm:git:https//github.com/Netcracker/qubership-testing-platform-ss7-transport-library.git</connection>
-        <developerConnection>scm:git:https://github.com:Netcracker/qubership-testing-platform-ss7-transport-library.git</developerConnection>
+        <developerConnection>scm:git:https://github.com/Netcracker/qubership-testing-platform-ss7-transport-library.git</developerConnection>
         <url>scm:git:https://github.com/Netcracker/qubership-testing-platform-ss7-transport-library/tree/main</url>
     </scm>
 
