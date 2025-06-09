@@ -6,10 +6,8 @@ It is used by Qubership Testing Platform ITF-Executor Service.
 
 ## Functionality description
 
-- The library provided SS7 Outbound Synchronous Transport implementation only. 
+- The library provides **SS7 Outbound Synchronous** Transport implementation only. 
 - So, it establishes connection according configuration settings, then sends messages of special format, waits a response, receives it and parses.
-- TCP and SCTP transport layers (behind SS7 protocol) are supported. 
-  - SCTP layer support is available on Unix only, and depends on 3rd party installed on OS.
 - Messages can be configured 2 formats
   - binary format (just how it is sent via SS7 protocol),
   - and text format like Wireshark text representation of SS7 protocol messages. In that case, text message is encoded by the library into binary (byte[]) before sending
@@ -47,3 +45,10 @@ mvn -P github clean install
     </dependency>
 ```
 
+In Qubership Testing Platform ITF-Executor Service, there is special transport module - **mockingbird-transport-ss7** - which uses this artifact.
+In this module, there is a class SS7OutboundTransport, which contains:
+- SS7 Transport Configuration Parameters Descriptions (see above for transport configuration properties list),
+- sendReceiveSync() method as a main entry point, performing:
+  - request sending (connection is established if necessary),
+  - and waiting a response,
+- extra service methods.
