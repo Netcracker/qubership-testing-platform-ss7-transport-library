@@ -33,7 +33,7 @@
     <scm>
         <connection>scm:git:https//github.com/Netcracker/qubership-testing-platform-ss7-transport-library.git</connection>
         <developerConnection>scm:git:https://github.com/Netcracker/qubership-testing-platform-ss7-transport-library.git</developerConnection>
-        <url>scm:git:https://github.com/Netcracker/qubership-testing-platform-ss7-transport-library/tree/main</url>
+        <url>scm:git:https://github.com/Netcracker/qubership-testing-platform-ss7-transport-library.git</url>
       <tag>HEAD</tag>
   </scm>
 
@@ -165,6 +165,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
@@ -202,7 +203,7 @@
                             <mainClass>org.qubership.automation.ss7lib.proxy.ProxyServer</mainClass>
                         </manifest>
                         <manifestEntries>
-                            <Build-Version>${version}</Build-Version>
+                            <Build-Version>${project.version}</Build-Version>
                         </manifestEntries>
                     </archive>
                 </configuration>
