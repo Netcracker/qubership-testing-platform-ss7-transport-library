@@ -22,8 +22,6 @@ import static org.qubership.automation.ss7lib.parse.scenario.Pattern.HEX_PATTERN
 import java.util.Objects;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.automation.ss7lib.model.sub.cap.message.idp.InitialDpArgExtension;
 import org.qubership.automation.ss7lib.model.sub.cap.message.idp.extention.Descriptor;
 import org.qubership.automation.ss7lib.model.sub.cap.message.idp.extention.Extension;
@@ -31,6 +29,8 @@ import org.qubership.automation.ss7lib.parse.parser.PartParser;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.annotation.Nonnull;
 
 public class InitialDpArgExtensionParser extends PartParser<InitialDpArgExtension> {
 

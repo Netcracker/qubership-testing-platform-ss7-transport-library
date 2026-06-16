@@ -17,15 +17,15 @@
 
 package org.qubership.automation.ss7lib.emulator;
 
-import org.qubership.automation.ss7lib.proxy.ProxyServer;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
+
+import org.junit.Test;
+import org.qubership.automation.ss7lib.proxy.ProxyServer;
 
 public class EmulationStarter {
     @Test

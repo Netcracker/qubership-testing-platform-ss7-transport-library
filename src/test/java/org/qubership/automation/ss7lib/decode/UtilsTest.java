@@ -17,11 +17,11 @@
 
 package org.qubership.automation.ss7lib.decode;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.nio.ByteBuffer;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 public class UtilsTest {
 

@@ -17,20 +17,21 @@
 
 package org.qubership.automation.ss7lib.connection;
 
-import com.google.common.base.Stopwatch;
-import org.qubership.automation.ss7lib.DumpReader;
-import org.qubership.automation.ss7lib.proxy.response.ResponseHandler;
-import org.hamcrest.core.StringContains;
-import org.junit.Test;
-import org.slf4j.LoggerFactory;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import org.hamcrest.core.StringContains;
+import org.junit.Test;
+import org.qubership.automation.ss7lib.DumpReader;
+import org.qubership.automation.ss7lib.proxy.response.ResponseHandler;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Stopwatch;
 
 public class MessageProcessorTest {
     @Test

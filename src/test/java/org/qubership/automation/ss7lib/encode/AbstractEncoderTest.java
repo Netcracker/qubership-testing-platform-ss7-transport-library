@@ -17,17 +17,18 @@
 
 package org.qubership.automation.ss7lib.encode;
 
-import com.google.common.collect.Lists;
-import com.google.common.primitives.Bytes;
-import org.qubership.automation.ss7lib.model.AbstractMessage;
-import org.junit.Test;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.qubership.automation.ss7lib.model.AbstractMessage;
+
+import com.google.common.collect.Lists;
+import com.google.common.primitives.Bytes;
+import jakarta.annotation.Nonnull;
 
 public class AbstractEncoderTest {
 

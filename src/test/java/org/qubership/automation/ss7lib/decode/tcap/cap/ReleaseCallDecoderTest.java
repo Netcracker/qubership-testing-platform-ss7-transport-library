@@ -17,13 +17,13 @@
 
 package org.qubership.automation.ss7lib.decode.tcap.cap;
 
-import org.qubership.automation.ss7lib.DumpReader;
-import org.qubership.automation.ss7lib.model.sub.cap.message.CapMessageReleaseCallArg;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.nio.ByteBuffer;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.qubership.automation.ss7lib.DumpReader;
+import org.qubership.automation.ss7lib.model.sub.cap.message.CapMessageReleaseCallArg;
 
 public class ReleaseCallDecoderTest {
     @Test

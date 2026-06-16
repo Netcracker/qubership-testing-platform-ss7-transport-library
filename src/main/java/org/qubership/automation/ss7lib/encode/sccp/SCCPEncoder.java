@@ -23,8 +23,6 @@ import static org.qubership.automation.ss7lib.encode.EncoderUtils.splitStringByt
 import java.util.ArrayList;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.automation.ss7lib.decode.Utils;
 import org.qubership.automation.ss7lib.encode.AbstractEncoder;
 import org.qubership.automation.ss7lib.model.AbstractMessage;
@@ -34,6 +32,7 @@ import org.qubership.automation.ss7lib.model.sub.sccp.CallPartyAddress;
 import org.qubership.automation.ss7lib.model.sub.sccp.GlobalTitle;
 
 import com.google.common.collect.Lists;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

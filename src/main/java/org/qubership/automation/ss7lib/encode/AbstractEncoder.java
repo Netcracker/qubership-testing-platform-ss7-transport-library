@@ -21,11 +21,10 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.automation.ss7lib.model.AbstractMessage;
 
 import com.google.common.primitives.Bytes;
+import jakarta.annotation.Nonnull;
 
 public abstract class AbstractEncoder<T extends AbstractMessage> implements Encoder {
 

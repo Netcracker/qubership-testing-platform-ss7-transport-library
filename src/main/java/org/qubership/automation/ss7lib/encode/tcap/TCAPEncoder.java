@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.automation.ss7lib.convert.Converter;
 import org.qubership.automation.ss7lib.decode.Utils;
 import org.qubership.automation.ss7lib.encode.AbstractEncoder;
@@ -44,6 +42,7 @@ import org.qubership.automation.ss7lib.model.type.dialog.Result;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

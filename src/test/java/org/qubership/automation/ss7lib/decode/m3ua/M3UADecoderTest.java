@@ -17,6 +17,14 @@
 
 package org.qubership.automation.ss7lib.decode.m3ua;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.qubership.automation.ss7lib.DumpReader;
 import org.qubership.automation.ss7lib.model.M3uaMessage;
 import org.qubership.automation.ss7lib.model.sub.m3ua.NetworkAppearance;
@@ -25,14 +33,6 @@ import org.qubership.automation.ss7lib.model.sub.m3ua.RoutingContext;
 import org.qubership.automation.ss7lib.model.type.MessageClass;
 import org.qubership.automation.ss7lib.model.type.MessageType;
 import org.qubership.automation.ss7lib.model.type.ParameterTag;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.ByteBuffer;
-
-import static org.junit.Assert.assertEquals;
 
 public class M3UADecoderTest {
 

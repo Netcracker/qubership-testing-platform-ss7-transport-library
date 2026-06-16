@@ -22,14 +22,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.automation.ss7lib.model.AbstractMessage;
 import org.qubership.automation.ss7lib.parse.MessageParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
+import jakarta.annotation.Nonnull;
 
 public abstract class AbstractParser<T extends AbstractMessage> extends StringParser implements Parser<T> {
     private static final Pattern SPACES = Pattern.compile("^\\s+");
