@@ -244,31 +244,10 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>3.18.0</version>
             </dependency>
-
-            <!--<dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>2.8.9</version>
-            </dependency>
-            <dependency>
-                <groupId>org.dom4j</groupId>
-                <artifactId>dom4j</artifactId>
-                <version>2.1.3</version>
-            </dependency>-->
-            <!--<dependency>
-                <groupId>org.codehaus.plexus</groupId>
-                <artifactId>plexus-utils</artifactId>
-                <version>3.0.24</version>
-            </dependency> -->
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
-        <!--<dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jul-to-slf4j</artifactId>
-            <version>2.0.7</version>
-        </dependency>-->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -290,11 +269,6 @@
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
         </dependency>
-        <!--<dependency>
-            <groupId>org.dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>2.1.3</version>
-        </dependency>-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -325,26 +299,7 @@
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.10.2</version>
-            <!--<exclusions>
-                <exclusion>
-                    <groupId>com.google.code.gson</groupId>
-                    <artifactId>gson</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.dom4j</groupId>
-                    <artifactId>dom4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.codehaus.plexus</groupId>
-                    <artifactId>plexus-utils</artifactId>
-                </exclusion>
-            </exclusions>-->
         </dependency>
-        <!--<dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-utils</artifactId>
-            <version>3.0.24</version>
-        </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
