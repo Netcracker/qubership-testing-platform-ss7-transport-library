@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Build and Publish current SNAPSHOT (dry run)"
-        uses: netcracker/qubership-workflow-hub/actions/maven-release@v1.0.3
+        uses: netcracker/qubership-workflow-hub/actions/maven-release@v2.3.0
         with:
           java-version: "21"
           version-type: ${{ github.event.inputs.version-type }}
@@ -89,14 +89,14 @@ jobs:
     steps:
       # This step is needed if there is a GitHub App used for authentication to bypass the protected branch rule
       - name: "Prepare app token"
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.GH_BUMP_VERSION_APP_ID }}
           private-key: ${{ secrets.GH_BUMP_VERSION_APP_KEY }}
       - name: "Build and Publish"
         id: build-and-publish
-        uses: netcracker/qubership-workflow-hub/actions/maven-release@v1.0.3
+        uses: netcracker/qubership-workflow-hub/actions/maven-release@v2.3.0
         with:
           java-version: "21"
           version-type: ${{ github.event.inputs.version-type }}
@@ -112,7 +112,7 @@ jobs:
           gpg-passphrase: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
           dry-run: 'false'
       - name: Upload all Maven target directories
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ github.event.repository.name }}
           path: '**/target'
@@ -123,7 +123,7 @@ jobs:
     outputs:
       dockerfile_exists: ${{ steps.check_dockerfile.outputs.df_exists }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: "Check Dockerfile existence"
         id: check_dockerfile
         shell: bash
@@ -157,7 +157,7 @@ jobs:
   github-release:
     needs: [deploy]
     if: ${{ needs.deploy.result == 'success' }}
-    uses: netcracker/qubership-workflow-hub/.github/workflows/release-drafter.yml@v1.0.3
+    uses: netcracker/qubership-workflow-hub/.github/workflows/release-drafter.yml@v2.3.0
     with:
       version: ${{ needs.deploy.outputs.release-version }}
       publish: true
