@@ -32,7 +32,7 @@ import jakarta.annotation.Nonnull;
 
 public class AbstractEncoderTest {
 
-    private AbstractEncoder encoder = new AbstractEncoder(){
+    private final AbstractEncoder encoder = new AbstractEncoder(){
         @Override
         public byte[] encode(@Nonnull AbstractMessage pojo) {
             return new byte[0];

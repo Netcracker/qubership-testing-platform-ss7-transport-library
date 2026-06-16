@@ -59,13 +59,13 @@ public abstract class AbstractParser<T extends AbstractMessage> extends StringPa
             } else if (level.equals(Level.UP)) {
                 int i = 0;
                 while (i >= 0 && iterator.hasNext()) {
-                    if (parents.size() > 0) {
-                        parents.remove(parents.size() - 1);
+                    if (!parents.isEmpty()) {
+                        parents.removeLast();
                     }
-                    if (parents.size() > 0) {
-                        i = stringLevel(parents.get(parents.size() - 1)) - stringLevel(currentString.get());
+                    if (!parents.isEmpty()) {
+                        i = stringLevel(parents.getLast()) - stringLevel(currentString.get());
                     }
-                    if (parents.size() == 0) {
+                    if (parents.isEmpty()) {
                         break;
                     }
                 }

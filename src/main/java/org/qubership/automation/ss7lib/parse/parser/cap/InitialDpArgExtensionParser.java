@@ -19,6 +19,7 @@ package org.qubership.automation.ss7lib.parse.parser.cap;
 
 import static org.qubership.automation.ss7lib.parse.scenario.Pattern.HEX_PATTERN;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Set;
 
@@ -35,8 +36,8 @@ import jakarta.annotation.Nonnull;
 public class InitialDpArgExtensionParser extends PartParser<InitialDpArgExtension> {
 
 
-    private Set<Class<? extends Extension>> extensions;
-    private Logger logger = LoggerFactory.getLogger(InitialDpArgExtensionParser.class);
+    private final Set<Class<? extends Extension>> extensions;
+    private final Logger logger = LoggerFactory.getLogger(InitialDpArgExtensionParser.class);
 
     {
         extensions = new Reflections(
@@ -59,11 +60,12 @@ public class InitialDpArgExtensionParser extends PartParser<InitialDpArgExtensio
         Extension extension = null;
         for (Class<? extends Extension> ex : extensions) {
             Descriptor annotation = ex.getAnnotation(Descriptor.class);
-            if (value.equals(annotation.value())) {
+            if (annotation != null && value.equals(annotation.value())) {
                 logger.info("Detected extension: '{}' for value '{}'", ex.getSimpleName(), value);
                 try {
-                    extension = ex.newInstance();
-                } catch (InstantiationException | IllegalAccessException e) {
+                    extension = ex.getDeclaredConstructor().newInstance();
+                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+                         InvocationTargetException e) {
                     logger.error("Can't create new extension with class " + ex.getSimpleName(), e);
                 }
                 break;

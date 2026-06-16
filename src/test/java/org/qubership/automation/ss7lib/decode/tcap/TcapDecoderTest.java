@@ -80,7 +80,7 @@ public class TcapDecoderTest {
         assertEquals(OpCodeType.REQUEST_REPORT_BCSMEVENT, invoke.getOpCode().getOpCodeType());
         List<CAPMessageRequestReportBCSMEventArg.BSCMEvent> eventList = ((CAPMessageRequestReportBCSMEventArg) invoke.getCapMessagePojo()).getBscmEventList();
         assertEquals(4, eventList.size());
-        CAPMessageRequestReportBCSMEventArg.BSCMEvent bscmEvent = eventList.get(eventList.size() - 1);
+        CAPMessageRequestReportBCSMEventArg.BSCMEvent bscmEvent = eventList.getLast();
         assertEquals(EventType.T_ABANDON, bscmEvent.getEventType());
         assertEquals(MonitorMode.NOTIFY_AND_CONTINUE, bscmEvent.getMonitorMode());
         assertEquals(1, bscmEvent.getLegID().getId());

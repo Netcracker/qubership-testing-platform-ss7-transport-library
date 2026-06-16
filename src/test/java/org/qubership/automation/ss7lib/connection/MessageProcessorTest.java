@@ -35,7 +35,7 @@ import com.google.common.base.Stopwatch;
 
 public class MessageProcessorTest {
     @Test
-    public void testProcessData() throws IOException, URISyntaxException, InterruptedException {
+    public void testProcessData() throws IOException, URISyntaxException {
         ByteBuffer trace = DumpReader.getHexTrace("/test_data/requestReportBCSVMEvent.hexdump");
         MessageProcessor processor = new MessageProcessor();
         Thread thread = new Thread(() -> {

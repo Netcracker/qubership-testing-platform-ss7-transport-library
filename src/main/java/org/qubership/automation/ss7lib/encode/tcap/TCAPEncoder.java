@@ -114,7 +114,7 @@ public class TCAPEncoder extends AbstractEncoder<TcapMessage> {
         int size = tx.size();
         if (size < 4) {
             for (int index = 0; index < 4 - size; index++) {
-                tx.add(0, (byte) 0x0);
+                tx.addFirst((byte) 0x0);
             }
         }
         subBytes.addAll(tx);
