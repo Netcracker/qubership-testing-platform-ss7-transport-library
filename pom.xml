@@ -4,13 +4,11 @@
 
     <groupId>org.qubership.automation</groupId>
     <artifactId>ss7-lib</artifactId>
-    <version>1.0.7-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <properties>
         <java.version>21</java.version>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <lombok.version>1.18.30</lombok.version>
+        <lombok.version>1.18.44</lombok.version>
     </properties>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -34,8 +32,8 @@
         <connection>scm:git:https//github.com/Netcracker/qubership-testing-platform-ss7-transport-library.git</connection>
         <developerConnection>scm:git:https://github.com/Netcracker/qubership-testing-platform-ss7-transport-library.git</developerConnection>
         <url>scm:git:https://github.com/Netcracker/qubership-testing-platform-ss7-transport-library.git</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <repositories>
         <!-- Maven Central repository for release versions -->
@@ -165,10 +163,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>3.15.0</version>
                 <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <release>21</release>
+                    <parameters>true</parameters>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>
@@ -224,9 +229,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.15</version>
+                <version>3.2.5</version>
                 <configuration>
-                    <argLine>-Dfile.encoding=UTF-8</argLine>
+                    <argLine>-Dfile.encoding=UTF-8 --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
                 </configuration>
             </plugin>
             <plugin>
@@ -266,6 +271,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.18.0</version>
+            </dependency>
+
             <!--<dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
@@ -293,7 +304,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.13</version>
+            <version>1.5.32</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.dom4j</groupId>
@@ -304,7 +315,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>1.2.13</version>
+            <version>1.5.32</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -377,6 +388,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>2.1.1</version>
         </dependency>
     </dependencies>
 
