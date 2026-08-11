@@ -17,13 +17,13 @@
 
 package org.qubership.automation.ss7lib.decode;
 
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 import org.qubership.automation.ss7lib.decode.m3ua.M3UADecoderTest;
 import org.qubership.automation.ss7lib.decode.sccp.SccpDecoderTest;
 import org.qubership.automation.ss7lib.decode.tcap.TcapDecoderTest;
 import org.qubership.automation.ss7lib.decode.tcap.cap.ApplyChargingArgDecoderTest;
 import org.qubership.automation.ss7lib.decode.tcap.cap.ReleaseCallDecoderTest;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
 
 @Suite.SuiteClasses({
         ApplyChargingArgDecoderTest.class,

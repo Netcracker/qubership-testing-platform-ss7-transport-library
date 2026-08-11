@@ -17,6 +17,14 @@
 
 package org.qubership.automation.ss7lib.decode.sccp;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
+
+import org.junit.Test;
 import org.qubership.automation.ss7lib.DumpReader;
 import org.qubership.automation.ss7lib.decode.m3ua.M3uaDecoder;
 import org.qubership.automation.ss7lib.model.SccpMessage;
@@ -25,14 +33,6 @@ import org.qubership.automation.ss7lib.model.sub.sccp.CallPartyAddress;
 import org.qubership.automation.ss7lib.model.sub.sccp.GlobalTitle;
 import org.qubership.automation.ss7lib.model.type.MessageType;
 import org.qubership.automation.ss7lib.model.type.SubSystemNumber;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.ByteBuffer;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 
 public class SccpDecoderTest {
 

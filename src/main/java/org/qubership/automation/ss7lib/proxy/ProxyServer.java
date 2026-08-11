@@ -20,8 +20,6 @@ package org.qubership.automation.ss7lib.proxy;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-import javax.servlet.Servlet;
-
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.qubership.automation.ss7lib.annotation.RestController;
@@ -30,6 +28,8 @@ import org.qubership.automation.ss7lib.proxy.config.Config;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.servlet.Servlet;
 
 public class ProxyServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProxyServer.class);

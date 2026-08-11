@@ -17,15 +17,17 @@
 
 package org.qubership.automation.ss7lib.emulator;
 
-import org.qubership.automation.ss7lib.DumpReader;
-import org.qubership.automation.ss7lib.decode.Utils;
-import com.sun.nio.sctp.*;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+
+import org.junit.Test;
+import org.qubership.automation.ss7lib.DumpReader;
+import org.qubership.automation.ss7lib.decode.Utils;
+
+import com.sun.nio.sctp.MessageInfo;
+import com.sun.nio.sctp.SctpChannel;
 
 public class TangoEmulator {
 

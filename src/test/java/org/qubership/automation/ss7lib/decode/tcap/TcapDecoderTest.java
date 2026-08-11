@@ -17,6 +17,16 @@
 
 package org.qubership.automation.ss7lib.decode.tcap;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
+import java.util.Iterator;
+import java.util.List;
+
+import org.junit.Test;
 import org.qubership.automation.ss7lib.DumpReader;
 import org.qubership.automation.ss7lib.decode.m3ua.M3uaDecoder;
 import org.qubership.automation.ss7lib.decode.sccp.SccpDecoder;
@@ -32,16 +42,6 @@ import org.qubership.automation.ss7lib.model.type.OpCodeType;
 import org.qubership.automation.ss7lib.model.type.dialog.DialogServiceUser;
 import org.qubership.automation.ss7lib.model.type.dialog.DialogueType;
 import org.qubership.automation.ss7lib.model.type.dialog.Result;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.ByteBuffer;
-import java.util.Iterator;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class TcapDecoderTest {
     @Test
@@ -80,7 +80,7 @@ public class TcapDecoderTest {
         assertEquals(OpCodeType.REQUEST_REPORT_BCSMEVENT, invoke.getOpCode().getOpCodeType());
         List<CAPMessageRequestReportBCSMEventArg.BSCMEvent> eventList = ((CAPMessageRequestReportBCSMEventArg) invoke.getCapMessagePojo()).getBscmEventList();
         assertEquals(4, eventList.size());
-        CAPMessageRequestReportBCSMEventArg.BSCMEvent bscmEvent = eventList.get(eventList.size() - 1);
+        CAPMessageRequestReportBCSMEventArg.BSCMEvent bscmEvent = eventList.getLast();
         assertEquals(EventType.T_ABANDON, bscmEvent.getEventType());
         assertEquals(MonitorMode.NOTIFY_AND_CONTINUE, bscmEvent.getMonitorMode());
         assertEquals(1, bscmEvent.getLegID().getId());

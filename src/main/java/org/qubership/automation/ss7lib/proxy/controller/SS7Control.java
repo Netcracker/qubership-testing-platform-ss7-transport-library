@@ -19,16 +19,16 @@ package org.qubership.automation.ss7lib.proxy.controller;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.qubership.automation.ss7lib.annotation.RestController;
 import org.qubership.automation.ss7lib.proxy.service.ExecutionService;
 import org.qubership.automation.ss7lib.utils.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController("/execute")
 public class SS7Control extends HttpServlet {

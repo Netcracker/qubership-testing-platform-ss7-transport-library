@@ -19,12 +19,12 @@ package org.qubership.automation.ss7lib.proxy.controller;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.qubership.automation.ss7lib.annotation.RestController;
 import org.qubership.automation.ss7lib.connection.ConnectionHolder;
+
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController("/state")
 public class SS7ConnectionState extends HttpServlet {

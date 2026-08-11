@@ -24,8 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.automation.ss7lib.convert.Converter;
 import org.qubership.automation.ss7lib.decode.Utils;
 import org.qubership.automation.ss7lib.encode.AbstractEncoder;
@@ -46,6 +44,7 @@ import org.qubership.automation.ss7lib.model.type.EventType;
 import org.qubership.automation.ss7lib.model.type.MonitorMode;
 
 import com.google.common.collect.Lists;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -102,18 +101,17 @@ public class CAPEncoder extends AbstractEncoder<CapMessage> {
         bytes.add(capMessage.getStartFlag());
         ArrayList<Byte> message = Lists.newArrayList();
         Utils.logTrace("Message flag: \n{}", bytes, getClass());
-        if (capMessage instanceof InitialDetectionPoint) {
-            encodeIDP(message, (InitialDetectionPoint) capMessage);
-        } else if (capMessage instanceof CAPMessageRequestReportBCSMEventArg) {
-            encodeRRB(message, (CAPMessageRequestReportBCSMEventArg) capMessage);
-        } else if (capMessage instanceof CAPMessageEventReportBCSMArg) {
-            encodeERB(message, (CAPMessageEventReportBCSMArg) capMessage);
-        } else if (capMessage instanceof ApplyChargingReportArg) {
-            encodeAcr(message, (ApplyChargingReportArg) capMessage);
-        } else if (capMessage instanceof CAPMessageApplyChargingArg) {
-            encodeAC(message, (CAPMessageApplyChargingArg) capMessage);
-        } else if (capMessage instanceof CAPMessageConnectArg) {
-            encodeConnect(message, (CAPMessageConnectArg) capMessage);
+        switch (capMessage) {
+            case InitialDetectionPoint initialDetectionPoint -> encodeIDP(message, initialDetectionPoint);
+            case CAPMessageRequestReportBCSMEventArg capMessageRequestReportBCSMEventArg ->
+                    encodeRRB(message, capMessageRequestReportBCSMEventArg);
+            case CAPMessageEventReportBCSMArg capMessageEventReportBCSMArg ->
+                    encodeERB(message, capMessageEventReportBCSMArg);
+            case ApplyChargingReportArg applyChargingReportArg -> encodeAcr(message, applyChargingReportArg);
+            case CAPMessageApplyChargingArg capMessageApplyChargingArg -> encodeAC(message, capMessageApplyChargingArg);
+            case CAPMessageConnectArg capMessageConnectArg -> encodeConnect(message, capMessageConnectArg);
+            default -> {
+            }
         }
         Utils.logTrace("Message: \n{}", message, getClass());
 

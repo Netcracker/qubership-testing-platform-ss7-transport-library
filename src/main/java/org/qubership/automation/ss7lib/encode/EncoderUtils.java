@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.automation.ss7lib.model.sub.Flag;
 import org.qubership.automation.ss7lib.model.sub.Flags;
 import org.qubership.automation.ss7lib.model.sub.cap.message.InitialDetectionPoint;
@@ -32,6 +30,7 @@ import org.qubership.automation.ss7lib.model.sub.cap.param.AbstractParamPojo;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import jakarta.annotation.Nonnull;
 
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor")
 public class EncoderUtils {

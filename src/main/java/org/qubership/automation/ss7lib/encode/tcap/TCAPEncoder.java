@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.automation.ss7lib.convert.Converter;
 import org.qubership.automation.ss7lib.decode.Utils;
 import org.qubership.automation.ss7lib.encode.AbstractEncoder;
@@ -44,6 +42,7 @@ import org.qubership.automation.ss7lib.model.type.dialog.Result;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -115,7 +114,7 @@ public class TCAPEncoder extends AbstractEncoder<TcapMessage> {
         int size = tx.size();
         if (size < 4) {
             for (int index = 0; index < 4 - size; index++) {
-                tx.add(0, (byte) 0x0);
+                tx.addFirst((byte) 0x0);
             }
         }
         subBytes.addAll(tx);

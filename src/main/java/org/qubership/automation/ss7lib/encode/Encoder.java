@@ -17,9 +17,9 @@
 
 package org.qubership.automation.ss7lib.encode;
 
-import javax.annotation.Nonnull;
-
 import org.qubership.automation.ss7lib.model.AbstractMessage;
+
+import jakarta.annotation.Nonnull;
 
 public interface Encoder {
 

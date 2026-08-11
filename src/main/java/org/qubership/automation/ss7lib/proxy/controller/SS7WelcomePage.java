@@ -20,16 +20,15 @@ package org.qubership.automation.ss7lib.proxy.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.qubership.automation.ss7lib.annotation.RestController;
 import org.qubership.automation.ss7lib.connection.ConnectionHolder;
 import org.qubership.automation.ss7lib.proxy.config.Config;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController("/")
 public class SS7WelcomePage extends HttpServlet {
