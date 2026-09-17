@@ -248,8 +248,14 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.1</version>
                 <executions>
+                    <!-- Bound to "verify", after the source and javadoc jars are built, not "package".
+                         Several dependency jars ship a module-info.class, and shading keeps only one of
+                         the colliding copies. Binding this goal to "package" let maven-javadoc-plugin,
+                         running in that same phase, read the already-shaded jar and patch the project's
+                         own sources into that survivor's unrelated module, which failed to resolve a
+                         JDK-internal package the project imports directly. -->
                     <execution>
-                        <phase>package</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>shade</goal>
                         </goals>
