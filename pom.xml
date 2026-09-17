@@ -352,6 +352,15 @@
             <artifactId>jakarta.servlet-api</artifactId>
             <version>6.0.0</version>
         </dependency>
+        <!-- logback-classic's module-info declares jakarta.mail as an optional module. The module
+             still has to resolve, or javadoc:jar fails with "module not found: jakarta.mail".
+             Scope "provided" keeps this artifact out of the shaded jar. -->
+        <dependency>
+            <groupId>jakarta.mail</groupId>
+            <artifactId>jakarta.mail-api</artifactId>
+            <version>2.1.5</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <pluginRepositories>
