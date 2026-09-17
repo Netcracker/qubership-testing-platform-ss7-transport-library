@@ -44,7 +44,7 @@ on:
           - 'github'
           - 'central'
         required: false
-        default: 'central'
+        default: 'github'
       mvn-args:
         description: 'Additional maven arguments to pass (e.g. -DskipTests=true -Dmaven.javadoc.skip=true)'
         required: false
