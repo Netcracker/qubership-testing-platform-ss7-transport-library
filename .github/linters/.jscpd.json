@@ -1,5 +1,6 @@
 {
   "threshold": 2,
+  "mode": "weak",
   "ignore": [
     "**/resources/**",
     "**/*/*.xml",
