@@ -37,7 +37,7 @@ jobs:
 
       - name: Maven Docker build
         id: maven_build
-        uses: netcracker/qubership-workflow-hub/actions/maven-snapshot-deploy@288a6a0d9a78e80dfdefccab1be6497a39deb746 # v2.8.0
+        uses: netcracker/qubership-workflow-hub/actions/maven-snapshot-deploy@0eefd4976131d113c986281eed8bc642b6da303d # v2.8.1
         with:
           java-version: "21"
           additional-mvn-args: ${{ env.additional-mvn-args }}
